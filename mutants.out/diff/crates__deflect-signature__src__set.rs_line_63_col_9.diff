@@ -1,0 +1,21 @@
+--- crates/deflect-signature/src/set.rs
++++ replace <impl Stage for SignatureSet>::evaluate -> Verdict with Default::default()
+@@ -55,17 +55,17 @@
+     /// Iterate the signatures in evaluation (priority) order.
+     pub fn iter(&self) -> impl Iterator<Item = &Signature> {
+         self.signatures.iter()
+     }
+ }
+ 
+ impl Stage for SignatureSet {
+     fn evaluate(&self, obs: &Observation<'_>) -> Verdict {
+-        self.classify(&obs.packet)
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn name(&self) -> &'static str {
+         "signature_set"
+     }
+ }
+ 
+ impl FromIterator<Signature> for SignatureSet {

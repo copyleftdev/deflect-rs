@@ -164,3 +164,40 @@ impl Signature {
         self.payload.matches(packet.payload)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use core::net::{IpAddr, Ipv4Addr};
+
+    fn pkt_len<'a>(wire_len: u32) -> Packet<'a> {
+        let ip = IpAddr::V4(Ipv4Addr::new(203, 0, 113, 1));
+        Packet::new(ip, ip, L4::Udp).with_wire_len(wire_len)
+    }
+
+    fn len_sig() -> Signature {
+        Signature::new(1, "len")
+            .proto(L4::Udp)
+            .wire_len(100, 200)
+            .action(Action::Drop(DropReason::Signature))
+    }
+
+    #[test]
+    fn wire_len_bounds_are_inclusive() {
+        let s = len_sig();
+        assert!(s.matches(&pkt_len(100)), "lower bound is inclusive");
+        assert!(s.matches(&pkt_len(200)), "upper bound is inclusive");
+        assert!(s.matches(&pkt_len(150)));
+        assert!(!s.matches(&pkt_len(99)), "below min must not match");
+        assert!(!s.matches(&pkt_len(201)), "above max must not match");
+    }
+
+    #[test]
+    fn action_verdict_maps_both_arms() {
+        assert_eq!(Action::Allow.verdict(), Verdict::Pass);
+        assert_eq!(
+            Action::Drop(DropReason::Signature).verdict(),
+            Verdict::Drop(DropReason::Signature)
+        );
+    }
+}

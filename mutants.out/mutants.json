@@ -1,1034 +1,138 @@
 [
   {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace SynCookie::with_defaults -> SynCookie with Default::default()\n@@ -105,17 +105,17 @@\n             max_age_epochs,\n         }\n     }\n \n     /// Engine with a ~64 s epoch and a two-epoch (~128 s) validity window, the\n     /// customary SYN-cookie lifetime.\n     #[must_use]\n     pub fn with_defaults(key: CookieKey) -> SynCookie {\n-        SynCookie::new(key, 64 * 1_000_000_000, 2)\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Rotate the secret: the current key becomes the previous key (still\n     /// accepted on validation during the grace window) and `new_key` takes\n     /// over for issuance. Rotate no more often than the validity window.\n     pub fn rotate(&mut self, new_key: CookieKey) {\n         self.prev_key = Some(self.key);\n         self.key = new_key;\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
+    "diff": "--- crates/deflect-signature/src/builtin.rs\n+++ replace tcp_flag_anomalies -> Vec<Signature> with vec![]\n@@ -10,51 +10,17 @@\n const ALL_FLAGS: TcpFlags = TcpFlags(0xFF);\n \n /// Illegal or scan-only TCP flag combinations. These never occur in a valid\n /// handshake, so dropping them is safe regardless of load — unlike port- or\n /// size-based heuristics, which can catch legitimate traffic and belong in the\n /// stateful reflection and rate-limiting primitives instead.\n #[must_use]\n pub fn tcp_flag_anomalies() -> Vec<Signature> {\n-    let drop = Action::Drop(DropReason::Signature);\n-    vec![\n-        // NULL scan: no control bits set at all.\n-        Signature::new(1001, \"tcp-null-scan\")\n-            .proto(L4::Tcp)\n-            .flags(FlagMatch::any().forbid(ALL_FLAGS))\n-            .priority(10)\n-            .action(drop),\n-        // XMAS scan: FIN + PSH + URG lit up together.\n-        Signature::new(1002, \"tcp-xmas-scan\")\n-            .proto(L4::Tcp)\n-            .flags(FlagMatch::require(\n-                TcpFlags::FIN | TcpFlags::PSH | TcpFlags::URG,\n-            ))\n-            .priority(10)\n-            .action(drop),\n-        // SYN+FIN: opening and closing in one segment.\n-        Signature::new(1003, \"tcp-syn-fin\")\n-            .proto(L4::Tcp)\n-            .flags(FlagMatch::require(TcpFlags::SYN | TcpFlags::FIN))\n-            .priority(10)\n-            .action(drop),\n-        // SYN+RST: contradictory control bits.\n-        Signature::new(1004, \"tcp-syn-rst\")\n-            .proto(L4::Tcp)\n-            .flags(FlagMatch::require(TcpFlags::SYN | TcpFlags::RST))\n-            .priority(10)\n-            .action(drop),\n-        // FIN scan: a bare FIN with no ACK, never valid mid-connection.\n-        Signature::new(1005, \"tcp-fin-scan\")\n-            .proto(L4::Tcp)\n-            .flags(FlagMatch::require(TcpFlags::FIN).forbid(TcpFlags::ACK))\n-            .priority(20)\n-            .action(drop),\n-    ]\n+    vec![] /* ~ changed by cargo-mutants ~ */\n }\n \n /// A conservative baseline set safe to run unconditionally: only the\n /// unambiguous TCP flag anomalies. Extend it with site-specific signatures.\n #[must_use]\n pub fn baseline() -> SignatureSet {\n     SignatureSet::new(tcp_flag_anomalies())\n }\n",
+    "file": "crates/deflect-signature/src/builtin.rs",
     "function": {
-      "function_name": "SynCookie::with_defaults",
-      "return_type": "-> SynCookie",
+      "function_name": "tcp_flag_anomalies",
+      "return_type": "-> Vec<Signature>",
       "span": {
         "end": {
-          "column": 6,
-          "line": 114
+          "column": 2,
+          "line": 53
         },
         "start": {
-          "column": 5,
-          "line": 109
+          "column": 1,
+          "line": 12
         }
       }
     },
     "genre": "FnValue",
-    "name": "crates/deflect-syncookie/src/lib.rs:113:9: replace SynCookie::with_defaults -> SynCookie with Default::default()",
-    "package": "deflect-syncookie",
+    "name": "crates/deflect-signature/src/builtin.rs:18:5: replace tcp_flag_anomalies -> Vec<Signature> with vec![]",
+    "package": "deflect-signature",
+    "replacement": "vec![]",
+    "span": {
+      "end": {
+        "column": 6,
+        "line": 52
+      },
+      "start": {
+        "column": 5,
+        "line": 18
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/builtin.rs\n+++ replace tcp_flag_anomalies -> Vec<Signature> with vec![Default::default()]\n@@ -10,51 +10,17 @@\n const ALL_FLAGS: TcpFlags = TcpFlags(0xFF);\n \n /// Illegal or scan-only TCP flag combinations. These never occur in a valid\n /// handshake, so dropping them is safe regardless of load — unlike port- or\n /// size-based heuristics, which can catch legitimate traffic and belong in the\n /// stateful reflection and rate-limiting primitives instead.\n #[must_use]\n pub fn tcp_flag_anomalies() -> Vec<Signature> {\n-    let drop = Action::Drop(DropReason::Signature);\n-    vec![\n-        // NULL scan: no control bits set at all.\n-        Signature::new(1001, \"tcp-null-scan\")\n-            .proto(L4::Tcp)\n-            .flags(FlagMatch::any().forbid(ALL_FLAGS))\n-            .priority(10)\n-            .action(drop),\n-        // XMAS scan: FIN + PSH + URG lit up together.\n-        Signature::new(1002, \"tcp-xmas-scan\")\n-            .proto(L4::Tcp)\n-            .flags(FlagMatch::require(\n-                TcpFlags::FIN | TcpFlags::PSH | TcpFlags::URG,\n-            ))\n-            .priority(10)\n-            .action(drop),\n-        // SYN+FIN: opening and closing in one segment.\n-        Signature::new(1003, \"tcp-syn-fin\")\n-            .proto(L4::Tcp)\n-            .flags(FlagMatch::require(TcpFlags::SYN | TcpFlags::FIN))\n-            .priority(10)\n-            .action(drop),\n-        // SYN+RST: contradictory control bits.\n-        Signature::new(1004, \"tcp-syn-rst\")\n-            .proto(L4::Tcp)\n-            .flags(FlagMatch::require(TcpFlags::SYN | TcpFlags::RST))\n-            .priority(10)\n-            .action(drop),\n-        // FIN scan: a bare FIN with no ACK, never valid mid-connection.\n-        Signature::new(1005, \"tcp-fin-scan\")\n-            .proto(L4::Tcp)\n-            .flags(FlagMatch::require(TcpFlags::FIN).forbid(TcpFlags::ACK))\n-            .priority(20)\n-            .action(drop),\n-    ]\n+    vec![Default::default()] /* ~ changed by cargo-mutants ~ */\n }\n \n /// A conservative baseline set safe to run unconditionally: only the\n /// unambiguous TCP flag anomalies. Extend it with site-specific signatures.\n #[must_use]\n pub fn baseline() -> SignatureSet {\n     SignatureSet::new(tcp_flag_anomalies())\n }\n",
+    "file": "crates/deflect-signature/src/builtin.rs",
+    "function": {
+      "function_name": "tcp_flag_anomalies",
+      "return_type": "-> Vec<Signature>",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 53
+        },
+        "start": {
+          "column": 1,
+          "line": 12
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/builtin.rs:18:5: replace tcp_flag_anomalies -> Vec<Signature> with vec![Default::default()]",
+    "package": "deflect-signature",
+    "replacement": "vec![Default::default()]",
+    "span": {
+      "end": {
+        "column": 6,
+        "line": 52
+      },
+      "start": {
+        "column": 5,
+        "line": 18
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/builtin.rs\n+++ replace baseline -> SignatureSet with Default::default()\n@@ -51,17 +51,17 @@\n             .action(drop),\n     ]\n }\n \n /// A conservative baseline set safe to run unconditionally: only the\n /// unambiguous TCP flag anomalies. Extend it with site-specific signatures.\n #[must_use]\n pub fn baseline() -> SignatureSet {\n-    SignatureSet::new(tcp_flag_anomalies())\n+    Default::default() /* ~ changed by cargo-mutants ~ */\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n     use core::net::{IpAddr, Ipv4Addr};\n     use deflect_core::{Packet, Verdict};\n \n",
+    "file": "crates/deflect-signature/src/builtin.rs",
+    "function": {
+      "function_name": "baseline",
+      "return_type": "-> SignatureSet",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 60
+        },
+        "start": {
+          "column": 1,
+          "line": 55
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/builtin.rs:59:5: replace baseline -> SignatureSet with Default::default()",
+    "package": "deflect-signature",
     "replacement": "Default::default()",
     "span": {
       "end": {
-        "column": 51,
-        "line": 113
+        "column": 44,
+        "line": 59
       },
       "start": {
-        "column": 9,
-        "line": 113
+        "column": 5,
+        "line": 59
       }
     }
   },
   {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace * with + in SynCookie::with_defaults\n@@ -105,17 +105,17 @@\n             max_age_epochs,\n         }\n     }\n \n     /// Engine with a ~64 s epoch and a two-epoch (~128 s) validity window, the\n     /// customary SYN-cookie lifetime.\n     #[must_use]\n     pub fn with_defaults(key: CookieKey) -> SynCookie {\n-        SynCookie::new(key, 64 * 1_000_000_000, 2)\n+        SynCookie::new(key, 64 + /* ~ changed by cargo-mutants ~ */ 1_000_000_000, 2)\n     }\n \n     /// Rotate the secret: the current key becomes the previous key (still\n     /// accepted on validation during the grace window) and `new_key` takes\n     /// over for issuance. Rotate no more often than the validity window.\n     pub fn rotate(&mut self, new_key: CookieKey) {\n         self.prev_key = Some(self.key);\n         self.key = new_key;\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace PortMatch::range -> PortMatch with Default::default()\n@@ -16,17 +16,17 @@\n     /// Inclusive range `[lo, hi]`; constructed normalised so `lo <= hi`.\n     Range(u16, u16),\n     OneOf(Vec<u16>),\n }\n \n impl PortMatch {\n     #[must_use]\n     pub fn range(a: u16, b: u16) -> PortMatch {\n-        PortMatch::Range(a.min(b), a.max(b))\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn matches(&self, port: u16) -> bool {\n         match self {\n             PortMatch::Any => true,\n             PortMatch::Exact(p) => *p == port,\n             PortMatch::Range(lo, hi) => (*lo..=*hi).contains(&port),\n",
+    "file": "crates/deflect-signature/src/matcher.rs",
     "function": {
-      "function_name": "SynCookie::with_defaults",
-      "return_type": "-> SynCookie",
+      "function_name": "PortMatch::range",
+      "return_type": "-> PortMatch",
       "span": {
         "end": {
           "column": 6,
-          "line": 114
+          "line": 25
         },
         "start": {
           "column": 5,
-          "line": 109
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:113:32: replace * with + in SynCookie::with_defaults",
-    "package": "deflect-syncookie",
-    "replacement": "+",
-    "span": {
-      "end": {
-        "column": 33,
-        "line": 113
-      },
-      "start": {
-        "column": 32,
-        "line": 113
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace * with / in SynCookie::with_defaults\n@@ -105,17 +105,17 @@\n             max_age_epochs,\n         }\n     }\n \n     /// Engine with a ~64 s epoch and a two-epoch (~128 s) validity window, the\n     /// customary SYN-cookie lifetime.\n     #[must_use]\n     pub fn with_defaults(key: CookieKey) -> SynCookie {\n-        SynCookie::new(key, 64 * 1_000_000_000, 2)\n+        SynCookie::new(key, 64 / /* ~ changed by cargo-mutants ~ */ 1_000_000_000, 2)\n     }\n \n     /// Rotate the secret: the current key becomes the previous key (still\n     /// accepted on validation during the grace window) and `new_key` takes\n     /// over for issuance. Rotate no more often than the validity window.\n     pub fn rotate(&mut self, new_key: CookieKey) {\n         self.prev_key = Some(self.key);\n         self.key = new_key;\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::with_defaults",
-      "return_type": "-> SynCookie",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 114
-        },
-        "start": {
-          "column": 5,
-          "line": 109
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:113:32: replace * with / in SynCookie::with_defaults",
-    "package": "deflect-syncookie",
-    "replacement": "/",
-    "span": {
-      "end": {
-        "column": 33,
-        "line": 113
-      },
-      "start": {
-        "column": 32,
-        "line": 113
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace SynCookie::rotate with ()\n@@ -112,18 +112,17 @@\n     pub fn with_defaults(key: CookieKey) -> SynCookie {\n         SynCookie::new(key, 64 * 1_000_000_000, 2)\n     }\n \n     /// Rotate the secret: the current key becomes the previous key (still\n     /// accepted on validation during the grace window) and `new_key` takes\n     /// over for issuance. Rotate no more often than the validity window.\n     pub fn rotate(&mut self, new_key: CookieKey) {\n-        self.prev_key = Some(self.key);\n-        self.key = new_key;\n+        () /* ~ changed by cargo-mutants ~ */\n     }\n \n     fn epoch(&self, now_nanos: u64) -> u64 {\n         now_nanos / self.epoch_nanos\n     }\n \n     /// Issue the cookie to place as the SYN-ACK initial sequence number.\n     ///\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::rotate",
-      "return_type": "",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 122
-        },
-        "start": {
-          "column": 5,
-          "line": 116
+          "line": 22
         }
       }
     },
     "genre": "FnValue",
-    "name": "crates/deflect-syncookie/src/lib.rs:120:9: replace SynCookie::rotate with ()",
-    "package": "deflect-syncookie",
-    "replacement": "()",
-    "span": {
-      "end": {
-        "column": 28,
-        "line": 121
-      },
-      "start": {
-        "column": 9,
-        "line": 120
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace SynCookie::epoch -> u64 with 0\n@@ -117,17 +117,17 @@\n     /// accepted on validation during the grace window) and `new_key` takes\n     /// over for issuance. Rotate no more often than the validity window.\n     pub fn rotate(&mut self, new_key: CookieKey) {\n         self.prev_key = Some(self.key);\n         self.key = new_key;\n     }\n \n     fn epoch(&self, now_nanos: u64) -> u64 {\n-        now_nanos / self.epoch_nanos\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Issue the cookie to place as the SYN-ACK initial sequence number.\n     ///\n     /// `client_isn` is the SYN's sequence number; `mss` is the connection MSS\n     /// to preserve. The result encodes both statelessly.\n     // The cookie is 32-bit modular arithmetic by construction; the epoch-byte\n     // and index narrowings below are the encoding, not lossy accidents.\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::epoch",
-      "return_type": "-> u64",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 126
-        },
-        "start": {
-          "column": 5,
-          "line": 124
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-syncookie/src/lib.rs:125:9: replace SynCookie::epoch -> u64 with 0",
-    "package": "deflect-syncookie",
-    "replacement": "0",
-    "span": {
-      "end": {
-        "column": 37,
-        "line": 125
-      },
-      "start": {
-        "column": 9,
-        "line": 125
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace SynCookie::epoch -> u64 with 1\n@@ -117,17 +117,17 @@\n     /// accepted on validation during the grace window) and `new_key` takes\n     /// over for issuance. Rotate no more often than the validity window.\n     pub fn rotate(&mut self, new_key: CookieKey) {\n         self.prev_key = Some(self.key);\n         self.key = new_key;\n     }\n \n     fn epoch(&self, now_nanos: u64) -> u64 {\n-        now_nanos / self.epoch_nanos\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Issue the cookie to place as the SYN-ACK initial sequence number.\n     ///\n     /// `client_isn` is the SYN's sequence number; `mss` is the connection MSS\n     /// to preserve. The result encodes both statelessly.\n     // The cookie is 32-bit modular arithmetic by construction; the epoch-byte\n     // and index narrowings below are the encoding, not lossy accidents.\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::epoch",
-      "return_type": "-> u64",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 126
-        },
-        "start": {
-          "column": 5,
-          "line": 124
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-syncookie/src/lib.rs:125:9: replace SynCookie::epoch -> u64 with 1",
-    "package": "deflect-syncookie",
-    "replacement": "1",
-    "span": {
-      "end": {
-        "column": 37,
-        "line": 125
-      },
-      "start": {
-        "column": 9,
-        "line": 125
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace / with % in SynCookie::epoch\n@@ -117,17 +117,17 @@\n     /// accepted on validation during the grace window) and `new_key` takes\n     /// over for issuance. Rotate no more often than the validity window.\n     pub fn rotate(&mut self, new_key: CookieKey) {\n         self.prev_key = Some(self.key);\n         self.key = new_key;\n     }\n \n     fn epoch(&self, now_nanos: u64) -> u64 {\n-        now_nanos / self.epoch_nanos\n+        now_nanos % /* ~ changed by cargo-mutants ~ */ self.epoch_nanos\n     }\n \n     /// Issue the cookie to place as the SYN-ACK initial sequence number.\n     ///\n     /// `client_isn` is the SYN's sequence number; `mss` is the connection MSS\n     /// to preserve. The result encodes both statelessly.\n     // The cookie is 32-bit modular arithmetic by construction; the epoch-byte\n     // and index narrowings below are the encoding, not lossy accidents.\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::epoch",
-      "return_type": "-> u64",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 126
-        },
-        "start": {
-          "column": 5,
-          "line": 124
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:125:19: replace / with % in SynCookie::epoch",
-    "package": "deflect-syncookie",
-    "replacement": "%",
-    "span": {
-      "end": {
-        "column": 20,
-        "line": 125
-      },
-      "start": {
-        "column": 19,
-        "line": 125
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace / with * in SynCookie::epoch\n@@ -117,17 +117,17 @@\n     /// accepted on validation during the grace window) and `new_key` takes\n     /// over for issuance. Rotate no more often than the validity window.\n     pub fn rotate(&mut self, new_key: CookieKey) {\n         self.prev_key = Some(self.key);\n         self.key = new_key;\n     }\n \n     fn epoch(&self, now_nanos: u64) -> u64 {\n-        now_nanos / self.epoch_nanos\n+        now_nanos * /* ~ changed by cargo-mutants ~ */ self.epoch_nanos\n     }\n \n     /// Issue the cookie to place as the SYN-ACK initial sequence number.\n     ///\n     /// `client_isn` is the SYN's sequence number; `mss` is the connection MSS\n     /// to preserve. The result encodes both statelessly.\n     // The cookie is 32-bit modular arithmetic by construction; the epoch-byte\n     // and index narrowings below are the encoding, not lossy accidents.\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::epoch",
-      "return_type": "-> u64",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 126
-        },
-        "start": {
-          "column": 5,
-          "line": 124
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:125:19: replace / with * in SynCookie::epoch",
-    "package": "deflect-syncookie",
-    "replacement": "*",
-    "span": {
-      "end": {
-        "column": 20,
-        "line": 125
-      },
-      "start": {
-        "column": 19,
-        "line": 125
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace SynCookie::issue -> u32 with 0\n@@ -129,25 +129,17 @@\n     ///\n     /// `client_isn` is the SYN's sequence number; `mss` is the connection MSS\n     /// to preserve. The result encodes both statelessly.\n     // The cookie is 32-bit modular arithmetic by construction; the epoch-byte\n     // and index narrowings below are the encoding, not lossy accidents.\n     #[allow(clippy::cast_possible_truncation)]\n     #[must_use]\n     pub fn issue(&self, tuple: &FourTuple, client_isn: u32, mss: u16, now_nanos: u64) -> u32 {\n-        let epoch = self.epoch(now_nanos);\n-        let h0 = mac::mac(self.key, tuple, 0, 0, 0);\n-        let hc = mac::mac(self.key, tuple, 1, epoch, client_isn);\n-        let mss_idx = u32::from(encode_mss(mss));\n-        let data = hc.wrapping_add(mss_idx) & DATA_MASK;\n-        let epoch_bits = (epoch as u32 & 0xff) << EPOCH_SHIFT;\n-        h0.wrapping_add(client_isn)\n-            .wrapping_add(epoch_bits)\n-            .wrapping_add(data)\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Validate a returning ACK's cookie and recover the connection.\n     ///\n     /// `client_isn` is the ACK's sequence number minus one (the SYN's ISN) and\n     /// `cookie` is the ACK's acknowledgement number minus one (the value\n     /// [`issue`](Self::issue) produced). Tries the current key, then the\n     /// previous key if one is held.\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::issue",
-      "return_type": "-> u32",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 146
-        },
-        "start": {
-          "column": 5,
-          "line": 128
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-syncookie/src/lib.rs:137:9: replace SynCookie::issue -> u32 with 0",
-    "package": "deflect-syncookie",
-    "replacement": "0",
-    "span": {
-      "end": {
-        "column": 32,
-        "line": 145
-      },
-      "start": {
-        "column": 9,
-        "line": 137
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace SynCookie::issue -> u32 with 1\n@@ -129,25 +129,17 @@\n     ///\n     /// `client_isn` is the SYN's sequence number; `mss` is the connection MSS\n     /// to preserve. The result encodes both statelessly.\n     // The cookie is 32-bit modular arithmetic by construction; the epoch-byte\n     // and index narrowings below are the encoding, not lossy accidents.\n     #[allow(clippy::cast_possible_truncation)]\n     #[must_use]\n     pub fn issue(&self, tuple: &FourTuple, client_isn: u32, mss: u16, now_nanos: u64) -> u32 {\n-        let epoch = self.epoch(now_nanos);\n-        let h0 = mac::mac(self.key, tuple, 0, 0, 0);\n-        let hc = mac::mac(self.key, tuple, 1, epoch, client_isn);\n-        let mss_idx = u32::from(encode_mss(mss));\n-        let data = hc.wrapping_add(mss_idx) & DATA_MASK;\n-        let epoch_bits = (epoch as u32 & 0xff) << EPOCH_SHIFT;\n-        h0.wrapping_add(client_isn)\n-            .wrapping_add(epoch_bits)\n-            .wrapping_add(data)\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Validate a returning ACK's cookie and recover the connection.\n     ///\n     /// `client_isn` is the ACK's sequence number minus one (the SYN's ISN) and\n     /// `cookie` is the ACK's acknowledgement number minus one (the value\n     /// [`issue`](Self::issue) produced). Tries the current key, then the\n     /// previous key if one is held.\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::issue",
-      "return_type": "-> u32",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 146
-        },
-        "start": {
-          "column": 5,
-          "line": 128
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-syncookie/src/lib.rs:137:9: replace SynCookie::issue -> u32 with 1",
-    "package": "deflect-syncookie",
-    "replacement": "1",
-    "span": {
-      "end": {
-        "column": 32,
-        "line": 145
-      },
-      "start": {
-        "column": 9,
-        "line": 137
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace & with | in SynCookie::issue\n@@ -133,17 +133,17 @@\n     // and index narrowings below are the encoding, not lossy accidents.\n     #[allow(clippy::cast_possible_truncation)]\n     #[must_use]\n     pub fn issue(&self, tuple: &FourTuple, client_isn: u32, mss: u16, now_nanos: u64) -> u32 {\n         let epoch = self.epoch(now_nanos);\n         let h0 = mac::mac(self.key, tuple, 0, 0, 0);\n         let hc = mac::mac(self.key, tuple, 1, epoch, client_isn);\n         let mss_idx = u32::from(encode_mss(mss));\n-        let data = hc.wrapping_add(mss_idx) & DATA_MASK;\n+        let data = hc.wrapping_add(mss_idx) | /* ~ changed by cargo-mutants ~ */ DATA_MASK;\n         let epoch_bits = (epoch as u32 & 0xff) << EPOCH_SHIFT;\n         h0.wrapping_add(client_isn)\n             .wrapping_add(epoch_bits)\n             .wrapping_add(data)\n     }\n \n     /// Validate a returning ACK's cookie and recover the connection.\n     ///\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::issue",
-      "return_type": "-> u32",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 146
-        },
-        "start": {
-          "column": 5,
-          "line": 128
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:141:45: replace & with | in SynCookie::issue",
-    "package": "deflect-syncookie",
-    "replacement": "|",
-    "span": {
-      "end": {
-        "column": 46,
-        "line": 141
-      },
-      "start": {
-        "column": 45,
-        "line": 141
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace & with ^ in SynCookie::issue\n@@ -133,17 +133,17 @@\n     // and index narrowings below are the encoding, not lossy accidents.\n     #[allow(clippy::cast_possible_truncation)]\n     #[must_use]\n     pub fn issue(&self, tuple: &FourTuple, client_isn: u32, mss: u16, now_nanos: u64) -> u32 {\n         let epoch = self.epoch(now_nanos);\n         let h0 = mac::mac(self.key, tuple, 0, 0, 0);\n         let hc = mac::mac(self.key, tuple, 1, epoch, client_isn);\n         let mss_idx = u32::from(encode_mss(mss));\n-        let data = hc.wrapping_add(mss_idx) & DATA_MASK;\n+        let data = hc.wrapping_add(mss_idx) ^ /* ~ changed by cargo-mutants ~ */ DATA_MASK;\n         let epoch_bits = (epoch as u32 & 0xff) << EPOCH_SHIFT;\n         h0.wrapping_add(client_isn)\n             .wrapping_add(epoch_bits)\n             .wrapping_add(data)\n     }\n \n     /// Validate a returning ACK's cookie and recover the connection.\n     ///\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::issue",
-      "return_type": "-> u32",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 146
-        },
-        "start": {
-          "column": 5,
-          "line": 128
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:141:45: replace & with ^ in SynCookie::issue",
-    "package": "deflect-syncookie",
-    "replacement": "^",
-    "span": {
-      "end": {
-        "column": 46,
-        "line": 141
-      },
-      "start": {
-        "column": 45,
-        "line": 141
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace << with >> in SynCookie::issue\n@@ -134,17 +134,17 @@\n     #[allow(clippy::cast_possible_truncation)]\n     #[must_use]\n     pub fn issue(&self, tuple: &FourTuple, client_isn: u32, mss: u16, now_nanos: u64) -> u32 {\n         let epoch = self.epoch(now_nanos);\n         let h0 = mac::mac(self.key, tuple, 0, 0, 0);\n         let hc = mac::mac(self.key, tuple, 1, epoch, client_isn);\n         let mss_idx = u32::from(encode_mss(mss));\n         let data = hc.wrapping_add(mss_idx) & DATA_MASK;\n-        let epoch_bits = (epoch as u32 & 0xff) << EPOCH_SHIFT;\n+        let epoch_bits = (epoch as u32 & 0xff) >> /* ~ changed by cargo-mutants ~ */ EPOCH_SHIFT;\n         h0.wrapping_add(client_isn)\n             .wrapping_add(epoch_bits)\n             .wrapping_add(data)\n     }\n \n     /// Validate a returning ACK's cookie and recover the connection.\n     ///\n     /// `client_isn` is the ACK's sequence number minus one (the SYN's ISN) and\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::issue",
-      "return_type": "-> u32",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 146
-        },
-        "start": {
-          "column": 5,
-          "line": 128
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:142:48: replace << with >> in SynCookie::issue",
-    "package": "deflect-syncookie",
-    "replacement": ">>",
-    "span": {
-      "end": {
-        "column": 50,
-        "line": 142
-      },
-      "start": {
-        "column": 48,
-        "line": 142
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace & with | in SynCookie::issue\n@@ -134,17 +134,17 @@\n     #[allow(clippy::cast_possible_truncation)]\n     #[must_use]\n     pub fn issue(&self, tuple: &FourTuple, client_isn: u32, mss: u16, now_nanos: u64) -> u32 {\n         let epoch = self.epoch(now_nanos);\n         let h0 = mac::mac(self.key, tuple, 0, 0, 0);\n         let hc = mac::mac(self.key, tuple, 1, epoch, client_isn);\n         let mss_idx = u32::from(encode_mss(mss));\n         let data = hc.wrapping_add(mss_idx) & DATA_MASK;\n-        let epoch_bits = (epoch as u32 & 0xff) << EPOCH_SHIFT;\n+        let epoch_bits = (epoch as u32 | /* ~ changed by cargo-mutants ~ */ 0xff) << EPOCH_SHIFT;\n         h0.wrapping_add(client_isn)\n             .wrapping_add(epoch_bits)\n             .wrapping_add(data)\n     }\n \n     /// Validate a returning ACK's cookie and recover the connection.\n     ///\n     /// `client_isn` is the ACK's sequence number minus one (the SYN's ISN) and\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::issue",
-      "return_type": "-> u32",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 146
-        },
-        "start": {
-          "column": 5,
-          "line": 128
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:142:40: replace & with | in SynCookie::issue",
-    "package": "deflect-syncookie",
-    "replacement": "|",
-    "span": {
-      "end": {
-        "column": 41,
-        "line": 142
-      },
-      "start": {
-        "column": 40,
-        "line": 142
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace & with ^ in SynCookie::issue\n@@ -134,17 +134,17 @@\n     #[allow(clippy::cast_possible_truncation)]\n     #[must_use]\n     pub fn issue(&self, tuple: &FourTuple, client_isn: u32, mss: u16, now_nanos: u64) -> u32 {\n         let epoch = self.epoch(now_nanos);\n         let h0 = mac::mac(self.key, tuple, 0, 0, 0);\n         let hc = mac::mac(self.key, tuple, 1, epoch, client_isn);\n         let mss_idx = u32::from(encode_mss(mss));\n         let data = hc.wrapping_add(mss_idx) & DATA_MASK;\n-        let epoch_bits = (epoch as u32 & 0xff) << EPOCH_SHIFT;\n+        let epoch_bits = (epoch as u32 ^ /* ~ changed by cargo-mutants ~ */ 0xff) << EPOCH_SHIFT;\n         h0.wrapping_add(client_isn)\n             .wrapping_add(epoch_bits)\n             .wrapping_add(data)\n     }\n \n     /// Validate a returning ACK's cookie and recover the connection.\n     ///\n     /// `client_isn` is the ACK's sequence number minus one (the SYN's ISN) and\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::issue",
-      "return_type": "-> u32",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 146
-        },
-        "start": {
-          "column": 5,
-          "line": 128
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:142:40: replace & with ^ in SynCookie::issue",
-    "package": "deflect-syncookie",
-    "replacement": "^",
-    "span": {
-      "end": {
-        "column": 41,
-        "line": 142
-      },
-      "start": {
-        "column": 40,
-        "line": 142
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace SynCookie::validate -> Result<Recovered, CookieError> with Ok(Default::default())\n@@ -158,32 +158,17 @@\n     /// under every accepted key.\n     pub fn validate(\n         &self,\n         tuple: &FourTuple,\n         client_isn: u32,\n         cookie: u32,\n         now_nanos: u64,\n     ) -> Result<Recovered, CookieError> {\n-        let current = self.epoch(now_nanos);\n-        let primary = self.check_key(self.key, tuple, client_isn, cookie, current, false);\n-        if primary.is_ok() {\n-            return primary;\n-        }\n-        if let Some(prev) = self.prev_key {\n-            let secondary = self.check_key(prev, tuple, client_isn, cookie, current, true);\n-            if secondary.is_ok() {\n-                return secondary;\n-            }\n-            // Prefer reporting expiry over a bad MAC when either key saw it.\n-            if primary == Err(CookieError::Expired) || secondary == Err(CookieError::Expired) {\n-                return Err(CookieError::Expired);\n-            }\n-        }\n-        primary\n+        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */\n     }\n \n     // Mirror of the modular encoding in `issue`; the narrowings reconstruct the\n     // epoch byte and MSS index and are intentional.\n     #[allow(clippy::cast_possible_truncation)]\n     fn check_key(\n         &self,\n         key: CookieKey,\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::validate",
-      "return_type": "-> Result<Recovered, CookieError>",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 182
-        },
-        "start": {
-          "column": 5,
-          "line": 148
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-syncookie/src/lib.rs:166:9: replace SynCookie::validate -> Result<Recovered, CookieError> with Ok(Default::default())",
-    "package": "deflect-syncookie",
-    "replacement": "Ok(Default::default())",
-    "span": {
-      "end": {
-        "column": 16,
-        "line": 181
-      },
-      "start": {
-        "column": 9,
-        "line": 166
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace || with && in SynCookie::validate\n@@ -169,17 +169,17 @@\n             return primary;\n         }\n         if let Some(prev) = self.prev_key {\n             let secondary = self.check_key(prev, tuple, client_isn, cookie, current, true);\n             if secondary.is_ok() {\n                 return secondary;\n             }\n             // Prefer reporting expiry over a bad MAC when either key saw it.\n-            if primary == Err(CookieError::Expired) || secondary == Err(CookieError::Expired) {\n+            if primary == Err(CookieError::Expired) && /* ~ changed by cargo-mutants ~ */ secondary == Err(CookieError::Expired) {\n                 return Err(CookieError::Expired);\n             }\n         }\n         primary\n     }\n \n     // Mirror of the modular encoding in `issue`; the narrowings reconstruct the\n     // epoch byte and MSS index and are intentional.\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::validate",
-      "return_type": "-> Result<Recovered, CookieError>",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 182
-        },
-        "start": {
-          "column": 5,
-          "line": 148
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:177:53: replace || with && in SynCookie::validate",
-    "package": "deflect-syncookie",
-    "replacement": "&&",
-    "span": {
-      "end": {
-        "column": 55,
-        "line": 177
-      },
-      "start": {
-        "column": 53,
-        "line": 177
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace == with != in SynCookie::validate\n@@ -169,17 +169,17 @@\n             return primary;\n         }\n         if let Some(prev) = self.prev_key {\n             let secondary = self.check_key(prev, tuple, client_isn, cookie, current, true);\n             if secondary.is_ok() {\n                 return secondary;\n             }\n             // Prefer reporting expiry over a bad MAC when either key saw it.\n-            if primary == Err(CookieError::Expired) || secondary == Err(CookieError::Expired) {\n+            if primary != /* ~ changed by cargo-mutants ~ */ Err(CookieError::Expired) || secondary == Err(CookieError::Expired) {\n                 return Err(CookieError::Expired);\n             }\n         }\n         primary\n     }\n \n     // Mirror of the modular encoding in `issue`; the narrowings reconstruct the\n     // epoch byte and MSS index and are intentional.\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::validate",
-      "return_type": "-> Result<Recovered, CookieError>",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 182
-        },
-        "start": {
-          "column": 5,
-          "line": 148
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:177:24: replace == with != in SynCookie::validate",
-    "package": "deflect-syncookie",
-    "replacement": "!=",
-    "span": {
-      "end": {
-        "column": 26,
-        "line": 177
-      },
-      "start": {
-        "column": 24,
-        "line": 177
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace == with != in SynCookie::validate\n@@ -169,17 +169,17 @@\n             return primary;\n         }\n         if let Some(prev) = self.prev_key {\n             let secondary = self.check_key(prev, tuple, client_isn, cookie, current, true);\n             if secondary.is_ok() {\n                 return secondary;\n             }\n             // Prefer reporting expiry over a bad MAC when either key saw it.\n-            if primary == Err(CookieError::Expired) || secondary == Err(CookieError::Expired) {\n+            if primary == Err(CookieError::Expired) || secondary != /* ~ changed by cargo-mutants ~ */ Err(CookieError::Expired) {\n                 return Err(CookieError::Expired);\n             }\n         }\n         primary\n     }\n \n     // Mirror of the modular encoding in `issue`; the narrowings reconstruct the\n     // epoch byte and MSS index and are intentional.\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::validate",
-      "return_type": "-> Result<Recovered, CookieError>",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 182
-        },
-        "start": {
-          "column": 5,
-          "line": 148
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:177:66: replace == with != in SynCookie::validate",
-    "package": "deflect-syncookie",
-    "replacement": "!=",
-    "span": {
-      "end": {
-        "column": 68,
-        "line": 177
-      },
-      "start": {
-        "column": 66,
-        "line": 177
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace SynCookie::check_key -> Result<Recovered, CookieError> with Ok(Default::default())\n@@ -188,42 +188,17 @@\n         &self,\n         key: CookieKey,\n         tuple: &FourTuple,\n         client_isn: u32,\n         cookie: u32,\n         current_epoch: u64,\n         via_previous_key: bool,\n     ) -> Result<Recovered, CookieError> {\n-        let h0 = mac::mac(key, tuple, 0, 0, 0);\n-        let v = cookie.wrapping_sub(h0).wrapping_sub(client_isn);\n-        let issued_bits = (v >> EPOCH_SHIFT) & 0xff;\n-        let data = v & DATA_MASK;\n-\n-        let age = (current_epoch as u8).wrapping_sub(issued_bits as u8);\n-        if age > self.max_age_epochs {\n-            return Err(CookieError::Expired);\n-        }\n-        // `age` is reconstructed modulo 256, so a crafted cookie can imply an\n-        // epoch before the clock's origin. There is no such issuing epoch, so\n-        // the cookie cannot be genuine: reject rather than wrap the subtraction.\n-        let Some(issued_epoch) = current_epoch.checked_sub(u64::from(age)) else {\n-            return Err(CookieError::BadMac);\n-        };\n-\n-        let hc = mac::mac(key, tuple, 1, issued_epoch, client_isn);\n-        let mss_idx = data.wrapping_sub(hc) & DATA_MASK;\n-        if mss_idx >= MSS_TABLE.len() as u32 {\n-            return Err(CookieError::BadMac);\n-        }\n-        Ok(Recovered {\n-            mss: decode_mss(mss_idx as u8),\n-            age_epochs: age,\n-            via_previous_key,\n-        })\n+        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n     use core::net::Ipv4Addr;\n \n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::check_key",
-      "return_type": "-> Result<Recovered, CookieError>",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 222
-        },
-        "start": {
-          "column": 5,
-          "line": 186
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-syncookie/src/lib.rs:196:9: replace SynCookie::check_key -> Result<Recovered, CookieError> with Ok(Default::default())",
-    "package": "deflect-syncookie",
-    "replacement": "Ok(Default::default())",
-    "span": {
-      "end": {
-        "column": 11,
-        "line": 221
-      },
-      "start": {
-        "column": 9,
-        "line": 196
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace & with | in SynCookie::check_key\n@@ -190,17 +190,17 @@\n         tuple: &FourTuple,\n         client_isn: u32,\n         cookie: u32,\n         current_epoch: u64,\n         via_previous_key: bool,\n     ) -> Result<Recovered, CookieError> {\n         let h0 = mac::mac(key, tuple, 0, 0, 0);\n         let v = cookie.wrapping_sub(h0).wrapping_sub(client_isn);\n-        let issued_bits = (v >> EPOCH_SHIFT) & 0xff;\n+        let issued_bits = (v >> EPOCH_SHIFT) | /* ~ changed by cargo-mutants ~ */ 0xff;\n         let data = v & DATA_MASK;\n \n         let age = (current_epoch as u8).wrapping_sub(issued_bits as u8);\n         if age > self.max_age_epochs {\n             return Err(CookieError::Expired);\n         }\n         // `age` is reconstructed modulo 256, so a crafted cookie can imply an\n         // epoch before the clock's origin. There is no such issuing epoch, so\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::check_key",
-      "return_type": "-> Result<Recovered, CookieError>",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 222
-        },
-        "start": {
-          "column": 5,
-          "line": 186
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:198:46: replace & with | in SynCookie::check_key",
-    "package": "deflect-syncookie",
-    "replacement": "|",
-    "span": {
-      "end": {
-        "column": 47,
-        "line": 198
-      },
-      "start": {
-        "column": 46,
-        "line": 198
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace & with ^ in SynCookie::check_key\n@@ -190,17 +190,17 @@\n         tuple: &FourTuple,\n         client_isn: u32,\n         cookie: u32,\n         current_epoch: u64,\n         via_previous_key: bool,\n     ) -> Result<Recovered, CookieError> {\n         let h0 = mac::mac(key, tuple, 0, 0, 0);\n         let v = cookie.wrapping_sub(h0).wrapping_sub(client_isn);\n-        let issued_bits = (v >> EPOCH_SHIFT) & 0xff;\n+        let issued_bits = (v >> EPOCH_SHIFT) ^ /* ~ changed by cargo-mutants ~ */ 0xff;\n         let data = v & DATA_MASK;\n \n         let age = (current_epoch as u8).wrapping_sub(issued_bits as u8);\n         if age > self.max_age_epochs {\n             return Err(CookieError::Expired);\n         }\n         // `age` is reconstructed modulo 256, so a crafted cookie can imply an\n         // epoch before the clock's origin. There is no such issuing epoch, so\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::check_key",
-      "return_type": "-> Result<Recovered, CookieError>",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 222
-        },
-        "start": {
-          "column": 5,
-          "line": 186
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:198:46: replace & with ^ in SynCookie::check_key",
-    "package": "deflect-syncookie",
-    "replacement": "^",
-    "span": {
-      "end": {
-        "column": 47,
-        "line": 198
-      },
-      "start": {
-        "column": 46,
-        "line": 198
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace >> with << in SynCookie::check_key\n@@ -190,17 +190,17 @@\n         tuple: &FourTuple,\n         client_isn: u32,\n         cookie: u32,\n         current_epoch: u64,\n         via_previous_key: bool,\n     ) -> Result<Recovered, CookieError> {\n         let h0 = mac::mac(key, tuple, 0, 0, 0);\n         let v = cookie.wrapping_sub(h0).wrapping_sub(client_isn);\n-        let issued_bits = (v >> EPOCH_SHIFT) & 0xff;\n+        let issued_bits = (v << /* ~ changed by cargo-mutants ~ */ EPOCH_SHIFT) & 0xff;\n         let data = v & DATA_MASK;\n \n         let age = (current_epoch as u8).wrapping_sub(issued_bits as u8);\n         if age > self.max_age_epochs {\n             return Err(CookieError::Expired);\n         }\n         // `age` is reconstructed modulo 256, so a crafted cookie can imply an\n         // epoch before the clock's origin. There is no such issuing epoch, so\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::check_key",
-      "return_type": "-> Result<Recovered, CookieError>",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 222
-        },
-        "start": {
-          "column": 5,
-          "line": 186
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:198:30: replace >> with << in SynCookie::check_key",
-    "package": "deflect-syncookie",
-    "replacement": "<<",
-    "span": {
-      "end": {
-        "column": 32,
-        "line": 198
-      },
-      "start": {
-        "column": 30,
-        "line": 198
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace & with | in SynCookie::check_key\n@@ -191,17 +191,17 @@\n         client_isn: u32,\n         cookie: u32,\n         current_epoch: u64,\n         via_previous_key: bool,\n     ) -> Result<Recovered, CookieError> {\n         let h0 = mac::mac(key, tuple, 0, 0, 0);\n         let v = cookie.wrapping_sub(h0).wrapping_sub(client_isn);\n         let issued_bits = (v >> EPOCH_SHIFT) & 0xff;\n-        let data = v & DATA_MASK;\n+        let data = v | /* ~ changed by cargo-mutants ~ */ DATA_MASK;\n \n         let age = (current_epoch as u8).wrapping_sub(issued_bits as u8);\n         if age > self.max_age_epochs {\n             return Err(CookieError::Expired);\n         }\n         // `age` is reconstructed modulo 256, so a crafted cookie can imply an\n         // epoch before the clock's origin. There is no such issuing epoch, so\n         // the cookie cannot be genuine: reject rather than wrap the subtraction.\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::check_key",
-      "return_type": "-> Result<Recovered, CookieError>",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 222
-        },
-        "start": {
-          "column": 5,
-          "line": 186
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:199:22: replace & with | in SynCookie::check_key",
-    "package": "deflect-syncookie",
-    "replacement": "|",
-    "span": {
-      "end": {
-        "column": 23,
-        "line": 199
-      },
-      "start": {
-        "column": 22,
-        "line": 199
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace & with ^ in SynCookie::check_key\n@@ -191,17 +191,17 @@\n         client_isn: u32,\n         cookie: u32,\n         current_epoch: u64,\n         via_previous_key: bool,\n     ) -> Result<Recovered, CookieError> {\n         let h0 = mac::mac(key, tuple, 0, 0, 0);\n         let v = cookie.wrapping_sub(h0).wrapping_sub(client_isn);\n         let issued_bits = (v >> EPOCH_SHIFT) & 0xff;\n-        let data = v & DATA_MASK;\n+        let data = v ^ /* ~ changed by cargo-mutants ~ */ DATA_MASK;\n \n         let age = (current_epoch as u8).wrapping_sub(issued_bits as u8);\n         if age > self.max_age_epochs {\n             return Err(CookieError::Expired);\n         }\n         // `age` is reconstructed modulo 256, so a crafted cookie can imply an\n         // epoch before the clock's origin. There is no such issuing epoch, so\n         // the cookie cannot be genuine: reject rather than wrap the subtraction.\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::check_key",
-      "return_type": "-> Result<Recovered, CookieError>",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 222
-        },
-        "start": {
-          "column": 5,
-          "line": 186
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:199:22: replace & with ^ in SynCookie::check_key",
-    "package": "deflect-syncookie",
-    "replacement": "^",
-    "span": {
-      "end": {
-        "column": 23,
-        "line": 199
-      },
-      "start": {
-        "column": 22,
-        "line": 199
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace > with == in SynCookie::check_key\n@@ -194,17 +194,17 @@\n         via_previous_key: bool,\n     ) -> Result<Recovered, CookieError> {\n         let h0 = mac::mac(key, tuple, 0, 0, 0);\n         let v = cookie.wrapping_sub(h0).wrapping_sub(client_isn);\n         let issued_bits = (v >> EPOCH_SHIFT) & 0xff;\n         let data = v & DATA_MASK;\n \n         let age = (current_epoch as u8).wrapping_sub(issued_bits as u8);\n-        if age > self.max_age_epochs {\n+        if age == /* ~ changed by cargo-mutants ~ */ self.max_age_epochs {\n             return Err(CookieError::Expired);\n         }\n         // `age` is reconstructed modulo 256, so a crafted cookie can imply an\n         // epoch before the clock's origin. There is no such issuing epoch, so\n         // the cookie cannot be genuine: reject rather than wrap the subtraction.\n         let Some(issued_epoch) = current_epoch.checked_sub(u64::from(age)) else {\n             return Err(CookieError::BadMac);\n         };\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::check_key",
-      "return_type": "-> Result<Recovered, CookieError>",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 222
-        },
-        "start": {
-          "column": 5,
-          "line": 186
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:202:16: replace > with == in SynCookie::check_key",
-    "package": "deflect-syncookie",
-    "replacement": "==",
-    "span": {
-      "end": {
-        "column": 17,
-        "line": 202
-      },
-      "start": {
-        "column": 16,
-        "line": 202
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace > with < in SynCookie::check_key\n@@ -194,17 +194,17 @@\n         via_previous_key: bool,\n     ) -> Result<Recovered, CookieError> {\n         let h0 = mac::mac(key, tuple, 0, 0, 0);\n         let v = cookie.wrapping_sub(h0).wrapping_sub(client_isn);\n         let issued_bits = (v >> EPOCH_SHIFT) & 0xff;\n         let data = v & DATA_MASK;\n \n         let age = (current_epoch as u8).wrapping_sub(issued_bits as u8);\n-        if age > self.max_age_epochs {\n+        if age < /* ~ changed by cargo-mutants ~ */ self.max_age_epochs {\n             return Err(CookieError::Expired);\n         }\n         // `age` is reconstructed modulo 256, so a crafted cookie can imply an\n         // epoch before the clock's origin. There is no such issuing epoch, so\n         // the cookie cannot be genuine: reject rather than wrap the subtraction.\n         let Some(issued_epoch) = current_epoch.checked_sub(u64::from(age)) else {\n             return Err(CookieError::BadMac);\n         };\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::check_key",
-      "return_type": "-> Result<Recovered, CookieError>",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 222
-        },
-        "start": {
-          "column": 5,
-          "line": 186
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:202:16: replace > with < in SynCookie::check_key",
-    "package": "deflect-syncookie",
-    "replacement": "<",
-    "span": {
-      "end": {
-        "column": 17,
-        "line": 202
-      },
-      "start": {
-        "column": 16,
-        "line": 202
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace > with >= in SynCookie::check_key\n@@ -194,17 +194,17 @@\n         via_previous_key: bool,\n     ) -> Result<Recovered, CookieError> {\n         let h0 = mac::mac(key, tuple, 0, 0, 0);\n         let v = cookie.wrapping_sub(h0).wrapping_sub(client_isn);\n         let issued_bits = (v >> EPOCH_SHIFT) & 0xff;\n         let data = v & DATA_MASK;\n \n         let age = (current_epoch as u8).wrapping_sub(issued_bits as u8);\n-        if age > self.max_age_epochs {\n+        if age >= /* ~ changed by cargo-mutants ~ */ self.max_age_epochs {\n             return Err(CookieError::Expired);\n         }\n         // `age` is reconstructed modulo 256, so a crafted cookie can imply an\n         // epoch before the clock's origin. There is no such issuing epoch, so\n         // the cookie cannot be genuine: reject rather than wrap the subtraction.\n         let Some(issued_epoch) = current_epoch.checked_sub(u64::from(age)) else {\n             return Err(CookieError::BadMac);\n         };\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::check_key",
-      "return_type": "-> Result<Recovered, CookieError>",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 222
-        },
-        "start": {
-          "column": 5,
-          "line": 186
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:202:16: replace > with >= in SynCookie::check_key",
-    "package": "deflect-syncookie",
-    "replacement": ">=",
-    "span": {
-      "end": {
-        "column": 17,
-        "line": 202
-      },
-      "start": {
-        "column": 16,
-        "line": 202
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace & with | in SynCookie::check_key\n@@ -205,17 +205,17 @@\n         // `age` is reconstructed modulo 256, so a crafted cookie can imply an\n         // epoch before the clock's origin. There is no such issuing epoch, so\n         // the cookie cannot be genuine: reject rather than wrap the subtraction.\n         let Some(issued_epoch) = current_epoch.checked_sub(u64::from(age)) else {\n             return Err(CookieError::BadMac);\n         };\n \n         let hc = mac::mac(key, tuple, 1, issued_epoch, client_isn);\n-        let mss_idx = data.wrapping_sub(hc) & DATA_MASK;\n+        let mss_idx = data.wrapping_sub(hc) | /* ~ changed by cargo-mutants ~ */ DATA_MASK;\n         if mss_idx >= MSS_TABLE.len() as u32 {\n             return Err(CookieError::BadMac);\n         }\n         Ok(Recovered {\n             mss: decode_mss(mss_idx as u8),\n             age_epochs: age,\n             via_previous_key,\n         })\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::check_key",
-      "return_type": "-> Result<Recovered, CookieError>",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 222
-        },
-        "start": {
-          "column": 5,
-          "line": 186
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:213:45: replace & with | in SynCookie::check_key",
-    "package": "deflect-syncookie",
-    "replacement": "|",
-    "span": {
-      "end": {
-        "column": 46,
-        "line": 213
-      },
-      "start": {
-        "column": 45,
-        "line": 213
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace & with ^ in SynCookie::check_key\n@@ -205,17 +205,17 @@\n         // `age` is reconstructed modulo 256, so a crafted cookie can imply an\n         // epoch before the clock's origin. There is no such issuing epoch, so\n         // the cookie cannot be genuine: reject rather than wrap the subtraction.\n         let Some(issued_epoch) = current_epoch.checked_sub(u64::from(age)) else {\n             return Err(CookieError::BadMac);\n         };\n \n         let hc = mac::mac(key, tuple, 1, issued_epoch, client_isn);\n-        let mss_idx = data.wrapping_sub(hc) & DATA_MASK;\n+        let mss_idx = data.wrapping_sub(hc) ^ /* ~ changed by cargo-mutants ~ */ DATA_MASK;\n         if mss_idx >= MSS_TABLE.len() as u32 {\n             return Err(CookieError::BadMac);\n         }\n         Ok(Recovered {\n             mss: decode_mss(mss_idx as u8),\n             age_epochs: age,\n             via_previous_key,\n         })\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::check_key",
-      "return_type": "-> Result<Recovered, CookieError>",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 222
-        },
-        "start": {
-          "column": 5,
-          "line": 186
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:213:45: replace & with ^ in SynCookie::check_key",
-    "package": "deflect-syncookie",
-    "replacement": "^",
-    "span": {
-      "end": {
-        "column": 46,
-        "line": 213
-      },
-      "start": {
-        "column": 45,
-        "line": 213
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/lib.rs\n+++ replace >= with < in SynCookie::check_key\n@@ -206,17 +206,17 @@\n         // epoch before the clock's origin. There is no such issuing epoch, so\n         // the cookie cannot be genuine: reject rather than wrap the subtraction.\n         let Some(issued_epoch) = current_epoch.checked_sub(u64::from(age)) else {\n             return Err(CookieError::BadMac);\n         };\n \n         let hc = mac::mac(key, tuple, 1, issued_epoch, client_isn);\n         let mss_idx = data.wrapping_sub(hc) & DATA_MASK;\n-        if mss_idx >= MSS_TABLE.len() as u32 {\n+        if mss_idx < /* ~ changed by cargo-mutants ~ */ MSS_TABLE.len() as u32 {\n             return Err(CookieError::BadMac);\n         }\n         Ok(Recovered {\n             mss: decode_mss(mss_idx as u8),\n             age_epochs: age,\n             via_previous_key,\n         })\n     }\n",
-    "file": "crates/deflect-syncookie/src/lib.rs",
-    "function": {
-      "function_name": "SynCookie::check_key",
-      "return_type": "-> Result<Recovered, CookieError>",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 222
-        },
-        "start": {
-          "column": 5,
-          "line": 186
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/lib.rs:214:20: replace >= with < in SynCookie::check_key",
-    "package": "deflect-syncookie",
-    "replacement": "<",
-    "span": {
-      "end": {
-        "column": 22,
-        "line": 214
-      },
-      "start": {
-        "column": 20,
-        "line": 214
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/mac.rs\n+++ replace CookieKey::from_u64s -> CookieKey with Default::default()\n@@ -14,17 +14,17 @@\n pub struct CookieKey {\n     k0: u64,\n     k1: u64,\n }\n \n impl CookieKey {\n     #[must_use]\n     pub const fn from_u64s(k0: u64, k1: u64) -> CookieKey {\n-        CookieKey { k0, k1 }\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn from_bytes(bytes: [u8; 16]) -> CookieKey {\n         let mut lo = [0u8; 8];\n         let mut hi = [0u8; 8];\n         lo.copy_from_slice(&bytes[0..8]);\n         hi.copy_from_slice(&bytes[8..16]);\n",
-    "file": "crates/deflect-syncookie/src/mac.rs",
-    "function": {
-      "function_name": "CookieKey::from_u64s",
-      "return_type": "-> CookieKey",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 23
-        },
-        "start": {
-          "column": 5,
-          "line": 20
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-syncookie/src/mac.rs:22:9: replace CookieKey::from_u64s -> CookieKey with Default::default()",
-    "package": "deflect-syncookie",
+    "name": "crates/deflect-signature/src/matcher.rs:24:9: replace PortMatch::range -> PortMatch with Default::default()",
+    "package": "deflect-signature",
     "replacement": "Default::default()",
     "span": {
       "end": {
-        "column": 29,
-        "line": 22
+        "column": 45,
+        "line": 24
       },
       "start": {
         "column": 9,
-        "line": 22
+        "line": 24
       }
     }
   },
   {
-    "diff": "--- crates/deflect-syncookie/src/mac.rs\n+++ replace CookieKey::from_bytes -> CookieKey with Default::default()\n@@ -19,24 +19,17 @@\n impl CookieKey {\n     #[must_use]\n     pub const fn from_u64s(k0: u64, k1: u64) -> CookieKey {\n         CookieKey { k0, k1 }\n     }\n \n     #[must_use]\n     pub fn from_bytes(bytes: [u8; 16]) -> CookieKey {\n-        let mut lo = [0u8; 8];\n-        let mut hi = [0u8; 8];\n-        lo.copy_from_slice(&bytes[0..8]);\n-        hi.copy_from_slice(&bytes[8..16]);\n-        CookieKey {\n-            k0: u64::from_le_bytes(lo),\n-            k1: u64::from_le_bytes(hi),\n-        }\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n impl core::fmt::Debug for CookieKey {\n     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {\n         f.write_str(\"CookieKey(..)\")\n     }\n }\n",
-    "file": "crates/deflect-syncookie/src/mac.rs",
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace PortMatch::matches -> bool with true\n@@ -21,22 +21,17 @@\n impl PortMatch {\n     #[must_use]\n     pub fn range(a: u16, b: u16) -> PortMatch {\n         PortMatch::Range(a.min(b), a.max(b))\n     }\n \n     #[must_use]\n     pub fn matches(&self, port: u16) -> bool {\n-        match self {\n-            PortMatch::Any => true,\n-            PortMatch::Exact(p) => *p == port,\n-            PortMatch::Range(lo, hi) => (*lo..=*hi).contains(&port),\n-            PortMatch::OneOf(ports) => ports.contains(&port),\n-        }\n+        true /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n /// How a signature constrains TCP control bits: every bit in `required` must be\n /// set and every bit in `forbidden` must be clear. An empty match accepts any\n /// flags, so a non-TCP signature leaves this at its default.\n #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]\n #[cfg_attr(feature = \"serde\", derive(Serialize, Deserialize))]\n",
+    "file": "crates/deflect-signature/src/matcher.rs",
     "function": {
-      "function_name": "CookieKey::from_bytes",
-      "return_type": "-> CookieKey",
+      "function_name": "PortMatch::matches",
+      "return_type": "-> bool",
       "span": {
         "end": {
           "column": 6,
@@ -1036,14 +140,14 @@
         },
         "start": {
           "column": 5,
-          "line": 25
+          "line": 27
         }
       }
     },
     "genre": "FnValue",
-    "name": "crates/deflect-syncookie/src/mac.rs:27:9: replace CookieKey::from_bytes -> CookieKey with Default::default()",
-    "package": "deflect-syncookie",
-    "replacement": "Default::default()",
+    "name": "crates/deflect-signature/src/matcher.rs:29:9: replace PortMatch::matches -> bool with true",
+    "package": "deflect-signature",
+    "replacement": "true",
     "span": {
       "end": {
         "column": 10,
@@ -1051,455 +155,2055 @@
       },
       "start": {
         "column": 9,
-        "line": 27
+        "line": 29
       }
     }
   },
   {
-    "diff": "--- crates/deflect-syncookie/src/mac.rs\n+++ replace <impl core::fmt::Debug for CookieKey>::fmt -> core::fmt::Result with Ok(Default::default())\n@@ -32,17 +32,17 @@\n             k0: u64::from_le_bytes(lo),\n             k1: u64::from_le_bytes(hi),\n         }\n     }\n }\n \n impl core::fmt::Debug for CookieKey {\n     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {\n-        f.write_str(\"CookieKey(..)\")\n+        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n /// Keyed MAC of a connection tuple under a `domain` separator, `count`, and a\n /// bound `isn`.\n ///\n /// `domain` separates the two independent hashes a cookie needs (`0` blinds the\n /// client ISN, `1` authenticates the encoded data) so they can never collide.\n",
-    "file": "crates/deflect-syncookie/src/mac.rs",
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace PortMatch::matches -> bool with false\n@@ -21,22 +21,17 @@\n impl PortMatch {\n     #[must_use]\n     pub fn range(a: u16, b: u16) -> PortMatch {\n         PortMatch::Range(a.min(b), a.max(b))\n     }\n \n     #[must_use]\n     pub fn matches(&self, port: u16) -> bool {\n-        match self {\n-            PortMatch::Any => true,\n-            PortMatch::Exact(p) => *p == port,\n-            PortMatch::Range(lo, hi) => (*lo..=*hi).contains(&port),\n-            PortMatch::OneOf(ports) => ports.contains(&port),\n-        }\n+        false /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n /// How a signature constrains TCP control bits: every bit in `required` must be\n /// set and every bit in `forbidden` must be clear. An empty match accepts any\n /// flags, so a non-TCP signature leaves this at its default.\n #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]\n #[cfg_attr(feature = \"serde\", derive(Serialize, Deserialize))]\n",
+    "file": "crates/deflect-signature/src/matcher.rs",
     "function": {
-      "function_name": "<impl core::fmt::Debug for CookieKey>::fmt",
-      "return_type": "-> core::fmt::Result",
+      "function_name": "PortMatch::matches",
+      "return_type": "-> bool",
       "span": {
         "end": {
           "column": 6,
-          "line": 41
+          "line": 35
         },
         "start": {
           "column": 5,
-          "line": 39
+          "line": 27
         }
       }
     },
     "genre": "FnValue",
-    "name": "crates/deflect-syncookie/src/mac.rs:40:9: replace <impl core::fmt::Debug for CookieKey>::fmt -> core::fmt::Result with Ok(Default::default())",
-    "package": "deflect-syncookie",
-    "replacement": "Ok(Default::default())",
+    "name": "crates/deflect-signature/src/matcher.rs:29:9: replace PortMatch::matches -> bool with false",
+    "package": "deflect-signature",
+    "replacement": "false",
     "span": {
       "end": {
-        "column": 37,
-        "line": 40
+        "column": 10,
+        "line": 34
       },
       "start": {
         "column": 9,
-        "line": 40
+        "line": 29
       }
     }
   },
   {
-    "diff": "--- crates/deflect-syncookie/src/mac.rs\n+++ replace mac -> u32 with 0\n@@ -45,31 +45,17 @@\n /// bound `isn`.\n ///\n /// `domain` separates the two independent hashes a cookie needs (`0` blinds the\n /// client ISN, `1` authenticates the encoded data) so they can never collide.\n /// The full `count` binds the cookie to its issuing epoch, and `isn` binds the\n /// authenticating hash to the client's sequence number so a shifted ISN does\n /// not verify.\n pub(crate) fn mac(key: CookieKey, tuple: &FourTuple, domain: u8, count: u64, isn: u32) -> u32 {\n-    let mut h = SipHasher24::new_with_keys(key.k0, key.k1);\n-    h.write_u8(domain);\n-    write_addr(&mut h, tuple.src);\n-    write_addr(&mut h, tuple.dst);\n-    h.write_u16(tuple.src_port);\n-    h.write_u16(tuple.dst_port);\n-    h.write_u64(count);\n-    h.write_u32(isn);\n-    // Fold the 64-bit SipHash output into the 32 bits a cookie carries; the\n-    // narrowing to u32 is the fold, not a lossy accident.\n-    let out = h.finish();\n-    #[allow(clippy::cast_possible_truncation)]\n-    {\n-        ((out >> 32) ^ out) as u32\n-    }\n+    0 /* ~ changed by cargo-mutants ~ */\n }\n \n fn write_addr<H: Hasher>(h: &mut H, addr: IpAddr) {\n     match addr {\n         IpAddr::V4(v4) => {\n             h.write_u8(4);\n             h.write(&v4.octets());\n         }\n",
-    "file": "crates/deflect-syncookie/src/mac.rs",
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace == with != in PortMatch::matches\n@@ -23,17 +23,17 @@\n     pub fn range(a: u16, b: u16) -> PortMatch {\n         PortMatch::Range(a.min(b), a.max(b))\n     }\n \n     #[must_use]\n     pub fn matches(&self, port: u16) -> bool {\n         match self {\n             PortMatch::Any => true,\n-            PortMatch::Exact(p) => *p == port,\n+            PortMatch::Exact(p) => *p != /* ~ changed by cargo-mutants ~ */ port,\n             PortMatch::Range(lo, hi) => (*lo..=*hi).contains(&port),\n             PortMatch::OneOf(ports) => ports.contains(&port),\n         }\n     }\n }\n \n /// How a signature constrains TCP control bits: every bit in `required` must be\n /// set and every bit in `forbidden` must be clear. An empty match accepts any\n",
+    "file": "crates/deflect-signature/src/matcher.rs",
     "function": {
-      "function_name": "mac",
-      "return_type": "-> u32",
+      "function_name": "PortMatch::matches",
+      "return_type": "-> bool",
       "span": {
         "end": {
-          "column": 2,
-          "line": 68
+          "column": 6,
+          "line": 35
         },
         "start": {
-          "column": 1,
-          "line": 44
+          "column": 5,
+          "line": 27
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/matcher.rs:31:39: replace == with != in PortMatch::matches",
+    "package": "deflect-signature",
+    "replacement": "!=",
+    "span": {
+      "end": {
+        "column": 41,
+        "line": 31
+      },
+      "start": {
+        "column": 39,
+        "line": 31
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace FlagMatch::any -> FlagMatch with Default::default()\n@@ -43,20 +43,17 @@\n pub struct FlagMatch {\n     pub required: u8,\n     pub forbidden: u8,\n }\n \n impl FlagMatch {\n     #[must_use]\n     pub const fn any() -> FlagMatch {\n-        FlagMatch {\n-            required: 0,\n-            forbidden: 0,\n-        }\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub const fn require(flags: TcpFlags) -> FlagMatch {\n         FlagMatch {\n             required: flags.bits(),\n             forbidden: 0,\n         }\n",
+    "file": "crates/deflect-signature/src/matcher.rs",
+    "function": {
+      "function_name": "FlagMatch::any",
+      "return_type": "-> FlagMatch",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 55
+        },
+        "start": {
+          "column": 5,
+          "line": 49
         }
       }
     },
     "genre": "FnValue",
-    "name": "crates/deflect-syncookie/src/mac.rs:53:5: replace mac -> u32 with 0",
-    "package": "deflect-syncookie",
-    "replacement": "0",
+    "name": "crates/deflect-signature/src/matcher.rs:51:9: replace FlagMatch::any -> FlagMatch with Default::default()",
+    "package": "deflect-signature",
+    "replacement": "Default::default()",
     "span": {
       "end": {
-        "column": 6,
-        "line": 67
+        "column": 10,
+        "line": 54
       },
       "start": {
-        "column": 5,
-        "line": 53
+        "column": 9,
+        "line": 51
       }
     }
   },
   {
-    "diff": "--- crates/deflect-syncookie/src/mac.rs\n+++ replace mac -> u32 with 1\n@@ -45,31 +45,17 @@\n /// bound `isn`.\n ///\n /// `domain` separates the two independent hashes a cookie needs (`0` blinds the\n /// client ISN, `1` authenticates the encoded data) so they can never collide.\n /// The full `count` binds the cookie to its issuing epoch, and `isn` binds the\n /// authenticating hash to the client's sequence number so a shifted ISN does\n /// not verify.\n pub(crate) fn mac(key: CookieKey, tuple: &FourTuple, domain: u8, count: u64, isn: u32) -> u32 {\n-    let mut h = SipHasher24::new_with_keys(key.k0, key.k1);\n-    h.write_u8(domain);\n-    write_addr(&mut h, tuple.src);\n-    write_addr(&mut h, tuple.dst);\n-    h.write_u16(tuple.src_port);\n-    h.write_u16(tuple.dst_port);\n-    h.write_u64(count);\n-    h.write_u32(isn);\n-    // Fold the 64-bit SipHash output into the 32 bits a cookie carries; the\n-    // narrowing to u32 is the fold, not a lossy accident.\n-    let out = h.finish();\n-    #[allow(clippy::cast_possible_truncation)]\n-    {\n-        ((out >> 32) ^ out) as u32\n-    }\n+    1 /* ~ changed by cargo-mutants ~ */\n }\n \n fn write_addr<H: Hasher>(h: &mut H, addr: IpAddr) {\n     match addr {\n         IpAddr::V4(v4) => {\n             h.write_u8(4);\n             h.write(&v4.octets());\n         }\n",
-    "file": "crates/deflect-syncookie/src/mac.rs",
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace FlagMatch::require -> FlagMatch with Default::default()\n@@ -51,20 +51,17 @@\n         FlagMatch {\n             required: 0,\n             forbidden: 0,\n         }\n     }\n \n     #[must_use]\n     pub const fn require(flags: TcpFlags) -> FlagMatch {\n-        FlagMatch {\n-            required: flags.bits(),\n-            forbidden: 0,\n-        }\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub const fn forbid(mut self, flags: TcpFlags) -> FlagMatch {\n         self.forbidden |= flags.bits();\n         self\n     }\n \n",
+    "file": "crates/deflect-signature/src/matcher.rs",
     "function": {
-      "function_name": "mac",
-      "return_type": "-> u32",
+      "function_name": "FlagMatch::require",
+      "return_type": "-> FlagMatch",
       "span": {
         "end": {
-          "column": 2,
-          "line": 68
+          "column": 6,
+          "line": 63
         },
         "start": {
-          "column": 1,
-          "line": 44
+          "column": 5,
+          "line": 57
         }
       }
     },
     "genre": "FnValue",
-    "name": "crates/deflect-syncookie/src/mac.rs:53:5: replace mac -> u32 with 1",
-    "package": "deflect-syncookie",
-    "replacement": "1",
+    "name": "crates/deflect-signature/src/matcher.rs:59:9: replace FlagMatch::require -> FlagMatch with Default::default()",
+    "package": "deflect-signature",
+    "replacement": "Default::default()",
     "span": {
       "end": {
-        "column": 6,
+        "column": 10,
+        "line": 62
+      },
+      "start": {
+        "column": 9,
+        "line": 59
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace FlagMatch::forbid -> FlagMatch with Default::default()\n@@ -59,18 +59,17 @@\n         FlagMatch {\n             required: flags.bits(),\n             forbidden: 0,\n         }\n     }\n \n     #[must_use]\n     pub const fn forbid(mut self, flags: TcpFlags) -> FlagMatch {\n-        self.forbidden |= flags.bits();\n-        self\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub const fn and_require(mut self, flags: TcpFlags) -> FlagMatch {\n         self.required |= flags.bits();\n         self\n     }\n \n",
+    "file": "crates/deflect-signature/src/matcher.rs",
+    "function": {
+      "function_name": "FlagMatch::forbid",
+      "return_type": "-> FlagMatch",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 69
+        },
+        "start": {
+          "column": 5,
+          "line": 65
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/matcher.rs:67:9: replace FlagMatch::forbid -> FlagMatch with Default::default()",
+    "package": "deflect-signature",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 13,
+        "line": 68
+      },
+      "start": {
+        "column": 9,
+        "line": 67
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace |= with &= in FlagMatch::forbid\n@@ -59,17 +59,17 @@\n         FlagMatch {\n             required: flags.bits(),\n             forbidden: 0,\n         }\n     }\n \n     #[must_use]\n     pub const fn forbid(mut self, flags: TcpFlags) -> FlagMatch {\n-        self.forbidden |= flags.bits();\n+        self.forbidden &= /* ~ changed by cargo-mutants ~ */ flags.bits();\n         self\n     }\n \n     #[must_use]\n     pub const fn and_require(mut self, flags: TcpFlags) -> FlagMatch {\n         self.required |= flags.bits();\n         self\n     }\n",
+    "file": "crates/deflect-signature/src/matcher.rs",
+    "function": {
+      "function_name": "FlagMatch::forbid",
+      "return_type": "-> FlagMatch",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 69
+        },
+        "start": {
+          "column": 5,
+          "line": 65
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/matcher.rs:67:24: replace |= with &= in FlagMatch::forbid",
+    "package": "deflect-signature",
+    "replacement": "&=",
+    "span": {
+      "end": {
+        "column": 26,
         "line": 67
       },
       "start": {
-        "column": 5,
-        "line": 53
+        "column": 24,
+        "line": 67
       }
     }
   },
   {
-    "diff": "--- crates/deflect-syncookie/src/mac.rs\n+++ replace ^ with | in mac\n@@ -58,17 +58,17 @@\n     h.write_u16(tuple.dst_port);\n     h.write_u64(count);\n     h.write_u32(isn);\n     // Fold the 64-bit SipHash output into the 32 bits a cookie carries; the\n     // narrowing to u32 is the fold, not a lossy accident.\n     let out = h.finish();\n     #[allow(clippy::cast_possible_truncation)]\n     {\n-        ((out >> 32) ^ out) as u32\n+        ((out >> 32) | /* ~ changed by cargo-mutants ~ */ out) as u32\n     }\n }\n \n fn write_addr<H: Hasher>(h: &mut H, addr: IpAddr) {\n     match addr {\n         IpAddr::V4(v4) => {\n             h.write_u8(4);\n             h.write(&v4.octets());\n",
-    "file": "crates/deflect-syncookie/src/mac.rs",
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace FlagMatch::and_require -> FlagMatch with Default::default()\n@@ -65,18 +65,17 @@\n     #[must_use]\n     pub const fn forbid(mut self, flags: TcpFlags) -> FlagMatch {\n         self.forbidden |= flags.bits();\n         self\n     }\n \n     #[must_use]\n     pub const fn and_require(mut self, flags: TcpFlags) -> FlagMatch {\n-        self.required |= flags.bits();\n-        self\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn matches(&self, flags: TcpFlags) -> bool {\n         let bits = flags.bits();\n         (bits & self.required) == self.required && (bits & self.forbidden) == 0\n     }\n }\n",
+    "file": "crates/deflect-signature/src/matcher.rs",
     "function": {
-      "function_name": "mac",
-      "return_type": "-> u32",
+      "function_name": "FlagMatch::and_require",
+      "return_type": "-> FlagMatch",
       "span": {
         "end": {
-          "column": 2,
-          "line": 68
+          "column": 6,
+          "line": 75
         },
         "start": {
-          "column": 1,
-          "line": 44
+          "column": 5,
+          "line": 71
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/matcher.rs:73:9: replace FlagMatch::and_require -> FlagMatch with Default::default()",
+    "package": "deflect-signature",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 13,
+        "line": 74
+      },
+      "start": {
+        "column": 9,
+        "line": 73
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace |= with &= in FlagMatch::and_require\n@@ -65,17 +65,17 @@\n     #[must_use]\n     pub const fn forbid(mut self, flags: TcpFlags) -> FlagMatch {\n         self.forbidden |= flags.bits();\n         self\n     }\n \n     #[must_use]\n     pub const fn and_require(mut self, flags: TcpFlags) -> FlagMatch {\n-        self.required |= flags.bits();\n+        self.required &= /* ~ changed by cargo-mutants ~ */ flags.bits();\n         self\n     }\n \n     #[must_use]\n     pub fn matches(&self, flags: TcpFlags) -> bool {\n         let bits = flags.bits();\n         (bits & self.required) == self.required && (bits & self.forbidden) == 0\n     }\n",
+    "file": "crates/deflect-signature/src/matcher.rs",
+    "function": {
+      "function_name": "FlagMatch::and_require",
+      "return_type": "-> FlagMatch",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 75
+        },
+        "start": {
+          "column": 5,
+          "line": 71
         }
       }
     },
     "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/mac.rs:66:22: replace ^ with | in mac",
-    "package": "deflect-syncookie",
-    "replacement": "|",
+    "name": "crates/deflect-signature/src/matcher.rs:73:23: replace |= with &= in FlagMatch::and_require",
+    "package": "deflect-signature",
+    "replacement": "&=",
     "span": {
       "end": {
+        "column": 25,
+        "line": 73
+      },
+      "start": {
         "column": 23,
-        "line": 66
-      },
-      "start": {
-        "column": 22,
-        "line": 66
+        "line": 73
       }
     }
   },
   {
-    "diff": "--- crates/deflect-syncookie/src/mac.rs\n+++ replace ^ with & in mac\n@@ -58,17 +58,17 @@\n     h.write_u16(tuple.dst_port);\n     h.write_u64(count);\n     h.write_u32(isn);\n     // Fold the 64-bit SipHash output into the 32 bits a cookie carries; the\n     // narrowing to u32 is the fold, not a lossy accident.\n     let out = h.finish();\n     #[allow(clippy::cast_possible_truncation)]\n     {\n-        ((out >> 32) ^ out) as u32\n+        ((out >> 32) & /* ~ changed by cargo-mutants ~ */ out) as u32\n     }\n }\n \n fn write_addr<H: Hasher>(h: &mut H, addr: IpAddr) {\n     match addr {\n         IpAddr::V4(v4) => {\n             h.write_u8(4);\n             h.write(&v4.octets());\n",
-    "file": "crates/deflect-syncookie/src/mac.rs",
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace FlagMatch::matches -> bool with true\n@@ -71,18 +71,17 @@\n     #[must_use]\n     pub const fn and_require(mut self, flags: TcpFlags) -> FlagMatch {\n         self.required |= flags.bits();\n         self\n     }\n \n     #[must_use]\n     pub fn matches(&self, flags: TcpFlags) -> bool {\n-        let bits = flags.bits();\n-        (bits & self.required) == self.required && (bits & self.forbidden) == 0\n+        true /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n /// How a signature constrains the packet payload. Length bounds are in bytes.\n #[derive(Debug, Clone, PartialEq, Eq, Default)]\n #[cfg_attr(feature = \"serde\", derive(Serialize, Deserialize))]\n #[cfg_attr(feature = \"serde\", serde(rename_all = \"snake_case\"))]\n pub enum PayloadMatch {\n",
+    "file": "crates/deflect-signature/src/matcher.rs",
     "function": {
-      "function_name": "mac",
-      "return_type": "-> u32",
+      "function_name": "FlagMatch::matches",
+      "return_type": "-> bool",
       "span": {
         "end": {
-          "column": 2,
-          "line": 68
-        },
-        "start": {
-          "column": 1,
-          "line": 44
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/mac.rs:66:22: replace ^ with & in mac",
-    "package": "deflect-syncookie",
-    "replacement": "&",
-    "span": {
-      "end": {
-        "column": 23,
-        "line": 66
-      },
-      "start": {
-        "column": 22,
-        "line": 66
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/mac.rs\n+++ replace >> with << in mac\n@@ -58,17 +58,17 @@\n     h.write_u16(tuple.dst_port);\n     h.write_u64(count);\n     h.write_u32(isn);\n     // Fold the 64-bit SipHash output into the 32 bits a cookie carries; the\n     // narrowing to u32 is the fold, not a lossy accident.\n     let out = h.finish();\n     #[allow(clippy::cast_possible_truncation)]\n     {\n-        ((out >> 32) ^ out) as u32\n+        ((out << /* ~ changed by cargo-mutants ~ */ 32) ^ out) as u32\n     }\n }\n \n fn write_addr<H: Hasher>(h: &mut H, addr: IpAddr) {\n     match addr {\n         IpAddr::V4(v4) => {\n             h.write_u8(4);\n             h.write(&v4.octets());\n",
-    "file": "crates/deflect-syncookie/src/mac.rs",
-    "function": {
-      "function_name": "mac",
-      "return_type": "-> u32",
-      "span": {
-        "end": {
-          "column": 2,
-          "line": 68
-        },
-        "start": {
-          "column": 1,
-          "line": 44
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/mac.rs:66:15: replace >> with << in mac",
-    "package": "deflect-syncookie",
-    "replacement": "<<",
-    "span": {
-      "end": {
-        "column": 17,
-        "line": 66
-      },
-      "start": {
-        "column": 15,
-        "line": 66
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/mac.rs\n+++ replace write_addr with ()\n@@ -63,26 +63,17 @@\n     let out = h.finish();\n     #[allow(clippy::cast_possible_truncation)]\n     {\n         ((out >> 32) ^ out) as u32\n     }\n }\n \n fn write_addr<H: Hasher>(h: &mut H, addr: IpAddr) {\n-    match addr {\n-        IpAddr::V4(v4) => {\n-            h.write_u8(4);\n-            h.write(&v4.octets());\n-        }\n-        IpAddr::V6(v6) => {\n-            h.write_u8(6);\n-            h.write(&v6.octets());\n-        }\n-    }\n+    () /* ~ changed by cargo-mutants ~ */\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n     use core::net::Ipv4Addr;\n \n     fn tuple() -> FourTuple {\n",
-    "file": "crates/deflect-syncookie/src/mac.rs",
-    "function": {
-      "function_name": "write_addr",
-      "return_type": "",
-      "span": {
-        "end": {
-          "column": 2,
+          "column": 6,
           "line": 81
         },
         "start": {
-          "column": 1,
-          "line": 70
+          "column": 5,
+          "line": 77
         }
       }
     },
     "genre": "FnValue",
-    "name": "crates/deflect-syncookie/src/mac.rs:71:5: replace write_addr with ()",
-    "package": "deflect-syncookie",
-    "replacement": "()",
+    "name": "crates/deflect-signature/src/matcher.rs:79:9: replace FlagMatch::matches -> bool with true",
+    "package": "deflect-signature",
+    "replacement": "true",
     "span": {
       "end": {
-        "column": 6,
+        "column": 80,
         "line": 80
       },
       "start": {
-        "column": 5,
-        "line": 71
+        "column": 9,
+        "line": 79
       }
     }
   },
   {
-    "diff": "--- crates/deflect-syncookie/src/mss.rs\n+++ replace encode_mss -> u8 with 0\n@@ -3,29 +3,17 @@\n /// entry not exceeding it, so the restored value is never larger than the peer\n /// asked for. Values span a legacy floor to a jumbo-frame ceiling.\n pub const MSS_TABLE: [u16; 8] = [536, 1300, 1440, 1460, 4312, 8960, 9000, 65495];\n \n /// Encode an MSS to its 3-bit table index: the largest entry `<= mss`, or index\n /// `0` when `mss` is below the floor.\n #[must_use]\n pub fn encode_mss(mss: u16) -> u8 {\n-    let mut idx = 0u8;\n-    for (i, &v) in MSS_TABLE.iter().enumerate().take(8) {\n-        if v <= mss {\n-            // i < 8 by take(8), so the narrowing cannot truncate.\n-            #[allow(clippy::cast_possible_truncation)]\n-            {\n-                idx = i as u8;\n-            }\n-        } else {\n-            break;\n-        }\n-    }\n-    idx\n+    0 /* ~ changed by cargo-mutants ~ */\n }\n \n /// Decode a 3-bit index back to its MSS. Indices are masked to the table, so\n /// out-of-range input cannot panic.\n #[must_use]\n pub fn decode_mss(idx: u8) -> u16 {\n     MSS_TABLE[(idx & 0b111) as usize]\n }\n",
-    "file": "crates/deflect-syncookie/src/mss.rs",
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace FlagMatch::matches -> bool with false\n@@ -71,18 +71,17 @@\n     #[must_use]\n     pub const fn and_require(mut self, flags: TcpFlags) -> FlagMatch {\n         self.required |= flags.bits();\n         self\n     }\n \n     #[must_use]\n     pub fn matches(&self, flags: TcpFlags) -> bool {\n-        let bits = flags.bits();\n-        (bits & self.required) == self.required && (bits & self.forbidden) == 0\n+        false /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n /// How a signature constrains the packet payload. Length bounds are in bytes.\n #[derive(Debug, Clone, PartialEq, Eq, Default)]\n #[cfg_attr(feature = \"serde\", derive(Serialize, Deserialize))]\n #[cfg_attr(feature = \"serde\", serde(rename_all = \"snake_case\"))]\n pub enum PayloadMatch {\n",
+    "file": "crates/deflect-signature/src/matcher.rs",
     "function": {
-      "function_name": "encode_mss",
-      "return_type": "-> u8",
+      "function_name": "FlagMatch::matches",
+      "return_type": "-> bool",
       "span": {
         "end": {
-          "column": 2,
-          "line": 24
+          "column": 6,
+          "line": 81
         },
         "start": {
-          "column": 1,
-          "line": 7
+          "column": 5,
+          "line": 77
         }
       }
     },
     "genre": "FnValue",
-    "name": "crates/deflect-syncookie/src/mss.rs:11:5: replace encode_mss -> u8 with 0",
-    "package": "deflect-syncookie",
-    "replacement": "0",
+    "name": "crates/deflect-signature/src/matcher.rs:79:9: replace FlagMatch::matches -> bool with false",
+    "package": "deflect-signature",
+    "replacement": "false",
     "span": {
       "end": {
-        "column": 8,
-        "line": 23
+        "column": 80,
+        "line": 80
       },
       "start": {
-        "column": 5,
-        "line": 11
+        "column": 9,
+        "line": 79
       }
     }
   },
   {
-    "diff": "--- crates/deflect-syncookie/src/mss.rs\n+++ replace encode_mss -> u8 with 1\n@@ -3,29 +3,17 @@\n /// entry not exceeding it, so the restored value is never larger than the peer\n /// asked for. Values span a legacy floor to a jumbo-frame ceiling.\n pub const MSS_TABLE: [u16; 8] = [536, 1300, 1440, 1460, 4312, 8960, 9000, 65495];\n \n /// Encode an MSS to its 3-bit table index: the largest entry `<= mss`, or index\n /// `0` when `mss` is below the floor.\n #[must_use]\n pub fn encode_mss(mss: u16) -> u8 {\n-    let mut idx = 0u8;\n-    for (i, &v) in MSS_TABLE.iter().enumerate().take(8) {\n-        if v <= mss {\n-            // i < 8 by take(8), so the narrowing cannot truncate.\n-            #[allow(clippy::cast_possible_truncation)]\n-            {\n-                idx = i as u8;\n-            }\n-        } else {\n-            break;\n-        }\n-    }\n-    idx\n+    1 /* ~ changed by cargo-mutants ~ */\n }\n \n /// Decode a 3-bit index back to its MSS. Indices are masked to the table, so\n /// out-of-range input cannot panic.\n #[must_use]\n pub fn decode_mss(idx: u8) -> u16 {\n     MSS_TABLE[(idx & 0b111) as usize]\n }\n",
-    "file": "crates/deflect-syncookie/src/mss.rs",
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace && with || in FlagMatch::matches\n@@ -72,17 +72,17 @@\n     pub const fn and_require(mut self, flags: TcpFlags) -> FlagMatch {\n         self.required |= flags.bits();\n         self\n     }\n \n     #[must_use]\n     pub fn matches(&self, flags: TcpFlags) -> bool {\n         let bits = flags.bits();\n-        (bits & self.required) == self.required && (bits & self.forbidden) == 0\n+        (bits & self.required) == self.required || /* ~ changed by cargo-mutants ~ */ (bits & self.forbidden) == 0\n     }\n }\n \n /// How a signature constrains the packet payload. Length bounds are in bytes.\n #[derive(Debug, Clone, PartialEq, Eq, Default)]\n #[cfg_attr(feature = \"serde\", derive(Serialize, Deserialize))]\n #[cfg_attr(feature = \"serde\", serde(rename_all = \"snake_case\"))]\n pub enum PayloadMatch {\n",
+    "file": "crates/deflect-signature/src/matcher.rs",
     "function": {
-      "function_name": "encode_mss",
-      "return_type": "-> u8",
+      "function_name": "FlagMatch::matches",
+      "return_type": "-> bool",
       "span": {
         "end": {
-          "column": 2,
-          "line": 24
+          "column": 6,
+          "line": 81
         },
         "start": {
-          "column": 1,
-          "line": 7
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-syncookie/src/mss.rs:11:5: replace encode_mss -> u8 with 1",
-    "package": "deflect-syncookie",
-    "replacement": "1",
-    "span": {
-      "end": {
-        "column": 8,
-        "line": 23
-      },
-      "start": {
-        "column": 5,
-        "line": 11
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/mss.rs\n+++ replace <= with > in encode_mss\n@@ -5,17 +5,17 @@\n pub const MSS_TABLE: [u16; 8] = [536, 1300, 1440, 1460, 4312, 8960, 9000, 65495];\n \n /// Encode an MSS to its 3-bit table index: the largest entry `<= mss`, or index\n /// `0` when `mss` is below the floor.\n #[must_use]\n pub fn encode_mss(mss: u16) -> u8 {\n     let mut idx = 0u8;\n     for (i, &v) in MSS_TABLE.iter().enumerate().take(8) {\n-        if v <= mss {\n+        if v > /* ~ changed by cargo-mutants ~ */ mss {\n             // i < 8 by take(8), so the narrowing cannot truncate.\n             #[allow(clippy::cast_possible_truncation)]\n             {\n                 idx = i as u8;\n             }\n         } else {\n             break;\n         }\n",
-    "file": "crates/deflect-syncookie/src/mss.rs",
-    "function": {
-      "function_name": "encode_mss",
-      "return_type": "-> u8",
-      "span": {
-        "end": {
-          "column": 2,
-          "line": 24
-        },
-        "start": {
-          "column": 1,
-          "line": 7
+          "column": 5,
+          "line": 77
         }
       }
     },
     "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/mss.rs:13:14: replace <= with > in encode_mss",
-    "package": "deflect-syncookie",
-    "replacement": ">",
+    "name": "crates/deflect-signature/src/matcher.rs:80:49: replace && with || in FlagMatch::matches",
+    "package": "deflect-signature",
+    "replacement": "||",
     "span": {
       "end": {
-        "column": 16,
-        "line": 13
+        "column": 51,
+        "line": 80
       },
       "start": {
-        "column": 14,
-        "line": 13
+        "column": 49,
+        "line": 80
       }
     }
   },
   {
-    "diff": "--- crates/deflect-syncookie/src/mss.rs\n+++ replace decode_mss -> u16 with 0\n@@ -22,17 +22,17 @@\n     }\n     idx\n }\n \n /// Decode a 3-bit index back to its MSS. Indices are masked to the table, so\n /// out-of-range input cannot panic.\n #[must_use]\n pub fn decode_mss(idx: u8) -> u16 {\n-    MSS_TABLE[(idx & 0b111) as usize]\n+    0 /* ~ changed by cargo-mutants ~ */\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     #[test]\n     fn encode_picks_largest_not_exceeding() {\n",
-    "file": "crates/deflect-syncookie/src/mss.rs",
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace == with != in FlagMatch::matches\n@@ -72,17 +72,17 @@\n     pub const fn and_require(mut self, flags: TcpFlags) -> FlagMatch {\n         self.required |= flags.bits();\n         self\n     }\n \n     #[must_use]\n     pub fn matches(&self, flags: TcpFlags) -> bool {\n         let bits = flags.bits();\n-        (bits & self.required) == self.required && (bits & self.forbidden) == 0\n+        (bits & self.required) != /* ~ changed by cargo-mutants ~ */ self.required && (bits & self.forbidden) == 0\n     }\n }\n \n /// How a signature constrains the packet payload. Length bounds are in bytes.\n #[derive(Debug, Clone, PartialEq, Eq, Default)]\n #[cfg_attr(feature = \"serde\", derive(Serialize, Deserialize))]\n #[cfg_attr(feature = \"serde\", serde(rename_all = \"snake_case\"))]\n pub enum PayloadMatch {\n",
+    "file": "crates/deflect-signature/src/matcher.rs",
     "function": {
-      "function_name": "decode_mss",
-      "return_type": "-> u16",
+      "function_name": "FlagMatch::matches",
+      "return_type": "-> bool",
       "span": {
         "end": {
-          "column": 2,
-          "line": 31
+          "column": 6,
+          "line": 81
         },
         "start": {
-          "column": 1,
-          "line": 26
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-syncookie/src/mss.rs:30:5: replace decode_mss -> u16 with 0",
-    "package": "deflect-syncookie",
-    "replacement": "0",
-    "span": {
-      "end": {
-        "column": 38,
-        "line": 30
-      },
-      "start": {
-        "column": 5,
-        "line": 30
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/mss.rs\n+++ replace decode_mss -> u16 with 1\n@@ -22,17 +22,17 @@\n     }\n     idx\n }\n \n /// Decode a 3-bit index back to its MSS. Indices are masked to the table, so\n /// out-of-range input cannot panic.\n #[must_use]\n pub fn decode_mss(idx: u8) -> u16 {\n-    MSS_TABLE[(idx & 0b111) as usize]\n+    1 /* ~ changed by cargo-mutants ~ */\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     #[test]\n     fn encode_picks_largest_not_exceeding() {\n",
-    "file": "crates/deflect-syncookie/src/mss.rs",
-    "function": {
-      "function_name": "decode_mss",
-      "return_type": "-> u16",
-      "span": {
-        "end": {
-          "column": 2,
-          "line": 31
-        },
-        "start": {
-          "column": 1,
-          "line": 26
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-syncookie/src/mss.rs:30:5: replace decode_mss -> u16 with 1",
-    "package": "deflect-syncookie",
-    "replacement": "1",
-    "span": {
-      "end": {
-        "column": 38,
-        "line": 30
-      },
-      "start": {
-        "column": 5,
-        "line": 30
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-syncookie/src/mss.rs\n+++ replace & with | in decode_mss\n@@ -22,17 +22,17 @@\n     }\n     idx\n }\n \n /// Decode a 3-bit index back to its MSS. Indices are masked to the table, so\n /// out-of-range input cannot panic.\n #[must_use]\n pub fn decode_mss(idx: u8) -> u16 {\n-    MSS_TABLE[(idx & 0b111) as usize]\n+    MSS_TABLE[(idx | /* ~ changed by cargo-mutants ~ */ 0b111) as usize]\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     #[test]\n     fn encode_picks_largest_not_exceeding() {\n",
-    "file": "crates/deflect-syncookie/src/mss.rs",
-    "function": {
-      "function_name": "decode_mss",
-      "return_type": "-> u16",
-      "span": {
-        "end": {
-          "column": 2,
-          "line": 31
-        },
-        "start": {
-          "column": 1,
-          "line": 26
+          "column": 5,
+          "line": 77
         }
       }
     },
     "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/mss.rs:30:20: replace & with | in decode_mss",
-    "package": "deflect-syncookie",
+    "name": "crates/deflect-signature/src/matcher.rs:80:32: replace == with != in FlagMatch::matches",
+    "package": "deflect-signature",
+    "replacement": "!=",
+    "span": {
+      "end": {
+        "column": 34,
+        "line": 80
+      },
+      "start": {
+        "column": 32,
+        "line": 80
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace & with | in FlagMatch::matches\n@@ -72,17 +72,17 @@\n     pub const fn and_require(mut self, flags: TcpFlags) -> FlagMatch {\n         self.required |= flags.bits();\n         self\n     }\n \n     #[must_use]\n     pub fn matches(&self, flags: TcpFlags) -> bool {\n         let bits = flags.bits();\n-        (bits & self.required) == self.required && (bits & self.forbidden) == 0\n+        (bits | /* ~ changed by cargo-mutants ~ */ self.required) == self.required && (bits & self.forbidden) == 0\n     }\n }\n \n /// How a signature constrains the packet payload. Length bounds are in bytes.\n #[derive(Debug, Clone, PartialEq, Eq, Default)]\n #[cfg_attr(feature = \"serde\", derive(Serialize, Deserialize))]\n #[cfg_attr(feature = \"serde\", serde(rename_all = \"snake_case\"))]\n pub enum PayloadMatch {\n",
+    "file": "crates/deflect-signature/src/matcher.rs",
+    "function": {
+      "function_name": "FlagMatch::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 81
+        },
+        "start": {
+          "column": 5,
+          "line": 77
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/matcher.rs:80:15: replace & with | in FlagMatch::matches",
+    "package": "deflect-signature",
     "replacement": "|",
     "span": {
       "end": {
-        "column": 21,
-        "line": 30
+        "column": 16,
+        "line": 80
       },
       "start": {
-        "column": 20,
-        "line": 30
+        "column": 15,
+        "line": 80
       }
     }
   },
   {
-    "diff": "--- crates/deflect-syncookie/src/mss.rs\n+++ replace & with ^ in decode_mss\n@@ -22,17 +22,17 @@\n     }\n     idx\n }\n \n /// Decode a 3-bit index back to its MSS. Indices are masked to the table, so\n /// out-of-range input cannot panic.\n #[must_use]\n pub fn decode_mss(idx: u8) -> u16 {\n-    MSS_TABLE[(idx & 0b111) as usize]\n+    MSS_TABLE[(idx ^ /* ~ changed by cargo-mutants ~ */ 0b111) as usize]\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     #[test]\n     fn encode_picks_largest_not_exceeding() {\n",
-    "file": "crates/deflect-syncookie/src/mss.rs",
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace & with ^ in FlagMatch::matches\n@@ -72,17 +72,17 @@\n     pub const fn and_require(mut self, flags: TcpFlags) -> FlagMatch {\n         self.required |= flags.bits();\n         self\n     }\n \n     #[must_use]\n     pub fn matches(&self, flags: TcpFlags) -> bool {\n         let bits = flags.bits();\n-        (bits & self.required) == self.required && (bits & self.forbidden) == 0\n+        (bits ^ /* ~ changed by cargo-mutants ~ */ self.required) == self.required && (bits & self.forbidden) == 0\n     }\n }\n \n /// How a signature constrains the packet payload. Length bounds are in bytes.\n #[derive(Debug, Clone, PartialEq, Eq, Default)]\n #[cfg_attr(feature = \"serde\", derive(Serialize, Deserialize))]\n #[cfg_attr(feature = \"serde\", serde(rename_all = \"snake_case\"))]\n pub enum PayloadMatch {\n",
+    "file": "crates/deflect-signature/src/matcher.rs",
     "function": {
-      "function_name": "decode_mss",
-      "return_type": "-> u16",
+      "function_name": "FlagMatch::matches",
+      "return_type": "-> bool",
       "span": {
         "end": {
-          "column": 2,
-          "line": 31
+          "column": 6,
+          "line": 81
         },
         "start": {
-          "column": 1,
-          "line": 26
+          "column": 5,
+          "line": 77
         }
       }
     },
     "genre": "BinaryOperator",
-    "name": "crates/deflect-syncookie/src/mss.rs:30:20: replace & with ^ in decode_mss",
-    "package": "deflect-syncookie",
+    "name": "crates/deflect-signature/src/matcher.rs:80:15: replace & with ^ in FlagMatch::matches",
+    "package": "deflect-signature",
     "replacement": "^",
     "span": {
       "end": {
-        "column": 21,
-        "line": 30
+        "column": 16,
+        "line": 80
       },
       "start": {
-        "column": 20,
-        "line": 30
+        "column": 15,
+        "line": 80
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace == with != in FlagMatch::matches\n@@ -72,17 +72,17 @@\n     pub const fn and_require(mut self, flags: TcpFlags) -> FlagMatch {\n         self.required |= flags.bits();\n         self\n     }\n \n     #[must_use]\n     pub fn matches(&self, flags: TcpFlags) -> bool {\n         let bits = flags.bits();\n-        (bits & self.required) == self.required && (bits & self.forbidden) == 0\n+        (bits & self.required) == self.required && (bits & self.forbidden) != /* ~ changed by cargo-mutants ~ */ 0\n     }\n }\n \n /// How a signature constrains the packet payload. Length bounds are in bytes.\n #[derive(Debug, Clone, PartialEq, Eq, Default)]\n #[cfg_attr(feature = \"serde\", derive(Serialize, Deserialize))]\n #[cfg_attr(feature = \"serde\", serde(rename_all = \"snake_case\"))]\n pub enum PayloadMatch {\n",
+    "file": "crates/deflect-signature/src/matcher.rs",
+    "function": {
+      "function_name": "FlagMatch::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 81
+        },
+        "start": {
+          "column": 5,
+          "line": 77
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/matcher.rs:80:76: replace == with != in FlagMatch::matches",
+    "package": "deflect-signature",
+    "replacement": "!=",
+    "span": {
+      "end": {
+        "column": 78,
+        "line": 80
+      },
+      "start": {
+        "column": 76,
+        "line": 80
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace & with | in FlagMatch::matches\n@@ -72,17 +72,17 @@\n     pub const fn and_require(mut self, flags: TcpFlags) -> FlagMatch {\n         self.required |= flags.bits();\n         self\n     }\n \n     #[must_use]\n     pub fn matches(&self, flags: TcpFlags) -> bool {\n         let bits = flags.bits();\n-        (bits & self.required) == self.required && (bits & self.forbidden) == 0\n+        (bits & self.required) == self.required && (bits | /* ~ changed by cargo-mutants ~ */ self.forbidden) == 0\n     }\n }\n \n /// How a signature constrains the packet payload. Length bounds are in bytes.\n #[derive(Debug, Clone, PartialEq, Eq, Default)]\n #[cfg_attr(feature = \"serde\", derive(Serialize, Deserialize))]\n #[cfg_attr(feature = \"serde\", serde(rename_all = \"snake_case\"))]\n pub enum PayloadMatch {\n",
+    "file": "crates/deflect-signature/src/matcher.rs",
+    "function": {
+      "function_name": "FlagMatch::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 81
+        },
+        "start": {
+          "column": 5,
+          "line": 77
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/matcher.rs:80:58: replace & with | in FlagMatch::matches",
+    "package": "deflect-signature",
+    "replacement": "|",
+    "span": {
+      "end": {
+        "column": 59,
+        "line": 80
+      },
+      "start": {
+        "column": 58,
+        "line": 80
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace & with ^ in FlagMatch::matches\n@@ -72,17 +72,17 @@\n     pub const fn and_require(mut self, flags: TcpFlags) -> FlagMatch {\n         self.required |= flags.bits();\n         self\n     }\n \n     #[must_use]\n     pub fn matches(&self, flags: TcpFlags) -> bool {\n         let bits = flags.bits();\n-        (bits & self.required) == self.required && (bits & self.forbidden) == 0\n+        (bits & self.required) == self.required && (bits ^ /* ~ changed by cargo-mutants ~ */ self.forbidden) == 0\n     }\n }\n \n /// How a signature constrains the packet payload. Length bounds are in bytes.\n #[derive(Debug, Clone, PartialEq, Eq, Default)]\n #[cfg_attr(feature = \"serde\", derive(Serialize, Deserialize))]\n #[cfg_attr(feature = \"serde\", serde(rename_all = \"snake_case\"))]\n pub enum PayloadMatch {\n",
+    "file": "crates/deflect-signature/src/matcher.rs",
+    "function": {
+      "function_name": "FlagMatch::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 81
+        },
+        "start": {
+          "column": 5,
+          "line": 77
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/matcher.rs:80:58: replace & with ^ in FlagMatch::matches",
+    "package": "deflect-signature",
+    "replacement": "^",
+    "span": {
+      "end": {
+        "column": 59,
+        "line": 80
+      },
+      "start": {
+        "column": 58,
+        "line": 80
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace PayloadMatch::matches -> bool with true\n@@ -96,33 +96,17 @@\n     PrefixAt { offset: u32, bytes: Vec<u8> },\n     /// `bytes` occurs anywhere in the payload.\n     Contains(Vec<u8>),\n }\n \n impl PayloadMatch {\n     #[must_use]\n     pub fn matches(&self, payload: &[u8]) -> bool {\n-        match self {\n-            PayloadMatch::Any => true,\n-            PayloadMatch::MinLen(n) => payload.len() as u64 >= u64::from(*n),\n-            PayloadMatch::MaxLen(n) => payload.len() as u64 <= u64::from(*n),\n-            PayloadMatch::PrefixAt { offset, bytes } => {\n-                let off = *offset as usize;\n-                payload\n-                    .get(off..)\n-                    .is_some_and(|tail| tail.starts_with(bytes))\n-            }\n-            PayloadMatch::Contains(bytes) => {\n-                if bytes.is_empty() {\n-                    return true;\n-                }\n-                memchr::memmem::find(payload, bytes).is_some()\n-            }\n-        }\n+        true /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n     use alloc::vec;\n \n",
+    "file": "crates/deflect-signature/src/matcher.rs",
+    "function": {
+      "function_name": "PayloadMatch::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 121
+        },
+        "start": {
+          "column": 5,
+          "line": 102
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/matcher.rs:104:9: replace PayloadMatch::matches -> bool with true",
+    "package": "deflect-signature",
+    "replacement": "true",
+    "span": {
+      "end": {
+        "column": 10,
+        "line": 120
+      },
+      "start": {
+        "column": 9,
+        "line": 104
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace PayloadMatch::matches -> bool with false\n@@ -96,33 +96,17 @@\n     PrefixAt { offset: u32, bytes: Vec<u8> },\n     /// `bytes` occurs anywhere in the payload.\n     Contains(Vec<u8>),\n }\n \n impl PayloadMatch {\n     #[must_use]\n     pub fn matches(&self, payload: &[u8]) -> bool {\n-        match self {\n-            PayloadMatch::Any => true,\n-            PayloadMatch::MinLen(n) => payload.len() as u64 >= u64::from(*n),\n-            PayloadMatch::MaxLen(n) => payload.len() as u64 <= u64::from(*n),\n-            PayloadMatch::PrefixAt { offset, bytes } => {\n-                let off = *offset as usize;\n-                payload\n-                    .get(off..)\n-                    .is_some_and(|tail| tail.starts_with(bytes))\n-            }\n-            PayloadMatch::Contains(bytes) => {\n-                if bytes.is_empty() {\n-                    return true;\n-                }\n-                memchr::memmem::find(payload, bytes).is_some()\n-            }\n-        }\n+        false /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n     use alloc::vec;\n \n",
+    "file": "crates/deflect-signature/src/matcher.rs",
+    "function": {
+      "function_name": "PayloadMatch::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 121
+        },
+        "start": {
+          "column": 5,
+          "line": 102
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/matcher.rs:104:9: replace PayloadMatch::matches -> bool with false",
+    "package": "deflect-signature",
+    "replacement": "false",
+    "span": {
+      "end": {
+        "column": 10,
+        "line": 120
+      },
+      "start": {
+        "column": 9,
+        "line": 104
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace >= with < in PayloadMatch::matches\n@@ -98,17 +98,17 @@\n     Contains(Vec<u8>),\n }\n \n impl PayloadMatch {\n     #[must_use]\n     pub fn matches(&self, payload: &[u8]) -> bool {\n         match self {\n             PayloadMatch::Any => true,\n-            PayloadMatch::MinLen(n) => payload.len() as u64 >= u64::from(*n),\n+            PayloadMatch::MinLen(n) => payload.len() as u64 < /* ~ changed by cargo-mutants ~ */ u64::from(*n),\n             PayloadMatch::MaxLen(n) => payload.len() as u64 <= u64::from(*n),\n             PayloadMatch::PrefixAt { offset, bytes } => {\n                 let off = *offset as usize;\n                 payload\n                     .get(off..)\n                     .is_some_and(|tail| tail.starts_with(bytes))\n             }\n             PayloadMatch::Contains(bytes) => {\n",
+    "file": "crates/deflect-signature/src/matcher.rs",
+    "function": {
+      "function_name": "PayloadMatch::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 121
+        },
+        "start": {
+          "column": 5,
+          "line": 102
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/matcher.rs:106:61: replace >= with < in PayloadMatch::matches",
+    "package": "deflect-signature",
+    "replacement": "<",
+    "span": {
+      "end": {
+        "column": 63,
+        "line": 106
+      },
+      "start": {
+        "column": 61,
+        "line": 106
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/matcher.rs\n+++ replace <= with > in PayloadMatch::matches\n@@ -99,17 +99,17 @@\n }\n \n impl PayloadMatch {\n     #[must_use]\n     pub fn matches(&self, payload: &[u8]) -> bool {\n         match self {\n             PayloadMatch::Any => true,\n             PayloadMatch::MinLen(n) => payload.len() as u64 >= u64::from(*n),\n-            PayloadMatch::MaxLen(n) => payload.len() as u64 <= u64::from(*n),\n+            PayloadMatch::MaxLen(n) => payload.len() as u64 > /* ~ changed by cargo-mutants ~ */ u64::from(*n),\n             PayloadMatch::PrefixAt { offset, bytes } => {\n                 let off = *offset as usize;\n                 payload\n                     .get(off..)\n                     .is_some_and(|tail| tail.starts_with(bytes))\n             }\n             PayloadMatch::Contains(bytes) => {\n                 if bytes.is_empty() {\n",
+    "file": "crates/deflect-signature/src/matcher.rs",
+    "function": {
+      "function_name": "PayloadMatch::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 121
+        },
+        "start": {
+          "column": 5,
+          "line": 102
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/matcher.rs:107:61: replace <= with > in PayloadMatch::matches",
+    "package": "deflect-signature",
+    "replacement": ">",
+    "span": {
+      "end": {
+        "column": 63,
+        "line": 107
+      },
+      "start": {
+        "column": 61,
+        "line": 107
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/set.rs\n+++ replace SignatureSet::len -> usize with 0\n@@ -18,17 +18,17 @@\n     #[must_use]\n     pub fn new(mut signatures: Vec<Signature>) -> SignatureSet {\n         signatures.sort_by_key(|s| s.priority);\n         SignatureSet { signatures }\n     }\n \n     #[must_use]\n     pub fn len(&self) -> usize {\n-        self.signatures.len()\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn is_empty(&self) -> bool {\n         self.signatures.is_empty()\n     }\n \n     pub fn push(&mut self, sig: Signature) {\n",
+    "file": "crates/deflect-signature/src/set.rs",
+    "function": {
+      "function_name": "SignatureSet::len",
+      "return_type": "-> usize",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 27
+        },
+        "start": {
+          "column": 5,
+          "line": 24
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/set.rs:26:9: replace SignatureSet::len -> usize with 0",
+    "package": "deflect-signature",
+    "replacement": "0",
+    "span": {
+      "end": {
+        "column": 30,
+        "line": 26
+      },
+      "start": {
+        "column": 9,
+        "line": 26
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/set.rs\n+++ replace SignatureSet::len -> usize with 1\n@@ -18,17 +18,17 @@\n     #[must_use]\n     pub fn new(mut signatures: Vec<Signature>) -> SignatureSet {\n         signatures.sort_by_key(|s| s.priority);\n         SignatureSet { signatures }\n     }\n \n     #[must_use]\n     pub fn len(&self) -> usize {\n-        self.signatures.len()\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn is_empty(&self) -> bool {\n         self.signatures.is_empty()\n     }\n \n     pub fn push(&mut self, sig: Signature) {\n",
+    "file": "crates/deflect-signature/src/set.rs",
+    "function": {
+      "function_name": "SignatureSet::len",
+      "return_type": "-> usize",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 27
+        },
+        "start": {
+          "column": 5,
+          "line": 24
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/set.rs:26:9: replace SignatureSet::len -> usize with 1",
+    "package": "deflect-signature",
+    "replacement": "1",
+    "span": {
+      "end": {
+        "column": 30,
+        "line": 26
+      },
+      "start": {
+        "column": 9,
+        "line": 26
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/set.rs\n+++ replace SignatureSet::is_empty -> bool with true\n@@ -23,17 +23,17 @@\n \n     #[must_use]\n     pub fn len(&self) -> usize {\n         self.signatures.len()\n     }\n \n     #[must_use]\n     pub fn is_empty(&self) -> bool {\n-        self.signatures.is_empty()\n+        true /* ~ changed by cargo-mutants ~ */\n     }\n \n     pub fn push(&mut self, sig: Signature) {\n         let at = self\n             .signatures\n             .partition_point(|s| s.priority <= sig.priority);\n         self.signatures.insert(at, sig);\n     }\n",
+    "file": "crates/deflect-signature/src/set.rs",
+    "function": {
+      "function_name": "SignatureSet::is_empty",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 32
+        },
+        "start": {
+          "column": 5,
+          "line": 29
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/set.rs:31:9: replace SignatureSet::is_empty -> bool with true",
+    "package": "deflect-signature",
+    "replacement": "true",
+    "span": {
+      "end": {
+        "column": 35,
+        "line": 31
+      },
+      "start": {
+        "column": 9,
+        "line": 31
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/set.rs\n+++ replace SignatureSet::is_empty -> bool with false\n@@ -23,17 +23,17 @@\n \n     #[must_use]\n     pub fn len(&self) -> usize {\n         self.signatures.len()\n     }\n \n     #[must_use]\n     pub fn is_empty(&self) -> bool {\n-        self.signatures.is_empty()\n+        false /* ~ changed by cargo-mutants ~ */\n     }\n \n     pub fn push(&mut self, sig: Signature) {\n         let at = self\n             .signatures\n             .partition_point(|s| s.priority <= sig.priority);\n         self.signatures.insert(at, sig);\n     }\n",
+    "file": "crates/deflect-signature/src/set.rs",
+    "function": {
+      "function_name": "SignatureSet::is_empty",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 32
+        },
+        "start": {
+          "column": 5,
+          "line": 29
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/set.rs:31:9: replace SignatureSet::is_empty -> bool with false",
+    "package": "deflect-signature",
+    "replacement": "false",
+    "span": {
+      "end": {
+        "column": 35,
+        "line": 31
+      },
+      "start": {
+        "column": 9,
+        "line": 31
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/set.rs\n+++ replace SignatureSet::push with ()\n@@ -27,20 +27,17 @@\n     }\n \n     #[must_use]\n     pub fn is_empty(&self) -> bool {\n         self.signatures.is_empty()\n     }\n \n     pub fn push(&mut self, sig: Signature) {\n-        let at = self\n-            .signatures\n-            .partition_point(|s| s.priority <= sig.priority);\n-        self.signatures.insert(at, sig);\n+        () /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// The first signature that matches `packet`, in priority order.\n     #[must_use]\n     pub fn first_match(&self, packet: &Packet<'_>) -> Option<&Signature> {\n         self.signatures.iter().find(|s| s.matches(packet))\n     }\n \n",
+    "file": "crates/deflect-signature/src/set.rs",
+    "function": {
+      "function_name": "SignatureSet::push",
+      "return_type": "",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 39
+        },
+        "start": {
+          "column": 5,
+          "line": 34
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/set.rs:35:9: replace SignatureSet::push with ()",
+    "package": "deflect-signature",
+    "replacement": "()",
+    "span": {
+      "end": {
+        "column": 41,
+        "line": 38
+      },
+      "start": {
+        "column": 9,
+        "line": 35
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/set.rs\n+++ replace <= with > in SignatureSet::push\n@@ -29,17 +29,17 @@\n     #[must_use]\n     pub fn is_empty(&self) -> bool {\n         self.signatures.is_empty()\n     }\n \n     pub fn push(&mut self, sig: Signature) {\n         let at = self\n             .signatures\n-            .partition_point(|s| s.priority <= sig.priority);\n+            .partition_point(|s| s.priority > /* ~ changed by cargo-mutants ~ */ sig.priority);\n         self.signatures.insert(at, sig);\n     }\n \n     /// The first signature that matches `packet`, in priority order.\n     #[must_use]\n     pub fn first_match(&self, packet: &Packet<'_>) -> Option<&Signature> {\n         self.signatures.iter().find(|s| s.matches(packet))\n     }\n",
+    "file": "crates/deflect-signature/src/set.rs",
+    "function": {
+      "function_name": "SignatureSet::push",
+      "return_type": "",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 39
+        },
+        "start": {
+          "column": 5,
+          "line": 34
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/set.rs:37:45: replace <= with > in SignatureSet::push",
+    "package": "deflect-signature",
+    "replacement": ">",
+    "span": {
+      "end": {
+        "column": 47,
+        "line": 37
+      },
+      "start": {
+        "column": 45,
+        "line": 37
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/set.rs\n+++ replace SignatureSet::first_match -> Option<&Signature> with None\n@@ -36,17 +36,17 @@\n             .signatures\n             .partition_point(|s| s.priority <= sig.priority);\n         self.signatures.insert(at, sig);\n     }\n \n     /// The first signature that matches `packet`, in priority order.\n     #[must_use]\n     pub fn first_match(&self, packet: &Packet<'_>) -> Option<&Signature> {\n-        self.signatures.iter().find(|s| s.matches(packet))\n+        None /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// The verdict for `packet`: the first matching signature's action, else\n     /// [`Verdict::Pass`].\n     #[must_use]\n     pub fn classify(&self, packet: &Packet<'_>) -> Verdict {\n         self.first_match(packet)\n             .map_or(Verdict::Pass, |s| s.action.verdict())\n",
+    "file": "crates/deflect-signature/src/set.rs",
+    "function": {
+      "function_name": "SignatureSet::first_match",
+      "return_type": "-> Option<&Signature>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 45
+        },
+        "start": {
+          "column": 5,
+          "line": 41
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/set.rs:44:9: replace SignatureSet::first_match -> Option<&Signature> with None",
+    "package": "deflect-signature",
+    "replacement": "None",
+    "span": {
+      "end": {
+        "column": 59,
+        "line": 44
+      },
+      "start": {
+        "column": 9,
+        "line": 44
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/set.rs\n+++ replace SignatureSet::first_match -> Option<&Signature> with Some(Box::leak(Box::new(Default::default())))\n@@ -36,17 +36,17 @@\n             .signatures\n             .partition_point(|s| s.priority <= sig.priority);\n         self.signatures.insert(at, sig);\n     }\n \n     /// The first signature that matches `packet`, in priority order.\n     #[must_use]\n     pub fn first_match(&self, packet: &Packet<'_>) -> Option<&Signature> {\n-        self.signatures.iter().find(|s| s.matches(packet))\n+        Some(Box::leak(Box::new(Default::default()))) /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// The verdict for `packet`: the first matching signature's action, else\n     /// [`Verdict::Pass`].\n     #[must_use]\n     pub fn classify(&self, packet: &Packet<'_>) -> Verdict {\n         self.first_match(packet)\n             .map_or(Verdict::Pass, |s| s.action.verdict())\n",
+    "file": "crates/deflect-signature/src/set.rs",
+    "function": {
+      "function_name": "SignatureSet::first_match",
+      "return_type": "-> Option<&Signature>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 45
+        },
+        "start": {
+          "column": 5,
+          "line": 41
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/set.rs:44:9: replace SignatureSet::first_match -> Option<&Signature> with Some(Box::leak(Box::new(Default::default())))",
+    "package": "deflect-signature",
+    "replacement": "Some(Box::leak(Box::new(Default::default())))",
+    "span": {
+      "end": {
+        "column": 59,
+        "line": 44
+      },
+      "start": {
+        "column": 9,
+        "line": 44
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/set.rs\n+++ replace SignatureSet::classify -> Verdict with Default::default()\n@@ -43,18 +43,17 @@\n     pub fn first_match(&self, packet: &Packet<'_>) -> Option<&Signature> {\n         self.signatures.iter().find(|s| s.matches(packet))\n     }\n \n     /// The verdict for `packet`: the first matching signature's action, else\n     /// [`Verdict::Pass`].\n     #[must_use]\n     pub fn classify(&self, packet: &Packet<'_>) -> Verdict {\n-        self.first_match(packet)\n-            .map_or(Verdict::Pass, |s| s.action.verdict())\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Iterate the signatures in evaluation (priority) order.\n     pub fn iter(&self) -> impl Iterator<Item = &Signature> {\n         self.signatures.iter()\n     }\n }\n \n",
+    "file": "crates/deflect-signature/src/set.rs",
+    "function": {
+      "function_name": "SignatureSet::classify",
+      "return_type": "-> Verdict",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 53
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/set.rs:51:9: replace SignatureSet::classify -> Verdict with Default::default()",
+    "package": "deflect-signature",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 59,
+        "line": 52
+      },
+      "start": {
+        "column": 9,
+        "line": 51
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/set.rs\n+++ replace SignatureSet::iter -> impl Iterator<Item =&Signature> with ::std::iter::empty()\n@@ -49,17 +49,17 @@\n     #[must_use]\n     pub fn classify(&self, packet: &Packet<'_>) -> Verdict {\n         self.first_match(packet)\n             .map_or(Verdict::Pass, |s| s.action.verdict())\n     }\n \n     /// Iterate the signatures in evaluation (priority) order.\n     pub fn iter(&self) -> impl Iterator<Item = &Signature> {\n-        self.signatures.iter()\n+        ::std::iter::empty() /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n impl Stage for SignatureSet {\n     fn evaluate(&self, obs: &Observation<'_>) -> Verdict {\n         self.classify(&obs.packet)\n     }\n \n",
+    "file": "crates/deflect-signature/src/set.rs",
+    "function": {
+      "function_name": "SignatureSet::iter",
+      "return_type": "-> impl Iterator<Item =&Signature>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 58
+        },
+        "start": {
+          "column": 5,
+          "line": 55
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/set.rs:57:9: replace SignatureSet::iter -> impl Iterator<Item =&Signature> with ::std::iter::empty()",
+    "package": "deflect-signature",
+    "replacement": "::std::iter::empty()",
+    "span": {
+      "end": {
+        "column": 31,
+        "line": 57
+      },
+      "start": {
+        "column": 9,
+        "line": 57
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/set.rs\n+++ replace SignatureSet::iter -> impl Iterator<Item =&Signature> with ::std::iter::once(Box::leak(Box::new(Default::default())))\n@@ -49,17 +49,17 @@\n     #[must_use]\n     pub fn classify(&self, packet: &Packet<'_>) -> Verdict {\n         self.first_match(packet)\n             .map_or(Verdict::Pass, |s| s.action.verdict())\n     }\n \n     /// Iterate the signatures in evaluation (priority) order.\n     pub fn iter(&self) -> impl Iterator<Item = &Signature> {\n-        self.signatures.iter()\n+        ::std::iter::once(Box::leak(Box::new(Default::default()))) /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n impl Stage for SignatureSet {\n     fn evaluate(&self, obs: &Observation<'_>) -> Verdict {\n         self.classify(&obs.packet)\n     }\n \n",
+    "file": "crates/deflect-signature/src/set.rs",
+    "function": {
+      "function_name": "SignatureSet::iter",
+      "return_type": "-> impl Iterator<Item =&Signature>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 58
+        },
+        "start": {
+          "column": 5,
+          "line": 55
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/set.rs:57:9: replace SignatureSet::iter -> impl Iterator<Item =&Signature> with ::std::iter::once(Box::leak(Box::new(Default::default())))",
+    "package": "deflect-signature",
+    "replacement": "::std::iter::once(Box::leak(Box::new(Default::default())))",
+    "span": {
+      "end": {
+        "column": 31,
+        "line": 57
+      },
+      "start": {
+        "column": 9,
+        "line": 57
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/set.rs\n+++ replace <impl Stage for SignatureSet>::evaluate -> Verdict with Default::default()\n@@ -55,17 +55,17 @@\n     /// Iterate the signatures in evaluation (priority) order.\n     pub fn iter(&self) -> impl Iterator<Item = &Signature> {\n         self.signatures.iter()\n     }\n }\n \n impl Stage for SignatureSet {\n     fn evaluate(&self, obs: &Observation<'_>) -> Verdict {\n-        self.classify(&obs.packet)\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     fn name(&self) -> &'static str {\n         \"signature_set\"\n     }\n }\n \n impl FromIterator<Signature> for SignatureSet {\n",
+    "file": "crates/deflect-signature/src/set.rs",
+    "function": {
+      "function_name": "<impl Stage for SignatureSet>::evaluate",
+      "return_type": "-> Verdict",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 64
+        },
+        "start": {
+          "column": 5,
+          "line": 62
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/set.rs:63:9: replace <impl Stage for SignatureSet>::evaluate -> Verdict with Default::default()",
+    "package": "deflect-signature",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 35,
+        "line": 63
+      },
+      "start": {
+        "column": 9,
+        "line": 63
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/set.rs\n+++ replace <impl Stage for SignatureSet>::name -> &'static str with \"\"\n@@ -59,17 +59,17 @@\n }\n \n impl Stage for SignatureSet {\n     fn evaluate(&self, obs: &Observation<'_>) -> Verdict {\n         self.classify(&obs.packet)\n     }\n \n     fn name(&self) -> &'static str {\n-        \"signature_set\"\n+        \"\" /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n impl FromIterator<Signature> for SignatureSet {\n     fn from_iter<I: IntoIterator<Item = Signature>>(iter: I) -> Self {\n         SignatureSet::new(iter.into_iter().collect())\n     }\n }\n",
+    "file": "crates/deflect-signature/src/set.rs",
+    "function": {
+      "function_name": "<impl Stage for SignatureSet>::name",
+      "return_type": "-> &'static str",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 68
+        },
+        "start": {
+          "column": 5,
+          "line": 66
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/set.rs:67:9: replace <impl Stage for SignatureSet>::name -> &'static str with \"\"",
+    "package": "deflect-signature",
+    "replacement": "\"\"",
+    "span": {
+      "end": {
+        "column": 24,
+        "line": 67
+      },
+      "start": {
+        "column": 9,
+        "line": 67
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/set.rs\n+++ replace <impl Stage for SignatureSet>::name -> &'static str with \"xyzzy\"\n@@ -59,17 +59,17 @@\n }\n \n impl Stage for SignatureSet {\n     fn evaluate(&self, obs: &Observation<'_>) -> Verdict {\n         self.classify(&obs.packet)\n     }\n \n     fn name(&self) -> &'static str {\n-        \"signature_set\"\n+        \"xyzzy\" /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n impl FromIterator<Signature> for SignatureSet {\n     fn from_iter<I: IntoIterator<Item = Signature>>(iter: I) -> Self {\n         SignatureSet::new(iter.into_iter().collect())\n     }\n }\n",
+    "file": "crates/deflect-signature/src/set.rs",
+    "function": {
+      "function_name": "<impl Stage for SignatureSet>::name",
+      "return_type": "-> &'static str",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 68
+        },
+        "start": {
+          "column": 5,
+          "line": 66
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/set.rs:67:9: replace <impl Stage for SignatureSet>::name -> &'static str with \"xyzzy\"",
+    "package": "deflect-signature",
+    "replacement": "\"xyzzy\"",
+    "span": {
+      "end": {
+        "column": 24,
+        "line": 67
+      },
+      "start": {
+        "column": 9,
+        "line": 67
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/set.rs\n+++ replace <impl FromIterator<Signature> for SignatureSet>::from_iter -> Self with Default::default()\n@@ -65,17 +65,17 @@\n \n     fn name(&self) -> &'static str {\n         \"signature_set\"\n     }\n }\n \n impl FromIterator<Signature> for SignatureSet {\n     fn from_iter<I: IntoIterator<Item = Signature>>(iter: I) -> Self {\n-        SignatureSet::new(iter.into_iter().collect())\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n     use alloc::vec;\n     use core::net::{IpAddr, Ipv4Addr};\n",
+    "file": "crates/deflect-signature/src/set.rs",
+    "function": {
+      "function_name": "<impl FromIterator<Signature> for SignatureSet>::from_iter",
+      "return_type": "-> Self",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 74
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/set.rs:73:9: replace <impl FromIterator<Signature> for SignatureSet>::from_iter -> Self with Default::default()",
+    "package": "deflect-signature",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 54,
+        "line": 73
+      },
+      "start": {
+        "column": 9,
+        "line": 73
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace Action::verdict -> Verdict with Default::default()\n@@ -16,20 +16,17 @@\n     Allow,\n     /// Drop the packet, attributing it to `reason`.\n     Drop(DropReason),\n }\n \n impl Action {\n     #[must_use]\n     pub fn verdict(self) -> Verdict {\n-        match self {\n-            Action::Allow => Verdict::Pass,\n-            Action::Drop(reason) => Verdict::Drop(reason),\n-        }\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n /// One matchable rule. Every set condition must hold (logical AND) for the\n /// signature to match; unset conditions are left at their permissive default.\n ///\n /// Signatures carry a `priority` used only to order a set; lower sorts first\n /// and therefore wins when several match.\n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Action::verdict",
+      "return_type": "-> Verdict",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 28
+        },
+        "start": {
+          "column": 5,
+          "line": 22
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/signature.rs:24:9: replace Action::verdict -> Verdict with Default::default()",
+    "package": "deflect-signature",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 10,
+        "line": 27
+      },
+      "start": {
+        "column": 9,
+        "line": 24
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace max_wire_default -> u32 with 0\n@@ -53,17 +53,17 @@\n     pub max_wire_len: u32,\n     #[cfg_attr(feature = \"serde\", serde(default))]\n     pub payload: PayloadMatch,\n     pub action: Action,\n }\n \n #[cfg(feature = \"serde\")]\n fn max_wire_default() -> u32 {\n-    u32::MAX\n+    0 /* ~ changed by cargo-mutants ~ */\n }\n \n impl Signature {\n     /// A permissive signature that matches every packet and drops it; refine it\n     /// with the builder methods, then set a real [`Action`].\n     #[must_use]\n     pub fn new(id: u32, name: impl Into<Cow<'static, str>>) -> Signature {\n         Signature {\n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "max_wire_default",
+      "return_type": "-> u32",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 62
+        },
+        "start": {
+          "column": 1,
+          "line": 59
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/signature.rs:61:5: replace max_wire_default -> u32 with 0",
+    "package": "deflect-signature",
+    "replacement": "0",
+    "span": {
+      "end": {
+        "column": 13,
+        "line": 61
+      },
+      "start": {
+        "column": 5,
+        "line": 61
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace max_wire_default -> u32 with 1\n@@ -53,17 +53,17 @@\n     pub max_wire_len: u32,\n     #[cfg_attr(feature = \"serde\", serde(default))]\n     pub payload: PayloadMatch,\n     pub action: Action,\n }\n \n #[cfg(feature = \"serde\")]\n fn max_wire_default() -> u32 {\n-    u32::MAX\n+    1 /* ~ changed by cargo-mutants ~ */\n }\n \n impl Signature {\n     /// A permissive signature that matches every packet and drops it; refine it\n     /// with the builder methods, then set a real [`Action`].\n     #[must_use]\n     pub fn new(id: u32, name: impl Into<Cow<'static, str>>) -> Signature {\n         Signature {\n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "max_wire_default",
+      "return_type": "-> u32",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 62
+        },
+        "start": {
+          "column": 1,
+          "line": 59
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/signature.rs:61:5: replace max_wire_default -> u32 with 1",
+    "package": "deflect-signature",
+    "replacement": "1",
+    "span": {
+      "end": {
+        "column": 13,
+        "line": 61
+      },
+      "start": {
+        "column": 5,
+        "line": 61
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace Signature::priority -> Self with Default::default()\n@@ -78,18 +78,17 @@\n             max_wire_len: u32::MAX,\n             payload: PayloadMatch::Any,\n             action: Action::Drop(DropReason::Signature),\n         }\n     }\n \n     #[must_use]\n     pub fn priority(mut self, p: i32) -> Self {\n-        self.priority = p;\n-        self\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn proto(mut self, l4: L4) -> Self {\n         self.l4 = Some(l4);\n         self\n     }\n \n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::priority",
+      "return_type": "-> Self",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 88
+        },
+        "start": {
+          "column": 5,
+          "line": 84
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/signature.rs:86:9: replace Signature::priority -> Self with Default::default()",
+    "package": "deflect-signature",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 13,
+        "line": 87
+      },
+      "start": {
+        "column": 9,
+        "line": 86
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace Signature::proto -> Self with Default::default()\n@@ -84,18 +84,17 @@\n     #[must_use]\n     pub fn priority(mut self, p: i32) -> Self {\n         self.priority = p;\n         self\n     }\n \n     #[must_use]\n     pub fn proto(mut self, l4: L4) -> Self {\n-        self.l4 = Some(l4);\n-        self\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn src_port(mut self, m: PortMatch) -> Self {\n         self.src_port = m;\n         self\n     }\n \n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::proto",
+      "return_type": "-> Self",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 94
+        },
+        "start": {
+          "column": 5,
+          "line": 90
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/signature.rs:92:9: replace Signature::proto -> Self with Default::default()",
+    "package": "deflect-signature",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 13,
+        "line": 93
+      },
+      "start": {
+        "column": 9,
+        "line": 92
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace Signature::src_port -> Self with Default::default()\n@@ -90,18 +90,17 @@\n     #[must_use]\n     pub fn proto(mut self, l4: L4) -> Self {\n         self.l4 = Some(l4);\n         self\n     }\n \n     #[must_use]\n     pub fn src_port(mut self, m: PortMatch) -> Self {\n-        self.src_port = m;\n-        self\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn dst_port(mut self, m: PortMatch) -> Self {\n         self.dst_port = m;\n         self\n     }\n \n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::src_port",
+      "return_type": "-> Self",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 100
+        },
+        "start": {
+          "column": 5,
+          "line": 96
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/signature.rs:98:9: replace Signature::src_port -> Self with Default::default()",
+    "package": "deflect-signature",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 13,
+        "line": 99
+      },
+      "start": {
+        "column": 9,
+        "line": 98
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace Signature::dst_port -> Self with Default::default()\n@@ -96,18 +96,17 @@\n     #[must_use]\n     pub fn src_port(mut self, m: PortMatch) -> Self {\n         self.src_port = m;\n         self\n     }\n \n     #[must_use]\n     pub fn dst_port(mut self, m: PortMatch) -> Self {\n-        self.dst_port = m;\n-        self\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn flags(mut self, m: FlagMatch) -> Self {\n         self.flags = m;\n         self\n     }\n \n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::dst_port",
+      "return_type": "-> Self",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 106
+        },
+        "start": {
+          "column": 5,
+          "line": 102
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/signature.rs:104:9: replace Signature::dst_port -> Self with Default::default()",
+    "package": "deflect-signature",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 13,
+        "line": 105
+      },
+      "start": {
+        "column": 9,
+        "line": 104
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace Signature::flags -> Self with Default::default()\n@@ -102,18 +102,17 @@\n     #[must_use]\n     pub fn dst_port(mut self, m: PortMatch) -> Self {\n         self.dst_port = m;\n         self\n     }\n \n     #[must_use]\n     pub fn flags(mut self, m: FlagMatch) -> Self {\n-        self.flags = m;\n-        self\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn wire_len(mut self, min: u32, max: u32) -> Self {\n         self.min_wire_len = min.min(max);\n         self.max_wire_len = min.max(max);\n         self\n     }\n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::flags",
+      "return_type": "-> Self",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 112
+        },
+        "start": {
+          "column": 5,
+          "line": 108
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/signature.rs:110:9: replace Signature::flags -> Self with Default::default()",
+    "package": "deflect-signature",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 13,
+        "line": 111
+      },
+      "start": {
+        "column": 9,
+        "line": 110
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace Signature::wire_len -> Self with Default::default()\n@@ -108,19 +108,17 @@\n     #[must_use]\n     pub fn flags(mut self, m: FlagMatch) -> Self {\n         self.flags = m;\n         self\n     }\n \n     #[must_use]\n     pub fn wire_len(mut self, min: u32, max: u32) -> Self {\n-        self.min_wire_len = min.min(max);\n-        self.max_wire_len = min.max(max);\n-        self\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn payload(mut self, m: PayloadMatch) -> Self {\n         self.payload = m;\n         self\n     }\n \n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::wire_len",
+      "return_type": "-> Self",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 119
+        },
+        "start": {
+          "column": 5,
+          "line": 114
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/signature.rs:116:9: replace Signature::wire_len -> Self with Default::default()",
+    "package": "deflect-signature",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 13,
+        "line": 118
+      },
+      "start": {
+        "column": 9,
+        "line": 116
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace Signature::payload -> Self with Default::default()\n@@ -115,18 +115,17 @@\n     pub fn wire_len(mut self, min: u32, max: u32) -> Self {\n         self.min_wire_len = min.min(max);\n         self.max_wire_len = min.max(max);\n         self\n     }\n \n     #[must_use]\n     pub fn payload(mut self, m: PayloadMatch) -> Self {\n-        self.payload = m;\n-        self\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn action(mut self, a: Action) -> Self {\n         self.action = a;\n         self\n     }\n \n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::payload",
+      "return_type": "-> Self",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 125
+        },
+        "start": {
+          "column": 5,
+          "line": 121
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/signature.rs:123:9: replace Signature::payload -> Self with Default::default()",
+    "package": "deflect-signature",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 13,
+        "line": 124
+      },
+      "start": {
+        "column": 9,
+        "line": 123
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace Signature::action -> Self with Default::default()\n@@ -121,18 +121,17 @@\n     #[must_use]\n     pub fn payload(mut self, m: PayloadMatch) -> Self {\n         self.payload = m;\n         self\n     }\n \n     #[must_use]\n     pub fn action(mut self, a: Action) -> Self {\n-        self.action = a;\n-        self\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn allow(mut self) -> Self {\n         self.action = Action::Allow;\n         self\n     }\n \n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::action",
+      "return_type": "-> Self",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 131
+        },
+        "start": {
+          "column": 5,
+          "line": 127
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/signature.rs:129:9: replace Signature::action -> Self with Default::default()",
+    "package": "deflect-signature",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 13,
+        "line": 130
+      },
+      "start": {
+        "column": 9,
+        "line": 129
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace Signature::allow -> Self with Default::default()\n@@ -127,18 +127,17 @@\n     #[must_use]\n     pub fn action(mut self, a: Action) -> Self {\n         self.action = a;\n         self\n     }\n \n     #[must_use]\n     pub fn allow(mut self) -> Self {\n-        self.action = Action::Allow;\n-        self\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// True if `packet` satisfies every condition of this signature.\n     #[must_use]\n     pub fn matches(&self, packet: &Packet<'_>) -> bool {\n         if let Some(l4) = self.l4 {\n             if l4 != packet.l4 {\n                 return false;\n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::allow",
+      "return_type": "-> Self",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 137
+        },
+        "start": {
+          "column": 5,
+          "line": 133
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/signature.rs:135:9: replace Signature::allow -> Self with Default::default()",
+    "package": "deflect-signature",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 13,
+        "line": 136
+      },
+      "start": {
+        "column": 9,
+        "line": 135
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace Signature::matches -> bool with true\n@@ -134,39 +134,17 @@\n     pub fn allow(mut self) -> Self {\n         self.action = Action::Allow;\n         self\n     }\n \n     /// True if `packet` satisfies every condition of this signature.\n     #[must_use]\n     pub fn matches(&self, packet: &Packet<'_>) -> bool {\n-        if let Some(l4) = self.l4 {\n-            if l4 != packet.l4 {\n-                return false;\n-            }\n-        }\n-        if packet.wire_len < self.min_wire_len || packet.wire_len > self.max_wire_len {\n-            return false;\n-        }\n-        if !self.src_port.matches(packet.src_port) || !self.dst_port.matches(packet.dst_port) {\n-            return false;\n-        }\n-        // Flag constraints are meaningful only for TCP; a flag-bearing signature\n-        // should also pin `l4 = Tcp`, but guard here so a stray constraint on a\n-        // non-TCP packet cannot match on its always-zero flags.\n-        if self.flags != FlagMatch::any() {\n-            if packet.l4 != L4::Tcp {\n-                return false;\n-            }\n-            if !self.flags.matches(packet.tcp_flags) {\n-                return false;\n-            }\n-        }\n-        self.payload.matches(packet.payload)\n+        true /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n     use core::net::{IpAddr, Ipv4Addr};\n \n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 165
+        },
+        "start": {
+          "column": 5,
+          "line": 139
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/signature.rs:142:9: replace Signature::matches -> bool with true",
+    "package": "deflect-signature",
+    "replacement": "true",
+    "span": {
+      "end": {
+        "column": 45,
+        "line": 164
+      },
+      "start": {
+        "column": 9,
+        "line": 142
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace Signature::matches -> bool with false\n@@ -134,39 +134,17 @@\n     pub fn allow(mut self) -> Self {\n         self.action = Action::Allow;\n         self\n     }\n \n     /// True if `packet` satisfies every condition of this signature.\n     #[must_use]\n     pub fn matches(&self, packet: &Packet<'_>) -> bool {\n-        if let Some(l4) = self.l4 {\n-            if l4 != packet.l4 {\n-                return false;\n-            }\n-        }\n-        if packet.wire_len < self.min_wire_len || packet.wire_len > self.max_wire_len {\n-            return false;\n-        }\n-        if !self.src_port.matches(packet.src_port) || !self.dst_port.matches(packet.dst_port) {\n-            return false;\n-        }\n-        // Flag constraints are meaningful only for TCP; a flag-bearing signature\n-        // should also pin `l4 = Tcp`, but guard here so a stray constraint on a\n-        // non-TCP packet cannot match on its always-zero flags.\n-        if self.flags != FlagMatch::any() {\n-            if packet.l4 != L4::Tcp {\n-                return false;\n-            }\n-            if !self.flags.matches(packet.tcp_flags) {\n-                return false;\n-            }\n-        }\n-        self.payload.matches(packet.payload)\n+        false /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n     use core::net::{IpAddr, Ipv4Addr};\n \n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 165
+        },
+        "start": {
+          "column": 5,
+          "line": 139
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-signature/src/signature.rs:142:9: replace Signature::matches -> bool with false",
+    "package": "deflect-signature",
+    "replacement": "false",
+    "span": {
+      "end": {
+        "column": 45,
+        "line": 164
+      },
+      "start": {
+        "column": 9,
+        "line": 142
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace != with == in Signature::matches\n@@ -135,17 +135,17 @@\n         self.action = Action::Allow;\n         self\n     }\n \n     /// True if `packet` satisfies every condition of this signature.\n     #[must_use]\n     pub fn matches(&self, packet: &Packet<'_>) -> bool {\n         if let Some(l4) = self.l4 {\n-            if l4 != packet.l4 {\n+            if l4 == /* ~ changed by cargo-mutants ~ */ packet.l4 {\n                 return false;\n             }\n         }\n         if packet.wire_len < self.min_wire_len || packet.wire_len > self.max_wire_len {\n             return false;\n         }\n         if !self.src_port.matches(packet.src_port) || !self.dst_port.matches(packet.dst_port) {\n             return false;\n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 165
+        },
+        "start": {
+          "column": 5,
+          "line": 139
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/signature.rs:143:19: replace != with == in Signature::matches",
+    "package": "deflect-signature",
+    "replacement": "==",
+    "span": {
+      "end": {
+        "column": 21,
+        "line": 143
+      },
+      "start": {
+        "column": 19,
+        "line": 143
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace || with && in Signature::matches\n@@ -139,17 +139,17 @@\n     /// True if `packet` satisfies every condition of this signature.\n     #[must_use]\n     pub fn matches(&self, packet: &Packet<'_>) -> bool {\n         if let Some(l4) = self.l4 {\n             if l4 != packet.l4 {\n                 return false;\n             }\n         }\n-        if packet.wire_len < self.min_wire_len || packet.wire_len > self.max_wire_len {\n+        if packet.wire_len < self.min_wire_len && /* ~ changed by cargo-mutants ~ */ packet.wire_len > self.max_wire_len {\n             return false;\n         }\n         if !self.src_port.matches(packet.src_port) || !self.dst_port.matches(packet.dst_port) {\n             return false;\n         }\n         // Flag constraints are meaningful only for TCP; a flag-bearing signature\n         // should also pin `l4 = Tcp`, but guard here so a stray constraint on a\n         // non-TCP packet cannot match on its always-zero flags.\n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 165
+        },
+        "start": {
+          "column": 5,
+          "line": 139
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/signature.rs:147:48: replace || with && in Signature::matches",
+    "package": "deflect-signature",
+    "replacement": "&&",
+    "span": {
+      "end": {
+        "column": 50,
+        "line": 147
+      },
+      "start": {
+        "column": 48,
+        "line": 147
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace < with == in Signature::matches\n@@ -139,17 +139,17 @@\n     /// True if `packet` satisfies every condition of this signature.\n     #[must_use]\n     pub fn matches(&self, packet: &Packet<'_>) -> bool {\n         if let Some(l4) = self.l4 {\n             if l4 != packet.l4 {\n                 return false;\n             }\n         }\n-        if packet.wire_len < self.min_wire_len || packet.wire_len > self.max_wire_len {\n+        if packet.wire_len == /* ~ changed by cargo-mutants ~ */ self.min_wire_len || packet.wire_len > self.max_wire_len {\n             return false;\n         }\n         if !self.src_port.matches(packet.src_port) || !self.dst_port.matches(packet.dst_port) {\n             return false;\n         }\n         // Flag constraints are meaningful only for TCP; a flag-bearing signature\n         // should also pin `l4 = Tcp`, but guard here so a stray constraint on a\n         // non-TCP packet cannot match on its always-zero flags.\n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 165
+        },
+        "start": {
+          "column": 5,
+          "line": 139
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/signature.rs:147:28: replace < with == in Signature::matches",
+    "package": "deflect-signature",
+    "replacement": "==",
+    "span": {
+      "end": {
+        "column": 29,
+        "line": 147
+      },
+      "start": {
+        "column": 28,
+        "line": 147
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace < with > in Signature::matches\n@@ -139,17 +139,17 @@\n     /// True if `packet` satisfies every condition of this signature.\n     #[must_use]\n     pub fn matches(&self, packet: &Packet<'_>) -> bool {\n         if let Some(l4) = self.l4 {\n             if l4 != packet.l4 {\n                 return false;\n             }\n         }\n-        if packet.wire_len < self.min_wire_len || packet.wire_len > self.max_wire_len {\n+        if packet.wire_len > /* ~ changed by cargo-mutants ~ */ self.min_wire_len || packet.wire_len > self.max_wire_len {\n             return false;\n         }\n         if !self.src_port.matches(packet.src_port) || !self.dst_port.matches(packet.dst_port) {\n             return false;\n         }\n         // Flag constraints are meaningful only for TCP; a flag-bearing signature\n         // should also pin `l4 = Tcp`, but guard here so a stray constraint on a\n         // non-TCP packet cannot match on its always-zero flags.\n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 165
+        },
+        "start": {
+          "column": 5,
+          "line": 139
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/signature.rs:147:28: replace < with > in Signature::matches",
+    "package": "deflect-signature",
+    "replacement": ">",
+    "span": {
+      "end": {
+        "column": 29,
+        "line": 147
+      },
+      "start": {
+        "column": 28,
+        "line": 147
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace < with <= in Signature::matches\n@@ -139,17 +139,17 @@\n     /// True if `packet` satisfies every condition of this signature.\n     #[must_use]\n     pub fn matches(&self, packet: &Packet<'_>) -> bool {\n         if let Some(l4) = self.l4 {\n             if l4 != packet.l4 {\n                 return false;\n             }\n         }\n-        if packet.wire_len < self.min_wire_len || packet.wire_len > self.max_wire_len {\n+        if packet.wire_len <= /* ~ changed by cargo-mutants ~ */ self.min_wire_len || packet.wire_len > self.max_wire_len {\n             return false;\n         }\n         if !self.src_port.matches(packet.src_port) || !self.dst_port.matches(packet.dst_port) {\n             return false;\n         }\n         // Flag constraints are meaningful only for TCP; a flag-bearing signature\n         // should also pin `l4 = Tcp`, but guard here so a stray constraint on a\n         // non-TCP packet cannot match on its always-zero flags.\n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 165
+        },
+        "start": {
+          "column": 5,
+          "line": 139
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/signature.rs:147:28: replace < with <= in Signature::matches",
+    "package": "deflect-signature",
+    "replacement": "<=",
+    "span": {
+      "end": {
+        "column": 29,
+        "line": 147
+      },
+      "start": {
+        "column": 28,
+        "line": 147
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace > with == in Signature::matches\n@@ -139,17 +139,17 @@\n     /// True if `packet` satisfies every condition of this signature.\n     #[must_use]\n     pub fn matches(&self, packet: &Packet<'_>) -> bool {\n         if let Some(l4) = self.l4 {\n             if l4 != packet.l4 {\n                 return false;\n             }\n         }\n-        if packet.wire_len < self.min_wire_len || packet.wire_len > self.max_wire_len {\n+        if packet.wire_len < self.min_wire_len || packet.wire_len == /* ~ changed by cargo-mutants ~ */ self.max_wire_len {\n             return false;\n         }\n         if !self.src_port.matches(packet.src_port) || !self.dst_port.matches(packet.dst_port) {\n             return false;\n         }\n         // Flag constraints are meaningful only for TCP; a flag-bearing signature\n         // should also pin `l4 = Tcp`, but guard here so a stray constraint on a\n         // non-TCP packet cannot match on its always-zero flags.\n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 165
+        },
+        "start": {
+          "column": 5,
+          "line": 139
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/signature.rs:147:67: replace > with == in Signature::matches",
+    "package": "deflect-signature",
+    "replacement": "==",
+    "span": {
+      "end": {
+        "column": 68,
+        "line": 147
+      },
+      "start": {
+        "column": 67,
+        "line": 147
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace > with < in Signature::matches\n@@ -139,17 +139,17 @@\n     /// True if `packet` satisfies every condition of this signature.\n     #[must_use]\n     pub fn matches(&self, packet: &Packet<'_>) -> bool {\n         if let Some(l4) = self.l4 {\n             if l4 != packet.l4 {\n                 return false;\n             }\n         }\n-        if packet.wire_len < self.min_wire_len || packet.wire_len > self.max_wire_len {\n+        if packet.wire_len < self.min_wire_len || packet.wire_len < /* ~ changed by cargo-mutants ~ */ self.max_wire_len {\n             return false;\n         }\n         if !self.src_port.matches(packet.src_port) || !self.dst_port.matches(packet.dst_port) {\n             return false;\n         }\n         // Flag constraints are meaningful only for TCP; a flag-bearing signature\n         // should also pin `l4 = Tcp`, but guard here so a stray constraint on a\n         // non-TCP packet cannot match on its always-zero flags.\n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 165
+        },
+        "start": {
+          "column": 5,
+          "line": 139
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/signature.rs:147:67: replace > with < in Signature::matches",
+    "package": "deflect-signature",
+    "replacement": "<",
+    "span": {
+      "end": {
+        "column": 68,
+        "line": 147
+      },
+      "start": {
+        "column": 67,
+        "line": 147
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace > with >= in Signature::matches\n@@ -139,17 +139,17 @@\n     /// True if `packet` satisfies every condition of this signature.\n     #[must_use]\n     pub fn matches(&self, packet: &Packet<'_>) -> bool {\n         if let Some(l4) = self.l4 {\n             if l4 != packet.l4 {\n                 return false;\n             }\n         }\n-        if packet.wire_len < self.min_wire_len || packet.wire_len > self.max_wire_len {\n+        if packet.wire_len < self.min_wire_len || packet.wire_len >= /* ~ changed by cargo-mutants ~ */ self.max_wire_len {\n             return false;\n         }\n         if !self.src_port.matches(packet.src_port) || !self.dst_port.matches(packet.dst_port) {\n             return false;\n         }\n         // Flag constraints are meaningful only for TCP; a flag-bearing signature\n         // should also pin `l4 = Tcp`, but guard here so a stray constraint on a\n         // non-TCP packet cannot match on its always-zero flags.\n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 165
+        },
+        "start": {
+          "column": 5,
+          "line": 139
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/signature.rs:147:67: replace > with >= in Signature::matches",
+    "package": "deflect-signature",
+    "replacement": ">=",
+    "span": {
+      "end": {
+        "column": 68,
+        "line": 147
+      },
+      "start": {
+        "column": 67,
+        "line": 147
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace || with && in Signature::matches\n@@ -142,17 +142,17 @@\n         if let Some(l4) = self.l4 {\n             if l4 != packet.l4 {\n                 return false;\n             }\n         }\n         if packet.wire_len < self.min_wire_len || packet.wire_len > self.max_wire_len {\n             return false;\n         }\n-        if !self.src_port.matches(packet.src_port) || !self.dst_port.matches(packet.dst_port) {\n+        if !self.src_port.matches(packet.src_port) && /* ~ changed by cargo-mutants ~ */ !self.dst_port.matches(packet.dst_port) {\n             return false;\n         }\n         // Flag constraints are meaningful only for TCP; a flag-bearing signature\n         // should also pin `l4 = Tcp`, but guard here so a stray constraint on a\n         // non-TCP packet cannot match on its always-zero flags.\n         if self.flags != FlagMatch::any() {\n             if packet.l4 != L4::Tcp {\n                 return false;\n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 165
+        },
+        "start": {
+          "column": 5,
+          "line": 139
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/signature.rs:150:52: replace || with && in Signature::matches",
+    "package": "deflect-signature",
+    "replacement": "&&",
+    "span": {
+      "end": {
+        "column": 54,
+        "line": 150
+      },
+      "start": {
+        "column": 52,
+        "line": 150
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ delete ! in Signature::matches\n@@ -142,17 +142,17 @@\n         if let Some(l4) = self.l4 {\n             if l4 != packet.l4 {\n                 return false;\n             }\n         }\n         if packet.wire_len < self.min_wire_len || packet.wire_len > self.max_wire_len {\n             return false;\n         }\n-        if !self.src_port.matches(packet.src_port) || !self.dst_port.matches(packet.dst_port) {\n+        if  /* ~ changed by cargo-mutants ~ */self.src_port.matches(packet.src_port) || !self.dst_port.matches(packet.dst_port) {\n             return false;\n         }\n         // Flag constraints are meaningful only for TCP; a flag-bearing signature\n         // should also pin `l4 = Tcp`, but guard here so a stray constraint on a\n         // non-TCP packet cannot match on its always-zero flags.\n         if self.flags != FlagMatch::any() {\n             if packet.l4 != L4::Tcp {\n                 return false;\n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 165
+        },
+        "start": {
+          "column": 5,
+          "line": 139
+        }
+      }
+    },
+    "genre": "UnaryOperator",
+    "name": "crates/deflect-signature/src/signature.rs:150:12: delete ! in Signature::matches",
+    "package": "deflect-signature",
+    "replacement": "",
+    "span": {
+      "end": {
+        "column": 13,
+        "line": 150
+      },
+      "start": {
+        "column": 12,
+        "line": 150
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ delete ! in Signature::matches\n@@ -142,17 +142,17 @@\n         if let Some(l4) = self.l4 {\n             if l4 != packet.l4 {\n                 return false;\n             }\n         }\n         if packet.wire_len < self.min_wire_len || packet.wire_len > self.max_wire_len {\n             return false;\n         }\n-        if !self.src_port.matches(packet.src_port) || !self.dst_port.matches(packet.dst_port) {\n+        if !self.src_port.matches(packet.src_port) ||  /* ~ changed by cargo-mutants ~ */self.dst_port.matches(packet.dst_port) {\n             return false;\n         }\n         // Flag constraints are meaningful only for TCP; a flag-bearing signature\n         // should also pin `l4 = Tcp`, but guard here so a stray constraint on a\n         // non-TCP packet cannot match on its always-zero flags.\n         if self.flags != FlagMatch::any() {\n             if packet.l4 != L4::Tcp {\n                 return false;\n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 165
+        },
+        "start": {
+          "column": 5,
+          "line": 139
+        }
+      }
+    },
+    "genre": "UnaryOperator",
+    "name": "crates/deflect-signature/src/signature.rs:150:55: delete ! in Signature::matches",
+    "package": "deflect-signature",
+    "replacement": "",
+    "span": {
+      "end": {
+        "column": 56,
+        "line": 150
+      },
+      "start": {
+        "column": 55,
+        "line": 150
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace != with == in Signature::matches\n@@ -148,17 +148,17 @@\n             return false;\n         }\n         if !self.src_port.matches(packet.src_port) || !self.dst_port.matches(packet.dst_port) {\n             return false;\n         }\n         // Flag constraints are meaningful only for TCP; a flag-bearing signature\n         // should also pin `l4 = Tcp`, but guard here so a stray constraint on a\n         // non-TCP packet cannot match on its always-zero flags.\n-        if self.flags != FlagMatch::any() {\n+        if self.flags == /* ~ changed by cargo-mutants ~ */ FlagMatch::any() {\n             if packet.l4 != L4::Tcp {\n                 return false;\n             }\n             if !self.flags.matches(packet.tcp_flags) {\n                 return false;\n             }\n         }\n         self.payload.matches(packet.payload)\n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 165
+        },
+        "start": {
+          "column": 5,
+          "line": 139
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/signature.rs:156:23: replace != with == in Signature::matches",
+    "package": "deflect-signature",
+    "replacement": "==",
+    "span": {
+      "end": {
+        "column": 25,
+        "line": 156
+      },
+      "start": {
+        "column": 23,
+        "line": 156
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ replace != with == in Signature::matches\n@@ -149,17 +149,17 @@\n         }\n         if !self.src_port.matches(packet.src_port) || !self.dst_port.matches(packet.dst_port) {\n             return false;\n         }\n         // Flag constraints are meaningful only for TCP; a flag-bearing signature\n         // should also pin `l4 = Tcp`, but guard here so a stray constraint on a\n         // non-TCP packet cannot match on its always-zero flags.\n         if self.flags != FlagMatch::any() {\n-            if packet.l4 != L4::Tcp {\n+            if packet.l4 == /* ~ changed by cargo-mutants ~ */ L4::Tcp {\n                 return false;\n             }\n             if !self.flags.matches(packet.tcp_flags) {\n                 return false;\n             }\n         }\n         self.payload.matches(packet.payload)\n     }\n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 165
+        },
+        "start": {
+          "column": 5,
+          "line": 139
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-signature/src/signature.rs:157:26: replace != with == in Signature::matches",
+    "package": "deflect-signature",
+    "replacement": "==",
+    "span": {
+      "end": {
+        "column": 28,
+        "line": 157
+      },
+      "start": {
+        "column": 26,
+        "line": 157
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-signature/src/signature.rs\n+++ delete ! in Signature::matches\n@@ -152,17 +152,17 @@\n         }\n         // Flag constraints are meaningful only for TCP; a flag-bearing signature\n         // should also pin `l4 = Tcp`, but guard here so a stray constraint on a\n         // non-TCP packet cannot match on its always-zero flags.\n         if self.flags != FlagMatch::any() {\n             if packet.l4 != L4::Tcp {\n                 return false;\n             }\n-            if !self.flags.matches(packet.tcp_flags) {\n+            if  /* ~ changed by cargo-mutants ~ */self.flags.matches(packet.tcp_flags) {\n                 return false;\n             }\n         }\n         self.payload.matches(packet.payload)\n     }\n }\n \n #[cfg(test)]\n",
+    "file": "crates/deflect-signature/src/signature.rs",
+    "function": {
+      "function_name": "Signature::matches",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 165
+        },
+        "start": {
+          "column": 5,
+          "line": 139
+        }
+      }
+    },
+    "genre": "UnaryOperator",
+    "name": "crates/deflect-signature/src/signature.rs:160:16: delete ! in Signature::matches",
+    "package": "deflect-signature",
+    "replacement": "",
+    "span": {
+      "end": {
+        "column": 17,
+        "line": 160
+      },
+      "start": {
+        "column": 16,
+        "line": 160
       }
     }
   }

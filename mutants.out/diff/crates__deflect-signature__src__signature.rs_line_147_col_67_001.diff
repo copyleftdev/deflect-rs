@@ -1,0 +1,21 @@
+--- crates/deflect-signature/src/signature.rs
++++ replace > with < in Signature::matches
+@@ -139,17 +139,17 @@
+     /// True if `packet` satisfies every condition of this signature.
+     #[must_use]
+     pub fn matches(&self, packet: &Packet<'_>) -> bool {
+         if let Some(l4) = self.l4 {
+             if l4 != packet.l4 {
+                 return false;
+             }
+         }
+-        if packet.wire_len < self.min_wire_len || packet.wire_len > self.max_wire_len {
++        if packet.wire_len < self.min_wire_len || packet.wire_len < /* ~ changed by cargo-mutants ~ */ self.max_wire_len {
+             return false;
+         }
+         if !self.src_port.matches(packet.src_port) || !self.dst_port.matches(packet.dst_port) {
+             return false;
+         }
+         // Flag constraints are meaningful only for TCP; a flag-bearing signature
+         // should also pin `l4 = Tcp`, but guard here so a stray constraint on a
+         // non-TCP packet cannot match on its always-zero flags.

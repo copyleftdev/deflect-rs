@@ -1,0 +1,216 @@
+
+*** crates/deflect-signature/src/matcher.rs:104:9: replace PayloadMatch::matches -> bool with true
+
+*** mutation diff:
+--- crates/deflect-signature/src/matcher.rs
++++ replace PayloadMatch::matches -> bool with true
+@@ -96,33 +96,17 @@
+     PrefixAt { offset: u32, bytes: Vec<u8> },
+     /// `bytes` occurs anywhere in the payload.
+     Contains(Vec<u8>),
+ }
+ 
+ impl PayloadMatch {
+     #[must_use]
+     pub fn matches(&self, payload: &[u8]) -> bool {
+-        match self {
+-            PayloadMatch::Any => true,
+-            PayloadMatch::MinLen(n) => payload.len() as u64 >= u64::from(*n),
+-            PayloadMatch::MaxLen(n) => payload.len() as u64 <= u64::from(*n),
+-            PayloadMatch::PrefixAt { offset, bytes } => {
+-                let off = *offset as usize;
+-                payload
+-                    .get(off..)
+-                    .is_some_and(|tail| tail.starts_with(bytes))
+-            }
+-            PayloadMatch::Contains(bytes) => {
+-                if bytes.is_empty() {
+-                    return true;
+-                }
+-                memchr::memmem::find(payload, bytes).is_some()
+-            }
+-        }
++        true /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+     use alloc::vec;
+ 
+
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=deflect-signature@0.1.0 --features=serde
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+       Fresh rand_core v0.10.1
+       Fresh unicode-ident v1.0.27
+       Fresh proc-macro2 v1.0.107
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh quote v1.0.47
+       Fresh syn v3.0.9
+       Fresh serde_core v1.0.229
+       Fresh getrandom v0.4.3
+       Fresh autocfg v1.5.1
+       Fresh bitflags v2.13.2
+       Fresh linux-raw-sys v0.12.1
+       Fresh rustix v1.1.5
+       Fresh serde_derive v1.0.229
+       Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
+       Fresh tempfile v3.27.0
+       Fresh serde v1.0.229
+       Fresh wait-timeout v0.2.1
+       Fresh bit-vec v0.10.1
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+       Fresh cpufeatures v0.3.1
+       Fresh memchr v2.8.3
+       Fresh chacha20 v0.10.2
+       Fresh rusty-fork v0.3.1
+       Fresh bit-set v0.11.1
+       Fresh num-traits v0.2.19
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/crates/deflect-core)
+       Fresh zmij v1.0.23
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh core_detect v1.0.0
+       Fresh regex-syntax v0.8.11
+       Fresh unarray v0.1.4
+       Fresh itoa v1.0.18
+       Fresh serde_json v1.0.154
+       Fresh proptest v1.12.0
+       Dirty deflect-signature v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/crates/deflect-signature): the file `crates/deflect-signature/src/matcher.rs` has changed (1792416732.881362322s, 4s after last build at 1792416728.549139981s)
+   Compiling deflect-signature v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/crates/deflect-signature)
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_signature --edition=2021 crates/deflect-signature/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="serde"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "serde", "std"))' -C metadata=812fc28fc3e5552e -C extra-filename=-3137f55794c1b405 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libdeflect_core-b64a48058b81922f.rlib --extern memchr=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libmemchr-e16633741164b756.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib --extern serde=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libserde-05adeb80374ef521.rlib --extern serde_json=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libserde_json-5dc8d59369440c0a.rlib`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_signature --edition=2021 crates/deflect-signature/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="serde"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "serde", "std"))' -C metadata=792b85c02907ef88 -C extra-filename=-fd0ffc80e5d235ba --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libdeflect_core-b64a48058b81922f.rmeta --extern memchr=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libmemchr-e16633741164b756.rmeta --extern serde=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libserde-05adeb80374ef521.rmeta`
+warning: unused variable: `payload`
+   --> crates/deflect-signature/src/matcher.rs:103:27
+    |
+103 |     pub fn matches(&self, payload: &[u8]) -> bool {
+    |                           ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_payload`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `deflect-signature` (lib) generated 1 warning (run `cargo fix --lib -p deflect-signature` to apply 1 suggestion)
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name properties --edition=2021 crates/deflect-signature/tests/properties.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="serde"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "serde", "std"))' -C metadata=2657f4c0c11e719c -C extra-filename=-adef269732adbe05 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libdeflect_core-b64a48058b81922f.rlib --extern deflect_signature=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libdeflect_signature-fd0ffc80e5d235ba.rlib --extern memchr=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libmemchr-e16633741164b756.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib --extern serde=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libserde-05adeb80374ef521.rlib --extern serde_json=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libserde_json-5dc8d59369440c0a.rlib`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name json_rules --edition=2021 crates/deflect-signature/tests/json_rules.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="serde"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "serde", "std"))' -C metadata=0efefa9ccf7914c8 -C extra-filename=-4e6a895c3472b0b0 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libdeflect_core-b64a48058b81922f.rlib --extern deflect_signature=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libdeflect_signature-fd0ffc80e5d235ba.rlib --extern memchr=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libmemchr-e16633741164b756.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib --extern serde=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libserde-05adeb80374ef521.rlib --extern serde_json=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/libserde_json-5dc8d59369440c0a.rlib`
+warning: `deflect-signature` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.35s
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/deflect_signature-3137f55794c1b405`
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/json_rules-4e6a895c3472b0b0`
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/properties-adef269732adbe05`
+
+*** result: Success
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=deflect-signature@0.1.0 --features=serde
+       Fresh unicode-ident v1.0.27
+       Fresh rand_core v0.10.1
+       Fresh proc-macro2 v1.0.107
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh quote v1.0.47
+       Fresh syn v3.0.9
+       Fresh getrandom v0.4.3
+       Fresh serde_core v1.0.229
+       Fresh autocfg v1.5.1
+       Fresh linux-raw-sys v0.12.1
+       Fresh bitflags v2.13.2
+       Fresh rustix v1.1.5
+       Fresh serde_derive v1.0.229
+       Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
+       Fresh serde v1.0.229
+       Fresh tempfile v3.27.0
+       Fresh wait-timeout v0.2.1
+       Fresh cpufeatures v0.3.1
+       Fresh memchr v2.8.3
+       Fresh bit-vec v0.10.1
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+       Fresh bit-set v0.11.1
+       Fresh chacha20 v0.10.2
+       Fresh rusty-fork v0.3.1
+       Fresh zmij v1.0.23
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/crates/deflect-core)
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh regex-syntax v0.8.11
+       Fresh unarray v0.1.4
+       Fresh itoa v1.0.18
+       Fresh core_detect v1.0.0
+warning: unused variable: `payload`
+   --> crates/deflect-signature/src/matcher.rs:103:27
+    |
+103 |     pub fn matches(&self, payload: &[u8]) -> bool {
+    |                           ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_payload`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `deflect-signature` (lib) generated 1 warning (run `cargo fix --lib -p deflect-signature` to apply 1 suggestion)
+       Fresh serde_json v1.0.154
+       Fresh proptest v1.12.0
+       Fresh deflect-signature v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/crates/deflect-signature)
+warning: `deflect-signature` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.16s
+     Running `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-uJPj8e.tmp/target/debug/deps/deflect_signature-3137f55794c1b405`
+
+running 23 tests
+test builtin::tests::baseline_drops_null_scan ... ok
+test builtin::tests::baseline_drops_xmas_and_syn_fin ... ok
+test builtin::tests::baseline_passes_established_ack ... ok
+test builtin::tests::baseline_passes_normal_syn ... ok
+test matcher::tests::and_require_accumulates_required_bits ... ok
+test matcher::tests::flag_match_any_accepts_everything ... ok
+test matcher::tests::flag_match_requires_and_forbids ... ok
+test matcher::tests::payload_contains ... FAILED
+test matcher::tests::payload_len_bounds ... FAILED
+test matcher::tests::payload_prefix_at_offset ... FAILED
+test matcher::tests::port_match_variants ... ok
+test set::tests::allowlist_short_circuits_a_later_drop ... ok
+test set::tests::from_iter_collects_into_a_working_set ... ok
+test set::tests::len_and_is_empty_track_contents ... ok
+test set::tests::matches_and_drops ... ok
+test set::tests::no_match_passes ... ok
+test set::tests::priority_orders_evaluation ... ok
+test set::tests::push_keeps_priority_order ... ok
+test set::tests::stage_evaluate_returns_the_match_verdict ... ok
+test set::tests::stage_name_is_stable ... ok
+test set::tests::tcp_flag_signature_ignores_non_tcp ... ok
+test signature::tests::action_verdict_maps_both_arms ... ok
+test signature::tests::wire_len_bounds_are_inclusive ... ok
+
+failures:
+
+---- matcher::tests::payload_contains stdout ----
+
+thread 'matcher::tests::payload_contains' (3842052) panicked at crates/deflect-signature/src/matcher.rs:172:9:
+assertion failed: !m.matches(&[0x13, 0x00, 0x37])
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- matcher::tests::payload_len_bounds stdout ----
+
+thread 'matcher::tests::payload_len_bounds' (3842053) panicked at crates/deflect-signature/src/matcher.rs:151:9:
+assertion failed: !PayloadMatch::MinLen(5).matches(&[0, 1, 2, 3])
+
+---- matcher::tests::payload_prefix_at_offset stdout ----
+
+thread 'matcher::tests::payload_prefix_at_offset' (3842054) panicked at crates/deflect-signature/src/matcher.rs:163:9:
+assertion failed: !m.matches(&[0, 1, 0xAA, 0xCC])
+
+
+failures:
+    matcher::tests::payload_contains
+    matcher::tests::payload_len_bounds
+    matcher::tests::payload_prefix_at_offset
+
+test result: FAILED. 20 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p deflect-signature --lib`
+
+*** result: Failure(101)

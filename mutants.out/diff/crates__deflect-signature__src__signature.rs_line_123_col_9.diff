@@ -1,0 +1,22 @@
+--- crates/deflect-signature/src/signature.rs
++++ replace Signature::payload -> Self with Default::default()
+@@ -115,18 +115,17 @@
+     pub fn wire_len(mut self, min: u32, max: u32) -> Self {
+         self.min_wire_len = min.min(max);
+         self.max_wire_len = min.max(max);
+         self
+     }
+ 
+     #[must_use]
+     pub fn payload(mut self, m: PayloadMatch) -> Self {
+-        self.payload = m;
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     #[must_use]
+     pub fn action(mut self, a: Action) -> Self {
+         self.action = a;
+         self
+     }
+ 

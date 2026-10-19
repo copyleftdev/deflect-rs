@@ -20,6 +20,7 @@ serde = ["dep:serde", "deflect-core/serde"]
 
 [dev-dependencies]
 serde_json = "1.0.143"
+proptest = "1.6.0"
 
 [lints.clippy]
 all = "warn"

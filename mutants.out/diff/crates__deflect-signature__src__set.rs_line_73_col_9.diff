@@ -1,0 +1,21 @@
+--- crates/deflect-signature/src/set.rs
++++ replace <impl FromIterator<Signature> for SignatureSet>::from_iter -> Self with Default::default()
+@@ -65,17 +65,17 @@
+ 
+     fn name(&self) -> &'static str {
+         "signature_set"
+     }
+ }
+ 
+ impl FromIterator<Signature> for SignatureSet {
+     fn from_iter<I: IntoIterator<Item = Signature>>(iter: I) -> Self {
+-        SignatureSet::new(iter.into_iter().collect())
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+     use alloc::vec;
+     use core::net::{IpAddr, Ipv4Addr};

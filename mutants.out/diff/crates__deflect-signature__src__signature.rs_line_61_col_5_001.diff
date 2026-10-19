@@ -1,0 +1,21 @@
+--- crates/deflect-signature/src/signature.rs
++++ replace max_wire_default -> u32 with 1
+@@ -53,17 +53,17 @@
+     pub max_wire_len: u32,
+     #[cfg_attr(feature = "serde", serde(default))]
+     pub payload: PayloadMatch,
+     pub action: Action,
+ }
+ 
+ #[cfg(feature = "serde")]
+ fn max_wire_default() -> u32 {
+-    u32::MAX
++    1 /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ impl Signature {
+     /// A permissive signature that matches every packet and drops it; refine it
+     /// with the builder methods, then set a real [`Action`].
+     #[must_use]
+     pub fn new(id: u32, name: impl Into<Cow<'static, str>>) -> Signature {
+         Signature {

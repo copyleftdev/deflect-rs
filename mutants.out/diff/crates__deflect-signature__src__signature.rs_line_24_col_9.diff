@@ -1,0 +1,24 @@
+--- crates/deflect-signature/src/signature.rs
++++ replace Action::verdict -> Verdict with Default::default()
+@@ -16,20 +16,17 @@
+     Allow,
+     /// Drop the packet, attributing it to `reason`.
+     Drop(DropReason),
+ }
+ 
+ impl Action {
+     #[must_use]
+     pub fn verdict(self) -> Verdict {
+-        match self {
+-            Action::Allow => Verdict::Pass,
+-            Action::Drop(reason) => Verdict::Drop(reason),
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// One matchable rule. Every set condition must hold (logical AND) for the
+ /// signature to match; unset conditions are left at their permissive default.
+ ///
+ /// Signatures carry a `priority` used only to order a set; lower sorts first
+ /// and therefore wins when several match.

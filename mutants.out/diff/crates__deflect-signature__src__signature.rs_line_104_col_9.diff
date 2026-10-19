@@ -1,0 +1,22 @@
+--- crates/deflect-signature/src/signature.rs
++++ replace Signature::dst_port -> Self with Default::default()
+@@ -96,18 +96,17 @@
+     #[must_use]
+     pub fn src_port(mut self, m: PortMatch) -> Self {
+         self.src_port = m;
+         self
+     }
+ 
+     #[must_use]
+     pub fn dst_port(mut self, m: PortMatch) -> Self {
+-        self.dst_port = m;
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     #[must_use]
+     pub fn flags(mut self, m: FlagMatch) -> Self {
+         self.flags = m;
+         self
+     }
+ 

@@ -1,0 +1,21 @@
+--- crates/deflect-signature/src/signature.rs
++++ delete ! in Signature::matches
+@@ -152,17 +152,17 @@
+         }
+         // Flag constraints are meaningful only for TCP; a flag-bearing signature
+         // should also pin `l4 = Tcp`, but guard here so a stray constraint on a
+         // non-TCP packet cannot match on its always-zero flags.
+         if self.flags != FlagMatch::any() {
+             if packet.l4 != L4::Tcp {
+                 return false;
+             }
+-            if !self.flags.matches(packet.tcp_flags) {
++            if  /* ~ changed by cargo-mutants ~ */self.flags.matches(packet.tcp_flags) {
+                 return false;
+             }
+         }
+         self.payload.matches(packet.payload)
+     }
+ }
+ 
+ #[cfg(test)]

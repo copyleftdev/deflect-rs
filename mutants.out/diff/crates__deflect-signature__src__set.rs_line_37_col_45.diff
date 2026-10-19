@@ -1,0 +1,21 @@
+--- crates/deflect-signature/src/set.rs
++++ replace <= with > in SignatureSet::push
+@@ -29,17 +29,17 @@
+     #[must_use]
+     pub fn is_empty(&self) -> bool {
+         self.signatures.is_empty()
+     }
+ 
+     pub fn push(&mut self, sig: Signature) {
+         let at = self
+             .signatures
+-            .partition_point(|s| s.priority <= sig.priority);
++            .partition_point(|s| s.priority > /* ~ changed by cargo-mutants ~ */ sig.priority);
+         self.signatures.insert(at, sig);
+     }
+ 
+     /// The first signature that matches `packet`, in priority order.
+     #[must_use]
+     pub fn first_match(&self, packet: &Packet<'_>) -> Option<&Signature> {
+         self.signatures.iter().find(|s| s.matches(packet))
+     }

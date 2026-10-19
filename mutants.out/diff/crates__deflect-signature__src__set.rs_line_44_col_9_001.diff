@@ -1,0 +1,21 @@
+--- crates/deflect-signature/src/set.rs
++++ replace SignatureSet::first_match -> Option<&Signature> with Some(Box::leak(Box::new(Default::default())))
+@@ -36,17 +36,17 @@
+             .signatures
+             .partition_point(|s| s.priority <= sig.priority);
+         self.signatures.insert(at, sig);
+     }
+ 
+     /// The first signature that matches `packet`, in priority order.
+     #[must_use]
+     pub fn first_match(&self, packet: &Packet<'_>) -> Option<&Signature> {
+-        self.signatures.iter().find(|s| s.matches(packet))
++        Some(Box::leak(Box::new(Default::default()))) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The verdict for `packet`: the first matching signature's action, else
+     /// [`Verdict::Pass`].
+     #[must_use]
+     pub fn classify(&self, packet: &Packet<'_>) -> Verdict {
+         self.first_match(packet)
+             .map_or(Verdict::Pass, |s| s.action.verdict())

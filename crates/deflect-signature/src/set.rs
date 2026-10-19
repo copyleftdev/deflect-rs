@@ -160,6 +160,41 @@ mod tests {
     }
 
     #[test]
+    fn len_and_is_empty_track_contents() {
+        let empty = SignatureSet::default();
+        assert!(empty.is_empty());
+        assert_eq!(empty.len(), 0);
+        let set = SignatureSet::new(vec![drop_udp_dns()]);
+        assert!(!set.is_empty());
+        assert_eq!(set.len(), 1);
+    }
+
+    #[test]
+    fn stage_evaluate_returns_the_match_verdict() {
+        let set = SignatureSet::new(vec![drop_udp_dns()]);
+        let p = pkt(L4::Udp, 53, 40000);
+        assert_eq!(
+            Stage::evaluate(&set, &Observation::new(p, 0)),
+            Verdict::Drop(DropReason::Reflection)
+        );
+    }
+
+    #[test]
+    fn stage_name_is_stable() {
+        assert_eq!(Stage::name(&SignatureSet::default()), "signature_set");
+    }
+
+    #[test]
+    fn from_iter_collects_into_a_working_set() {
+        let set: SignatureSet = [drop_udp_dns()].into_iter().collect();
+        assert_eq!(set.len(), 1);
+        assert_eq!(
+            set.classify(&pkt(L4::Udp, 53, 40000)),
+            Verdict::Drop(DropReason::Reflection)
+        );
+    }
+
+    #[test]
     fn tcp_flag_signature_ignores_non_tcp() {
         let xmas = Signature::new(3, "xmas")
             .proto(L4::Tcp)

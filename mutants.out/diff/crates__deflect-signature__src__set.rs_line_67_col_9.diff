@@ -1,0 +1,21 @@
+--- crates/deflect-signature/src/set.rs
++++ replace <impl Stage for SignatureSet>::name -> &'static str with ""
+@@ -59,17 +59,17 @@
+ }
+ 
+ impl Stage for SignatureSet {
+     fn evaluate(&self, obs: &Observation<'_>) -> Verdict {
+         self.classify(&obs.packet)
+     }
+ 
+     fn name(&self) -> &'static str {
+-        "signature_set"
++        "" /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl FromIterator<Signature> for SignatureSet {
+     fn from_iter<I: IntoIterator<Item = Signature>>(iter: I) -> Self {
+         SignatureSet::new(iter.into_iter().collect())
+     }
+ }

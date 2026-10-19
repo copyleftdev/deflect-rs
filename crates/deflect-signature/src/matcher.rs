@@ -153,6 +153,15 @@ mod tests {
     }
 
     #[test]
+    fn and_require_accumulates_required_bits() {
+        let both = FlagMatch::require(TcpFlags::SYN).and_require(TcpFlags::ACK);
+        assert!(both.matches(TcpFlags::SYN | TcpFlags::ACK));
+        // Each required bit is necessary; neither alone suffices.
+        assert!(!both.matches(TcpFlags::SYN));
+        assert!(!both.matches(TcpFlags::ACK));
+    }
+
+    #[test]
     fn payload_len_bounds() {
         assert!(PayloadMatch::MinLen(4).matches(&[0, 1, 2, 3]));
         assert!(!PayloadMatch::MinLen(5).matches(&[0, 1, 2, 3]));

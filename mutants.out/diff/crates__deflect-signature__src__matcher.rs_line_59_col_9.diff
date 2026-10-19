@@ -1,0 +1,24 @@
+--- crates/deflect-signature/src/matcher.rs
++++ replace FlagMatch::require -> FlagMatch with Default::default()
+@@ -51,20 +51,17 @@
+         FlagMatch {
+             required: 0,
+             forbidden: 0,
+         }
+     }
+ 
+     #[must_use]
+     pub const fn require(flags: TcpFlags) -> FlagMatch {
+-        FlagMatch {
+-            required: flags.bits(),
+-            forbidden: 0,
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     #[must_use]
+     pub const fn forbid(mut self, flags: TcpFlags) -> FlagMatch {
+         self.forbidden |= flags.bits();
+         self
+     }
+ 

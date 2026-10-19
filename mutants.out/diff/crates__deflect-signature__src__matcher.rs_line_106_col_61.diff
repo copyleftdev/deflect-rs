@@ -1,0 +1,21 @@
+--- crates/deflect-signature/src/matcher.rs
++++ replace >= with < in PayloadMatch::matches
+@@ -98,17 +98,17 @@
+     Contains(Vec<u8>),
+ }
+ 
+ impl PayloadMatch {
+     #[must_use]
+     pub fn matches(&self, payload: &[u8]) -> bool {
+         match self {
+             PayloadMatch::Any => true,
+-            PayloadMatch::MinLen(n) => payload.len() as u64 >= u64::from(*n),
++            PayloadMatch::MinLen(n) => payload.len() as u64 < /* ~ changed by cargo-mutants ~ */ u64::from(*n),
+             PayloadMatch::MaxLen(n) => payload.len() as u64 <= u64::from(*n),
+             PayloadMatch::PrefixAt { offset, bytes } => {
+                 let off = *offset as usize;
+                 payload
+                     .get(off..)
+                     .is_some_and(|tail| tail.starts_with(bytes))
+             }
+             PayloadMatch::Contains(bytes) => {

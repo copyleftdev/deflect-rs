@@ -1,0 +1,21 @@
+--- crates/deflect-signature/src/matcher.rs
++++ replace |= with &= in FlagMatch::and_require
+@@ -65,17 +65,17 @@
+     #[must_use]
+     pub const fn forbid(mut self, flags: TcpFlags) -> FlagMatch {
+         self.forbidden |= flags.bits();
+         self
+     }
+ 
+     #[must_use]
+     pub const fn and_require(mut self, flags: TcpFlags) -> FlagMatch {
+-        self.required |= flags.bits();
++        self.required &= /* ~ changed by cargo-mutants ~ */ flags.bits();
+         self
+     }
+ 
+     #[must_use]
+     pub fn matches(&self, flags: TcpFlags) -> bool {
+         let bits = flags.bits();
+         (bits & self.required) == self.required && (bits & self.forbidden) == 0
+     }

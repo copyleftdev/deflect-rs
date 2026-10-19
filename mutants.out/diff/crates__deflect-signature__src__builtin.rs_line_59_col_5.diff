@@ -1,0 +1,21 @@
+--- crates/deflect-signature/src/builtin.rs
++++ replace baseline -> SignatureSet with Default::default()
+@@ -51,17 +51,17 @@
+             .action(drop),
+     ]
+ }
+ 
+ /// A conservative baseline set safe to run unconditionally: only the
+ /// unambiguous TCP flag anomalies. Extend it with site-specific signatures.
+ #[must_use]
+ pub fn baseline() -> SignatureSet {
+-    SignatureSet::new(tcp_flag_anomalies())
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+     use core::net::{IpAddr, Ipv4Addr};
+     use deflect_core::{Packet, Verdict};
+ 

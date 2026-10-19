@@ -1,0 +1,21 @@
+--- crates/deflect-signature/src/signature.rs
++++ delete ! in Signature::matches
+@@ -142,17 +142,17 @@
+         if let Some(l4) = self.l4 {
+             if l4 != packet.l4 {
+                 return false;
+             }
+         }
+         if packet.wire_len < self.min_wire_len || packet.wire_len > self.max_wire_len {
+             return false;
+         }
+-        if !self.src_port.matches(packet.src_port) || !self.dst_port.matches(packet.dst_port) {
++        if  /* ~ changed by cargo-mutants ~ */self.src_port.matches(packet.src_port) || !self.dst_port.matches(packet.dst_port) {
+             return false;
+         }
+         // Flag constraints are meaningful only for TCP; a flag-bearing signature
+         // should also pin `l4 = Tcp`, but guard here so a stray constraint on a
+         // non-TCP packet cannot match on its always-zero flags.
+         if self.flags != FlagMatch::any() {
+             if packet.l4 != L4::Tcp {
+                 return false;
