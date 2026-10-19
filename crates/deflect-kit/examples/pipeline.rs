@@ -3,14 +3,14 @@
 //! Run with:
 //!
 //! ```text
-//! cargo run -p deflect --example pipeline --features full
+//! cargo run -p deflect-kit --example pipeline --features full
 //! ```
 //!
 //! Three `Stage`s judge every observation independently; the pipeline keeps the
 //! most severe verdict (`Pass < Challenge < RateLimit < Drop`). No stage knows
 //! about the others — composition is just folding their verdicts.
 
-use deflect::prelude::*;
+use deflect_kit::prelude::*;
 use std::net::{IpAddr, Ipv4Addr};
 
 fn verdict(stages: &[&dyn Stage], obs: &Observation<'_>) -> Verdict {

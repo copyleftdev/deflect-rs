@@ -1,4 +1,4 @@
-# deflect
+# deflect-kit
 
 [![Crates.io](https://img.shields.io/crates/v/deflect)](https://crates.io/crates/deflect)
 [![Docs.rs](https://img.shields.io/docsrs/deflect)](https://docs.rs/deflect)
@@ -12,10 +12,10 @@ flag, so you take **one** dependency and compile only the parts you ask for:
 
 ```toml
 # Just the rate limiter and the attack detector:
-deflect = { version = "0.1", features = ["ratelimit", "detect"] }
+deflect-kit = { version = "0.1", features = ["ratelimit", "detect"] }
 
 # Everything:
-deflect = { version = "0.1", features = ["full"] }
+deflect-kit = { version = "0.1", features = ["full"] }
 ```
 
 ## The model
@@ -33,7 +33,7 @@ injected through a `Clock`, so the same primitive runs in a userspace daemon, a
 kernel-adjacent fast path, or a deterministic simulation.
 
 ```rust
-use deflect::prelude::*;
+use deflect_kit::prelude::*;
 
 let verdicts = [
     Verdict::Pass,

@@ -1,0 +1,260 @@
+<title>Deflect Observatory</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  /* Instrument console: a masthead readout, a wide off-center arc scope, and a
+     strip of labelled panels. One committed dark world; a single ember accent
+     carries severity, everything else is a graphite ramp. */
+  :root {
+    --bg: #06070a;
+    --bg-grad: #0b0e15;
+    --panel: #090b11;
+    --panel-2: #0c0f16;
+    --edge: #171b23;
+    --line: #13161d;
+    --line-2: #222731;
+    --ink-0: #eef1f6;   /* brightest — core, pass, headline numbers */
+    --ink-1: #aab3c0;   /* primary label */
+    --ink-2: #7d8694;   /* secondary (≥4.5:1 on the field) */
+    --ink-3: #6b7482;   /* tertiary / ambient label / hairline tick */
+    --ember: #d4623c;   /* the one accent: drop / mitigation */
+    --ember-soft: #8a4027;
+    color-scheme: dark;
+    --f-display: "Archivo", system-ui, -apple-system, sans-serif;
+    --f-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(1400px 900px at 72% 42%, var(--bg-grad) 0%, transparent 62%),
+      var(--bg);
+    color: var(--ink-1);
+    font-family: var(--f-mono);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #app {
+    min-height: 100%;
+    display: flex; flex-direction: column;
+    padding-left: max(18px, env(safe-area-inset-left, 0px));
+    padding-right: max(18px, env(safe-area-inset-right, 0px));
+    padding-block: 16px 22px;
+    max-width: 1500px; margin: 0 auto;
+    gap: 14px;
+    background: var(--bg);
+  }
+
+  /* ---- masthead ---------------------------------------------------------- */
+  .masthead {
+    display: flex; align-items: flex-end; gap: 20px 32px; flex-wrap: wrap;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--edge);
+  }
+  .mark h1 {
+    font-family: var(--f-display); font-weight: 800;
+    font-size: clamp(17px, 2.3vw, 23px); letter-spacing: 0.04em; margin: 0;
+    color: var(--ink-0); text-transform: uppercase; white-space: nowrap;
+  }
+  .mark h1 span { color: var(--ink-3); margin: 0 0.35em; font-weight: 500; }
+  .mark p {
+    margin: 6px 0 0; font-size: 11px; letter-spacing: 0.03em; color: var(--ink-2);
+  }
+  .metrics { display: flex; gap: 0; margin-left: auto; flex-wrap: wrap; }
+  .metric {
+    padding: 0 16px; border-left: 1px solid var(--line-2);
+    display: flex; flex-direction: column; gap: 3px; min-width: 76px;
+  }
+  .metric:first-child { border-left: 0; padding-left: 0; }
+  .metric .k { font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2); }
+  .metric .v {
+    font-size: clamp(16px, 2vw, 21px); font-weight: 500; color: var(--ink-0);
+    font-variant-numeric: tabular-nums; line-height: 1; white-space: nowrap;
+  }
+  .metric .v.em { color: var(--ember); }
+  .metric .v small { font-size: 0.6em; color: var(--ink-2); font-weight: 400; }
+  .defcon { display: inline-flex; align-items: center; gap: 7px; }
+  .defcon::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ink-2); }
+  .defcon[data-on="calm"] { color: var(--ink-0); }
+  .defcon[data-on="calm"]::before { background: var(--ink-0); box-shadow: 0 0 7px rgba(238,241,246,.5); }
+  .defcon[data-on="mit"] { color: var(--ember); }
+  .defcon[data-on="mit"]::before { background: var(--ember); box-shadow: 0 0 9px var(--ember); animation: blink 1.1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0.25; } }
+
+  /* ---- scope ------------------------------------------------------------- */
+  .console {
+    position: relative; flex: 1; min-height: 46vh;
+    border: 1px solid var(--edge); border-radius: 3px; overflow: hidden;
+    background: linear-gradient(90deg, #070a10 0%, #05060a 100%);
+  }
+  #scope { width: 100%; height: 100%; display: block; }
+  .scope-tag {
+    position: absolute; right: 16px; bottom: 14px; text-align: right;
+    font-size: 10px; letter-spacing: 0.1em; color: var(--ink-2); pointer-events: none;
+    line-height: 1.7;
+  }
+  .scope-tag b { color: var(--ink-1); font-weight: 500; }
+  .scope-tag .eq { color: var(--ink-1); }
+  .scope-corner {
+    position: absolute; left: 14px; top: 12px; font-size: 9.5px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-3); pointer-events: none;
+  }
+  #loading {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    font-size: 11px; letter-spacing: 0.3em; color: var(--ink-2); text-transform: uppercase;
+  }
+  #loading[hidden] { display: none; }
+
+  /* ---- panel strip ------------------------------------------------------- */
+  .panels {
+    display: grid; gap: 12px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  @media (max-width: 1080px) { .panels { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .panels { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--panel); border: 1px solid var(--edge); border-radius: 3px;
+    padding: 12px 13px 13px; min-width: 0; display: flex; flex-direction: column;
+  }
+  .panel > h2 {
+    font-family: var(--f-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-1); margin: 0 0 11px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--line-2);
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .panel > h2 .sub { color: var(--ink-2); font-weight: 400; letter-spacing: 0.05em; }
+
+  /* control panel */
+  .transport { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  button {
+    font-family: var(--f-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink-1); background: var(--panel-2);
+    border: 1px solid var(--line-2); border-radius: 2px; padding: 8px 6px; cursor: pointer;
+    transition: border-color .12s, color .12s, background .12s;
+  }
+  button:hover { border-color: var(--ink-2); color: var(--ink-0); }
+  button:focus-visible { outline: 1px solid var(--ember); outline-offset: 1px; }
+  button.run[data-run="1"] { color: var(--ember); border-color: var(--ember-soft); }
+  .presets { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+  .presets button { padding: 5px 8px; font-size: 10px; text-transform: none; letter-spacing: 0.02em; color: var(--ink-2); }
+  .presets button:hover { color: var(--ink-0); }
+
+  .sliders { margin-top: 11px; display: flex; flex-direction: column; gap: 9px; max-height: 190px; overflow-y: auto; padding-right: 4px; }
+  .sliders::-webkit-scrollbar { width: 6px; }
+  .sliders::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 3px; }
+  .slider .row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 3px; }
+  .slider label { font-size: 10.5px; color: var(--ink-1); display: flex; align-items: center; gap: 7px; letter-spacing: 0.02em; }
+  .slider .glyph-mini { width: 12px; height: 12px; flex: none; opacity: 0.85; }
+  .slider .val { font-size: 10px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 2px; background: var(--line-2); outline: none; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 10px; height: 10px; background: var(--ink-1); cursor: pointer; border-radius: 0; }
+  input[type=range]::-webkit-slider-thumb:hover { background: var(--ink-0); }
+  input[type=range]::-moz-range-thumb { width: 10px; height: 10px; background: var(--ink-1); cursor: pointer; border: 0; border-radius: 0; }
+  .seedrow { display: flex; align-items: center; gap: 9px; margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line); }
+  .seedrow label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); }
+  input[type=number] {
+    font-family: var(--f-mono); font-size: 12px; color: var(--ink-0); background: var(--bg);
+    border: 1px solid var(--line-2); border-radius: 2px; padding: 6px 8px; width: 100%; min-width: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  input:focus-visible { outline: 1px solid var(--ember); outline-offset: 0; }
+
+  /* feed panel */
+  .feed { display: flex; flex-direction: column; gap: 0; font-size: 10.5px; line-height: 1.85; min-height: 0; }
+  .feed .ln { display: grid; grid-template-columns: 44px 1fr auto; gap: 8px; color: var(--ink-2); white-space: nowrap; }
+  .feed .ln .seq { color: var(--ink-2); }
+  .feed .ln .cls { color: var(--ink-1); overflow: hidden; text-overflow: ellipsis; }
+  .feed .ln .vd { font-weight: 500; }
+  .feed .ln .vd[data-v="0"] { color: var(--ink-0); }
+  .feed .ln .vd[data-v="1"] { color: var(--ink-1); }
+  .feed .ln .vd[data-v="2"] { color: var(--ink-2); }
+  .feed .ln .vd[data-v="3"] { color: var(--ember); }
+
+  /* pipeline panel */
+  .stages { display: flex; flex-direction: column; gap: 8px; }
+  .stage { display: grid; grid-template-columns: 16px 1fr auto; align-items: center; gap: 9px; }
+  .stage .ix { font-size: 9px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .stage .nm { font-size: 11px; color: var(--ink-1); }
+  .stage .nm .cap { display: block; font-size: 9px; color: var(--ink-2); letter-spacing: 0.04em; margin-top: 1px; }
+  .stage .ct { font-size: 11px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .stage[data-armed="1"] .nm { color: var(--ink-0); }
+  .stage[data-armed="1"] .ix { color: var(--ember); }
+  .stage[data-fp="1"] .ct { color: var(--ember); }
+  .legend-strip { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 8px 12px; }
+  .lg { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--ink-2); }
+  .lg .glyph-mini { width: 13px; height: 13px; }
+
+  /* verdict field panel */
+  .field { display: grid; grid-template-columns: 58px repeat(4, 1fr); gap: 3px; align-items: center; }
+  .field .hd { font-size: 8.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); text-align: center; }
+  .field .rl { font-size: 10.5px; color: var(--ink-2); display: flex; align-items: center; gap: 5px; }
+  .field .cell { height: 20px; border-radius: 1px; position: relative; }
+  .field .cell span { position: absolute; inset: 0; display: grid; place-items: center; font-size: 9px; color: var(--ink-0); font-variant-numeric: tabular-nums; opacity: 0.85; }
+  .fieldnote { margin-top: 11px; padding-top: 9px; border-top: 1px solid var(--line); font-size: 10.5px; color: var(--ink-2); letter-spacing: 0.04em; line-height: 1.6; }
+  .fieldnote b { color: var(--ink-1); font-weight: 500; }
+
+  a { color: var(--ink-1); }
+
+  @media (prefers-reduced-motion: reduce) { .defcon[data-on="mit"]::before { animation: none; } }
+</style>
+
+<div id="app">
+  <header class="masthead">
+    <div class="mark">
+      <h1>DEFLECT<span>/</span>OBSERVATORY</h1>
+      <p>Real primitives · WASM · replayable</p>
+    </div>
+    <div class="metrics" id="metrics"></div>
+  </header>
+
+  <main class="console">
+    <canvas id="scope"></canvas>
+    <div class="scope-corner">INGRESS · LEFT HEMISPHERE</div>
+    <div class="scope-tag">
+      <div>SEVERITY LATTICE</div>
+      <div class="eq">Pass &lt; Challenge &lt; RateLimit &lt; <b>Drop</b></div>
+    </div>
+    <div id="loading">Initialising primitives</div>
+  </main>
+
+  <section class="panels">
+    <div class="panel" id="p-control">
+      <h2>Control <span class="sub">dispatch</span></h2>
+      <div class="transport">
+        <button class="run" id="btn-run" data-run="0">Run</button>
+        <button id="btn-step">Step</button>
+        <button id="btn-reset">Replay</button>
+        <button id="btn-mutate">Mutate</button>
+      </div>
+      <div class="presets" id="presets"></div>
+      <div class="sliders" id="sliders"></div>
+      <div class="seedrow">
+        <label for="seed">Seed</label>
+        <input type="number" id="seed" value="2600712" min="0" step="1">
+      </div>
+    </div>
+
+    <div class="panel" id="p-feed">
+      <h2>Ingest feed <span class="sub">live</span></h2>
+      <div class="feed" id="feed"></div>
+    </div>
+
+    <div class="panel" id="p-pipeline">
+      <h2>Pipeline <span class="sub">5 stages · outer → inner</span></h2>
+      <div class="stages" id="stages"></div>
+      <div class="legend-strip" id="legend"></div>
+    </div>
+
+    <div class="panel" id="p-field">
+      <h2>Verdict field <span class="sub">class × verdict</span></h2>
+      <div class="field" id="field"></div>
+      <div class="fieldnote" id="eff">Effectiveness on attack traffic <b>—</b></div>
+    </div>
+  </section>
+</div>
+
+<script type="module">

@@ -1,7 +1,7 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
-//! # deflect
+//! # deflect-kit
 //!
 //! Composable, **defensive** DDoS-mitigation primitives. This crate is a thin
 //! umbrella over the `deflect-*` family: it adds no logic of its own, it just
@@ -10,7 +10,7 @@
 //!
 //! ```toml
 //! # Only the rate limiter and the attack detector, nothing else builds:
-//! deflect = { version = "0.1", features = ["ratelimit", "detect"] }
+//! deflect-kit = { version = "0.1", features = ["ratelimit", "detect"] }
 //! ```
 //!
 //! Every primitive speaks the same contract from [`deflect_core`]: a parsed
@@ -31,7 +31,7 @@
 //! pipeline:
 //!
 //! ```
-//! use deflect::prelude::*;
+//! use deflect_kit::prelude::*;
 //!
 //! let verdicts = [
 //!     Verdict::Pass,
@@ -79,7 +79,7 @@ pub use deflect_syncookie as syncookie;
 #[doc(inline)]
 pub use deflect_telemetry as telemetry;
 
-/// The common primitives, re-exported for `use deflect::prelude::*;`.
+/// The common primitives, re-exported for `use deflect_kit::prelude::*;`.
 ///
 /// The [`deflect_core`] contract is always present. Each primitive's types
 /// appear only when its feature is enabled, so the prelude never pulls in a

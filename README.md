@@ -42,22 +42,22 @@ time-dependent primitive is driven deterministically in tests.
 | `deflect-telemetry` | ✅ | NetFlow v5 / v9 / IPFIX and sFlow v5 ingestion into unified flow records |
 | `deflect-packet` | ✅ | Bounds-checked Ethernet / IPv4 / IPv6 / TCP / UDP header parsing into a 5-tuple |
 | `deflect-bgp` | ✅ | Upstream RTBH blackhole announcement over the ExaBGP text API |
-| `deflect` | ✅ | Umbrella entry point: re-exports every primitive behind a feature flag, with a `prelude` and a composition example |
+| `deflect-kit` | ✅ | Umbrella entry point: re-exports every primitive behind a feature flag, with a `prelude` and a composition example |
 
 ## Using it
 
-Depend on the `deflect` umbrella and enable only the primitives you need — nothing
+Depend on the `deflect-kit` umbrella and enable only the primitives you need — nothing
 else is compiled:
 
 ```toml
-deflect = { version = "0.1", features = ["ratelimit", "detect", "signature"] }
+deflect-kit = { version = "0.1", features = ["ratelimit", "detect", "signature"] }
 ```
 
 Everything speaks one contract: a `Stage` turns an `Observation` into a `Verdict`,
 and a pipeline keeps the most severe. Composition is just folding verdicts.
 
 ```rust
-use deflect::prelude::*;
+use deflect_kit::prelude::*;
 
 // `stages` holds any mix of primitives; each judges the observation independently.
 let verdict = stages
@@ -67,7 +67,7 @@ let verdict = stages
 
 Each primitive is equally usable on its own (`deflect-ratelimit = "0.1"`) if you
 prefer one crate per dependency. A full, runnable composition lives in
-`cargo run -p deflect --example pipeline --features full`.
+`cargo run -p deflect-kit --example pipeline --features full`.
 
 ## Design decisions worth knowing
 
@@ -171,7 +171,7 @@ subtraction (a remotely reachable panic in debug builds); it is now rejected.
 
 ## Status
 
-Well-tested and consumable. Eleven mitigation primitives plus the `deflect` umbrella
+Well-tested and consumable. Eleven mitigation primitives plus the `deflect-kit` umbrella
 that re-exports them, with **336 tests** (unit, integration, and doctests) and zero
 mutation survivors across the primitives. The data, detection, action, ingestion, and
 upstream-signalling planes are all present; flow ingestion covers NetFlow v5/v9, IPFIX,

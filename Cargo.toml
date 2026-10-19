@@ -12,7 +12,8 @@ members = [
     "crates/deflect-telemetry",
     "crates/deflect-bgp",
     "crates/deflect-packet",
-    "crates/deflect",
+    "crates/deflect-kit",
+    "crates/deflect-sim",
 ]
 
 [workspace.package]
