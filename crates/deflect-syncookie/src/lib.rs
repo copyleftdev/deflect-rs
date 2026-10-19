@@ -202,7 +202,12 @@ impl SynCookie {
         if age > self.max_age_epochs {
             return Err(CookieError::Expired);
         }
-        let issued_epoch = current_epoch - u64::from(age);
+        // `age` is reconstructed modulo 256, so a crafted cookie can imply an
+        // epoch before the clock's origin. There is no such issuing epoch, so
+        // the cookie cannot be genuine: reject rather than wrap the subtraction.
+        let Some(issued_epoch) = current_epoch.checked_sub(u64::from(age)) else {
+            return Err(CookieError::BadMac);
+        };
 
         let hc = mac::mac(key, tuple, 1, issued_epoch, client_isn);
         let mss_idx = data.wrapping_sub(hc) & DATA_MASK;
@@ -268,6 +273,31 @@ mod tests {
     }
 
     #[test]
+    fn roundtrip_at_a_nonzero_epoch() {
+        // Issue when the epoch byte is non-zero, so the epoch shift in `issue`
+        // and the extraction shift in `check_key` must both be the right
+        // direction for the value to round-trip.
+        let e = engine();
+        let now = 5 * 64 * 1_000_000_000; // epoch 5
+        let c = e.issue(&tuple(), 42, 1460, now);
+        let r = e.validate(&tuple(), 42, c, now).unwrap();
+        assert_eq!(r.mss, 1460);
+        assert_eq!(r.age_epochs, 0);
+    }
+
+    #[test]
+    fn valid_at_exactly_max_age() {
+        // max_age_epochs is 2; a cookie exactly two epochs old must still verify
+        // (so the age check is `>`, not `>=`).
+        let e = engine();
+        let c = e.issue(&tuple(), 42, 1440, 0);
+        let at_max = 2 * 64 * 1_000_000_000 + 5; // epoch 2, age 2
+        let r = e.validate(&tuple(), 42, c, at_max).unwrap();
+        assert_eq!(r.mss, 1440);
+        assert_eq!(r.age_epochs, 2);
+    }
+
+    #[test]
     fn wrong_tuple_is_rejected() {
         // A different tuple randomises the whole word, so rejection may be
         // reported as BadMac or Expired; the guarantee is that it is rejected.
@@ -319,6 +349,43 @@ mod tests {
         let r = e.validate(&tuple(), 42, c, 1_000).unwrap();
         assert_eq!(r.mss, 1460);
         assert!(r.via_previous_key);
+    }
+
+    #[test]
+    fn reports_bad_mac_when_both_keys_reject_with_bad_mac() {
+        // A rotated engine where the tampered cookie fails the MAC under both the
+        // current and previous key. The reported error must stay BadMac — it must
+        // not be rewritten to Expired. (Keys chosen so both outcomes are BadMac.)
+        let kold = CookieKey::from_u64s(0xdead_beef, 0x0bad_f00d);
+        let c = SynCookie::with_defaults(kold).issue(&tuple(), 42, 1460, 1_000) ^ 0x55;
+        let mut e = SynCookie::with_defaults(kold);
+        e.rotate(CookieKey::from_u64s(0x23, 0x23 ^ 0x55)); // key 35; current -> BadMac, prev -> BadMac
+        assert_eq!(e.validate(&tuple(), 42, c, 1_000), Err(CookieError::BadMac));
+    }
+
+    #[test]
+    fn prefers_expired_over_bad_mac_across_keys() {
+        // Current key rejects as BadMac, previous key as Expired. Expiry is the
+        // more informative verdict, so it must win the tie (an `&&` or a flipped
+        // comparison would report BadMac instead).
+        let kold = CookieKey::from_u64s(0xdead_beef, 0x0bad_f00d);
+        let c = SynCookie::with_defaults(kold).issue(&tuple(), 42, 1460, 1_000) ^ 0x55;
+        let mut e = SynCookie::with_defaults(CookieKey::from_u64s(0, 0x55)); // prev -> Expired
+        e.rotate(kold); // current(kold) -> BadMac
+        assert_eq!(
+            e.validate(&tuple(), 42, c, 1_000),
+            Err(CookieError::Expired)
+        );
+    }
+
+    #[test]
+    fn crafted_epoch_before_origin_is_rejected_not_panicking() {
+        // A cookie whose reconstructed age would place its issuing epoch before
+        // the clock origin must be rejected, never underflow the epoch subtraction.
+        let e = engine();
+        for isn in 0u32..512 {
+            let _ = e.validate(&tuple(), isn, isn.wrapping_mul(0x9E37_79B1), 1_000);
+        }
     }
 
     #[test]

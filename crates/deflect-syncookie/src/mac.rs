@@ -126,4 +126,35 @@ mod tests {
         t2.src_port = 51_001;
         assert_ne!(mac(k, &tuple(), 1, 10, 0), mac(k, &t2, 1, 10, 0));
     }
+
+    #[test]
+    fn source_address_changes_mac() {
+        // Vary the address, not a port, so dropping the address from the hash
+        // (not just reordering ports) is caught.
+        let k = CookieKey::from_u64s(1, 2);
+        let mut t2 = tuple();
+        t2.src = IpAddr::V4(Ipv4Addr::new(203, 0, 113, 8));
+        assert_ne!(mac(k, &tuple(), 1, 10, 0), mac(k, &t2, 1, 10, 0));
+    }
+
+    #[test]
+    fn isn_changes_mac() {
+        let k = CookieKey::from_u64s(1, 2);
+        assert_ne!(mac(k, &tuple(), 1, 10, 7), mac(k, &tuple(), 1, 10, 9));
+    }
+
+    #[test]
+    fn fold_is_pinned() {
+        // A golden value pins the 64->32 fold (`(out >> 32) ^ out`), so flipping
+        // the shift or the xor cannot pass unnoticed. SipHash-2-4 is stable, so
+        // this value is fixed for these fixed inputs.
+        let k = CookieKey::from_u64s(1, 2);
+        assert_eq!(mac(k, &tuple(), 0, 10, 0), 0xE0B7_EDDD);
+    }
+
+    #[test]
+    fn debug_is_redacted() {
+        let k = CookieKey::from_u64s(0xdead_beef, 0x0bad_f00d);
+        assert_eq!(format!("{k:?}"), "CookieKey(..)");
+    }
 }

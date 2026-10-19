@@ -1,0 +1,252 @@
+
+*** crates/deflect-syncookie/src/lib.rs:137:9: replace SynCookie::issue -> u32 with 1
+
+*** mutation diff:
+--- crates/deflect-syncookie/src/lib.rs
++++ replace SynCookie::issue -> u32 with 1
+@@ -129,25 +129,17 @@
+     ///
+     /// `client_isn` is the SYN's sequence number; `mss` is the connection MSS
+     /// to preserve. The result encodes both statelessly.
+     // The cookie is 32-bit modular arithmetic by construction; the epoch-byte
+     // and index narrowings below are the encoding, not lossy accidents.
+     #[allow(clippy::cast_possible_truncation)]
+     #[must_use]
+     pub fn issue(&self, tuple: &FourTuple, client_isn: u32, mss: u16, now_nanos: u64) -> u32 {
+-        let epoch = self.epoch(now_nanos);
+-        let h0 = mac::mac(self.key, tuple, 0, 0, 0);
+-        let hc = mac::mac(self.key, tuple, 1, epoch, client_isn);
+-        let mss_idx = u32::from(encode_mss(mss));
+-        let data = hc.wrapping_add(mss_idx) & DATA_MASK;
+-        let epoch_bits = (epoch as u32 & 0xff) << EPOCH_SHIFT;
+-        h0.wrapping_add(client_isn)
+-            .wrapping_add(epoch_bits)
+-            .wrapping_add(data)
++        1 /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Validate a returning ACK's cookie and recover the connection.
+     ///
+     /// `client_isn` is the ACK's sequence number minus one (the SYN's ISN) and
+     /// `cookie` is the ACK's acknowledgement number minus one (the value
+     /// [`issue`](Self::issue) produced). Tries the current key, then the
+     /// previous key if one is held.
+
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=deflect-syncookie@0.1.0
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh getrandom v0.4.3
+       Fresh bitflags v2.13.2
+       Fresh autocfg v1.5.1
+       Fresh linux-raw-sys v0.12.1
+       Fresh rustix v1.1.5
+       Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
+       Fresh tempfile v3.27.0
+       Fresh wait-timeout v0.2.1
+       Fresh quick-error v1.2.3
+       Fresh bit-vec v0.10.1
+       Fresh cpufeatures v0.3.1
+       Fresh fnv v1.0.7
+       Fresh rusty-fork v0.3.1
+       Fresh chacha20 v0.10.2
+       Fresh bit-set v0.11.1
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh regex-syntax v0.8.11
+       Fresh core_detect v1.0.0
+       Fresh siphasher v1.0.4
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/crates/deflect-core)
+       Fresh unarray v0.1.4
+       Fresh proptest v1.12.0
+       Dirty deflect-syncookie v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/crates/deflect-syncookie): the file `crates/deflect-syncookie/src/lib.rs` has changed (1792416220.232051998s, 6s after last build at 1792416214.369751132s)
+   Compiling deflect-syncookie v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/crates/deflect-syncookie)
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_syncookie --edition=2021 crates/deflect-syncookie/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=37f330f51c09ee98 -C extra-filename=-5294838cfa1ef210 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rmeta --extern siphasher=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/deps/libsiphasher-96d9cd908403babe.rmeta`
+warning: unused variable: `tuple`
+   --> crates/deflect-syncookie/src/lib.rs:136:25
+    |
+136 |     pub fn issue(&self, tuple: &FourTuple, client_isn: u32, mss: u16, now_nanos: u64) -> u32 {
+    |                         ^^^^^ help: if this is intentional, prefix it with an underscore: `_tuple`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `client_isn`
+   --> crates/deflect-syncookie/src/lib.rs:136:44
+    |
+136 |     pub fn issue(&self, tuple: &FourTuple, client_isn: u32, mss: u16, now_nanos: u64) -> u32 {
+    |                                            ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_client_isn`
+
+warning: unused variable: `mss`
+   --> crates/deflect-syncookie/src/lib.rs:136:61
+    |
+136 |     pub fn issue(&self, tuple: &FourTuple, client_isn: u32, mss: u16, now_nanos: u64) -> u32 {
+    |                                                             ^^^ help: if this is intentional, prefix it with an underscore: `_mss`
+
+warning: unused variable: `now_nanos`
+   --> crates/deflect-syncookie/src/lib.rs:136:71
+    |
+136 |     pub fn issue(&self, tuple: &FourTuple, client_isn: u32, mss: u16, now_nanos: u64) -> u32 {
+    |                                                                       ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_now_nanos`
+
+warning: `deflect-syncookie` (lib) generated 4 warnings (run `cargo fix --lib -p deflect-syncookie` to apply 4 suggestions)
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name properties --edition=2021 crates/deflect-syncookie/tests/properties.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=08e1eb85f7657385 -C extra-filename=-4aec20d5235a1e9b --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern deflect_syncookie=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/deps/libdeflect_syncookie-5294838cfa1ef210.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib --extern siphasher=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/deps/libsiphasher-96d9cd908403babe.rlib`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_syncookie --edition=2021 crates/deflect-syncookie/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=76677997f4a7dcbd -C extra-filename=-8d112484344e4d7b --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib --extern siphasher=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/deps/libsiphasher-96d9cd908403babe.rlib`
+warning: `deflect-syncookie` (lib test) generated 4 warnings (4 duplicates)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.99s
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/deps/deflect_syncookie-8d112484344e4d7b`
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/deps/properties-4aec20d5235a1e9b`
+
+*** result: Success
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=deflect-syncookie@0.1.0
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh getrandom v0.4.3
+       Fresh bitflags v2.13.2
+       Fresh linux-raw-sys v0.12.1
+       Fresh autocfg v1.5.1
+       Fresh rustix v1.1.5
+       Fresh once_cell v1.21.4
+       Fresh fastrand v2.5.0
+       Fresh tempfile v3.27.0
+       Fresh wait-timeout v0.2.1
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+       Fresh cpufeatures v0.3.1
+       Fresh bit-vec v0.10.1
+       Fresh bit-set v0.11.1
+       Fresh chacha20 v0.10.2
+       Fresh rusty-fork v0.3.1
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh siphasher v1.0.4
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/crates/deflect-core)
+       Fresh unarray v0.1.4
+       Fresh core_detect v1.0.0
+       Fresh regex-syntax v0.8.11
+       Fresh proptest v1.12.0
+warning: unused variable: `tuple`
+   --> crates/deflect-syncookie/src/lib.rs:136:25
+    |
+136 |     pub fn issue(&self, tuple: &FourTuple, client_isn: u32, mss: u16, now_nanos: u64) -> u32 {
+    |                         ^^^^^ help: if this is intentional, prefix it with an underscore: `_tuple`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `client_isn`
+   --> crates/deflect-syncookie/src/lib.rs:136:44
+    |
+136 |     pub fn issue(&self, tuple: &FourTuple, client_isn: u32, mss: u16, now_nanos: u64) -> u32 {
+    |                                            ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_client_isn`
+
+warning: unused variable: `mss`
+   --> crates/deflect-syncookie/src/lib.rs:136:61
+    |
+136 |     pub fn issue(&self, tuple: &FourTuple, client_isn: u32, mss: u16, now_nanos: u64) -> u32 {
+    |                                                             ^^^ help: if this is intentional, prefix it with an underscore: `_mss`
+
+warning: unused variable: `now_nanos`
+   --> crates/deflect-syncookie/src/lib.rs:136:71
+    |
+136 |     pub fn issue(&self, tuple: &FourTuple, client_isn: u32, mss: u16, now_nanos: u64) -> u32 {
+    |                                                                       ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_now_nanos`
+
+warning: `deflect-syncookie` (lib) generated 4 warnings (run `cargo fix --lib -p deflect-syncookie` to apply 4 suggestions)
+       Fresh deflect-syncookie v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/crates/deflect-syncookie)
+warning: `deflect-syncookie` (lib test) generated 4 warnings (4 duplicates)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.27s
+     Running `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-B8VDzk.tmp/target/debug/deps/deflect_syncookie-8d112484344e4d7b`
+
+running 27 tests
+test mac::tests::count_changes_mac ... ok
+test mac::tests::debug_is_redacted ... ok
+test mac::tests::domain_separates ... ok
+test mac::tests::fold_is_pinned ... ok
+test mac::tests::isn_changes_mac ... ok
+test mac::tests::key_changes_mac ... ok
+test mac::tests::mac_is_deterministic ... ok
+test mac::tests::source_address_changes_mac ... ok
+test mac::tests::tuple_changes_mac ... ok
+test mss::tests::below_floor_uses_index_zero ... ok
+test mss::tests::decode_masks_out_of_range ... ok
+test mss::tests::encode_picks_largest_not_exceeding ... ok
+test mss::tests::roundtrip_never_exceeds_input ... ok
+test tests::crafted_epoch_before_origin_is_rejected_not_panicking ... ok
+test tests::expires_past_window ... ok
+test tests::prefers_expired_over_bad_mac_across_keys ... ok
+test tests::previous_key_accepted_after_rotation ... FAILED
+test tests::reports_bad_mac_when_both_keys_reject_with_bad_mac ... FAILED
+test tests::roundtrip_at_a_nonzero_epoch ... FAILED
+test tests::roundtrip_recovers_mss ... FAILED
+test tests::tampered_low_bits_are_bad_mac ... FAILED
+test tests::two_rotations_drop_the_oldest_key ... ok
+test tests::valid_at_exactly_max_age ... FAILED
+test tests::valid_within_window_across_epochs ... FAILED
+test tests::wrong_client_isn_is_rejected ... ok
+test tests::wrong_key_is_rejected ... ok
+test tests::wrong_tuple_is_rejected ... ok
+
+failures:
+
+---- tests::previous_key_accepted_after_rotation stdout ----
+
+thread 'tests::previous_key_accepted_after_rotation' (3769873) panicked at crates/deflect-syncookie/src/lib.rs:339:9:
+assertion `left != right` failed
+  left: 1
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- tests::reports_bad_mac_when_both_keys_reject_with_bad_mac stdout ----
+
+thread 'tests::reports_bad_mac_when_both_keys_reject_with_bad_mac' (3769874) panicked at crates/deflect-syncookie/src/lib.rs:355:9:
+assertion `left == right` failed
+  left: Err(Expired)
+ right: Err(BadMac)
+
+---- tests::roundtrip_at_a_nonzero_epoch stdout ----
+
+thread 'tests::roundtrip_at_a_nonzero_epoch' (3769875) panicked at crates/deflect-syncookie/src/lib.rs:275:50:
+called `Result::unwrap()` on an `Err` value: Expired
+
+---- tests::roundtrip_recovers_mss stdout ----
+
+thread 'tests::roundtrip_recovers_mss' (3769876) panicked at crates/deflect-syncookie/src/lib.rs:239:61:
+called `Result::unwrap()` on an `Err` value: Expired
+
+---- tests::tampered_low_bits_are_bad_mac stdout ----
+
+thread 'tests::tampered_low_bits_are_bad_mac' (3769877) panicked at crates/deflect-syncookie/src/lib.rs:318:9:
+assertion `left == right` failed
+  left: Err(Expired)
+ right: Err(BadMac)
+
+---- tests::valid_at_exactly_max_age stdout ----
+
+thread 'tests::valid_at_exactly_max_age' (3769879) panicked at crates/deflect-syncookie/src/lib.rs:287:53:
+called `Result::unwrap()` on an `Err` value: Expired
+
+---- tests::valid_within_window_across_epochs stdout ----
+
+thread 'tests::valid_within_window_across_epochs' (3769880) panicked at crates/deflect-syncookie/src/lib.rs:251:52:
+called `Result::unwrap()` on an `Err` value: Expired
+
+
+failures:
+    tests::previous_key_accepted_after_rotation
+    tests::reports_bad_mac_when_both_keys_reject_with_bad_mac
+    tests::roundtrip_at_a_nonzero_epoch
+    tests::roundtrip_recovers_mss
+    tests::tampered_low_bits_are_bad_mac
+    tests::valid_at_exactly_max_age
+    tests::valid_within_window_across_epochs
+
+test result: FAILED. 20 passed; 7 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p deflect-syncookie --lib`
+
+*** result: Failure(101)

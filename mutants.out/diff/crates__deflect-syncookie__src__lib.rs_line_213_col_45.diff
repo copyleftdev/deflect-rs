@@ -1,0 +1,21 @@
+--- crates/deflect-syncookie/src/lib.rs
++++ replace & with | in SynCookie::check_key
+@@ -205,17 +205,17 @@
+         // `age` is reconstructed modulo 256, so a crafted cookie can imply an
+         // epoch before the clock's origin. There is no such issuing epoch, so
+         // the cookie cannot be genuine: reject rather than wrap the subtraction.
+         let Some(issued_epoch) = current_epoch.checked_sub(u64::from(age)) else {
+             return Err(CookieError::BadMac);
+         };
+ 
+         let hc = mac::mac(key, tuple, 1, issued_epoch, client_isn);
+-        let mss_idx = data.wrapping_sub(hc) & DATA_MASK;
++        let mss_idx = data.wrapping_sub(hc) | /* ~ changed by cargo-mutants ~ */ DATA_MASK;
+         if mss_idx >= MSS_TABLE.len() as u32 {
+             return Err(CookieError::BadMac);
+         }
+         Ok(Recovered {
+             mss: decode_mss(mss_idx as u8),
+             age_epochs: age,
+             via_previous_key,
+         })

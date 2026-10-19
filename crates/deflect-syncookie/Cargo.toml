@@ -12,6 +12,9 @@ description = "Stateless SYN-cookie issuance and validation for deflect-rs, keye
 deflect-core = { workspace = true, default-features = false }
 siphasher = { version = "1.0.4", default-features = false }
 
+[dev-dependencies]
+proptest = "1.6.0"
+
 [features]
 default = ["std"]
 std = ["deflect-core/std"]

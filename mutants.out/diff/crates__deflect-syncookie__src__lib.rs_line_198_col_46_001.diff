@@ -1,0 +1,21 @@
+--- crates/deflect-syncookie/src/lib.rs
++++ replace & with ^ in SynCookie::check_key
+@@ -190,17 +190,17 @@
+         tuple: &FourTuple,
+         client_isn: u32,
+         cookie: u32,
+         current_epoch: u64,
+         via_previous_key: bool,
+     ) -> Result<Recovered, CookieError> {
+         let h0 = mac::mac(key, tuple, 0, 0, 0);
+         let v = cookie.wrapping_sub(h0).wrapping_sub(client_isn);
+-        let issued_bits = (v >> EPOCH_SHIFT) & 0xff;
++        let issued_bits = (v >> EPOCH_SHIFT) ^ /* ~ changed by cargo-mutants ~ */ 0xff;
+         let data = v & DATA_MASK;
+ 
+         let age = (current_epoch as u8).wrapping_sub(issued_bits as u8);
+         if age > self.max_age_epochs {
+             return Err(CookieError::Expired);
+         }
+         // `age` is reconstructed modulo 256, so a crafted cookie can imply an
+         // epoch before the clock's origin. There is no such issuing epoch, so

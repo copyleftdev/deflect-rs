@@ -1,0 +1,21 @@
+--- crates/deflect-syncookie/src/lib.rs
++++ replace || with && in SynCookie::validate
+@@ -169,17 +169,17 @@
+             return primary;
+         }
+         if let Some(prev) = self.prev_key {
+             let secondary = self.check_key(prev, tuple, client_isn, cookie, current, true);
+             if secondary.is_ok() {
+                 return secondary;
+             }
+             // Prefer reporting expiry over a bad MAC when either key saw it.
+-            if primary == Err(CookieError::Expired) || secondary == Err(CookieError::Expired) {
++            if primary == Err(CookieError::Expired) && /* ~ changed by cargo-mutants ~ */ secondary == Err(CookieError::Expired) {
+                 return Err(CookieError::Expired);
+             }
+         }
+         primary
+     }
+ 
+     // Mirror of the modular encoding in `issue`; the narrowings reconstruct the
+     // epoch byte and MSS index and are intentional.

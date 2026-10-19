@@ -8,25 +8,25 @@
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 8.137382403,
+          "duration": 7.942634418,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.302004167,
+          "duration": 0.15177582,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         }
       ]
@@ -34,15 +34,1856 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:27:9: replace Watermarks::from_high -> Watermarks with Default::default()",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
+          "name": "crates/deflect-syncookie/src/lib.rs:113:9: replace SynCookie::with_defaults -> SynCookie with Default::default()",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
           "function": {
-            "function_name": "Watermarks::from_high",
-            "return_type": "-> Watermarks",
+            "function_name": "SynCookie::with_defaults",
+            "return_type": "-> SynCookie",
             "span": {
               "start": {
-                "line": 24,
+                "line": 109,
+                "column": 5
+              },
+              "end": {
+                "line": 114,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 113,
+              "column": 9
+            },
+            "end": {
+              "line": 113,
+              "column": 51
+            }
+          },
+          "replacement": "Default::default()",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "Unviable",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_113_col_9.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_113_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.30227726,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:125:19: replace / with % in SynCookie::epoch",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::epoch",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 124,
+                "column": 5
+              },
+              "end": {
+                "line": 126,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 125,
+              "column": 19
+            },
+            "end": {
+              "line": 125,
+              "column": 20
+            }
+          },
+          "replacement": "%",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_125_col_19.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_125_col_19.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 6.423200949,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.350634535,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:125:19: replace / with * in SynCookie::epoch",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::epoch",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 124,
+                "column": 5
+              },
+              "end": {
+                "line": 126,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 125,
+              "column": 19
+            },
+            "end": {
+              "line": 125,
+              "column": 20
+            }
+          },
+          "replacement": "*",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_125_col_19_001.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_125_col_19_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.850811611,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.497983454,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:137:9: replace SynCookie::issue -> u32 with 0",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::issue",
+            "return_type": "-> u32",
+            "span": {
+              "start": {
+                "line": 128,
+                "column": 5
+              },
+              "end": {
+                "line": 146,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 137,
+              "column": 9
+            },
+            "end": {
+              "line": 145,
+              "column": 32
+            }
+          },
+          "replacement": "0",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_137_col_9.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_137_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 5.649346824,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.499954727,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:137:9: replace SynCookie::issue -> u32 with 1",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::issue",
+            "return_type": "-> u32",
+            "span": {
+              "start": {
+                "line": 128,
+                "column": 5
+              },
+              "end": {
+                "line": 146,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 137,
+              "column": 9
+            },
+            "end": {
+              "line": 145,
+              "column": 32
+            }
+          },
+          "replacement": "1",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_137_col_9_001.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_137_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 4.099522047,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.359534621,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:141:45: replace & with | in SynCookie::issue",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::issue",
+            "return_type": "-> u32",
+            "span": {
+              "start": {
+                "line": 128,
+                "column": 5
+              },
+              "end": {
+                "line": 146,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 141,
+              "column": 45
+            },
+            "end": {
+              "line": 141,
+              "column": 46
+            }
+          },
+          "replacement": "|",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_141_col_45.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_141_col_45.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.897452999,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.401455999,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:141:45: replace & with ^ in SynCookie::issue",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::issue",
+            "return_type": "-> u32",
+            "span": {
+              "start": {
+                "line": 128,
+                "column": 5
+              },
+              "end": {
+                "line": 146,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 141,
+              "column": 45
+            },
+            "end": {
+              "line": 141,
+              "column": 46
+            }
+          },
+          "replacement": "^",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_141_col_45_001.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_141_col_45_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 5.54034867,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.503664046,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:142:48: replace << with >> in SynCookie::issue",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::issue",
+            "return_type": "-> u32",
+            "span": {
+              "start": {
+                "line": 128,
+                "column": 5
+              },
+              "end": {
+                "line": 146,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 142,
+              "column": 48
+            },
+            "end": {
+              "line": 142,
+              "column": 50
+            }
+          },
+          "replacement": ">>",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_142_col_48.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_142_col_48.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 2.49621827,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.205112086,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:142:40: replace & with | in SynCookie::issue",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::issue",
+            "return_type": "-> u32",
+            "span": {
+              "start": {
+                "line": 128,
+                "column": 5
+              },
+              "end": {
+                "line": 146,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 142,
+              "column": 40
+            },
+            "end": {
+              "line": 142,
+              "column": 41
+            }
+          },
+          "replacement": "|",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_142_col_40.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_142_col_40.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.041324935,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.204124334,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:142:40: replace & with ^ in SynCookie::issue",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::issue",
+            "return_type": "-> u32",
+            "span": {
+              "start": {
+                "line": 128,
+                "column": 5
+              },
+              "end": {
+                "line": 146,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 142,
+              "column": 40
+            },
+            "end": {
+              "line": 142,
+              "column": 41
+            }
+          },
+          "replacement": "^",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_142_col_40_001.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_142_col_40_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 2.292399826,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.257354095,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:166:9: replace SynCookie::validate -> Result<Recovered, CookieError> with Ok(Default::default())",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::validate",
+            "return_type": "-> Result<Recovered, CookieError>",
+            "span": {
+              "start": {
+                "line": 148,
+                "column": 5
+              },
+              "end": {
+                "line": 182,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 166,
+              "column": 9
+            },
+            "end": {
+              "line": 181,
+              "column": 16
+            }
+          },
+          "replacement": "Ok(Default::default())",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "Unviable",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_166_col_9.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_166_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.00602733,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:125:9: replace SynCookie::epoch -> u64 with 1",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::epoch",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 124,
+                "column": 5
+              },
+              "end": {
+                "line": 126,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 125,
+              "column": 9
+            },
+            "end": {
+              "line": 125,
+              "column": 37
+            }
+          },
+          "replacement": "1",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_125_col_9_001.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_125_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 44.420616399,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.563555192,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:177:53: replace || with && in SynCookie::validate",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::validate",
+            "return_type": "-> Result<Recovered, CookieError>",
+            "span": {
+              "start": {
+                "line": 148,
+                "column": 5
+              },
+              "end": {
+                "line": 182,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 177,
+              "column": 53
+            },
+            "end": {
+              "line": 177,
+              "column": 55
+            }
+          },
+          "replacement": "&&",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_177_col_53.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_177_col_53.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 4.7488165460000005,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.50251395,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:177:24: replace == with != in SynCookie::validate",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::validate",
+            "return_type": "-> Result<Recovered, CookieError>",
+            "span": {
+              "start": {
+                "line": 148,
+                "column": 5
+              },
+              "end": {
+                "line": 182,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 177,
+              "column": 24
+            },
+            "end": {
+              "line": 177,
+              "column": 26
+            }
+          },
+          "replacement": "!=",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_177_col_24.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_177_col_24.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.800987944,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.255072222,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:177:66: replace == with != in SynCookie::validate",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::validate",
+            "return_type": "-> Result<Recovered, CookieError>",
+            "span": {
+              "start": {
+                "line": 148,
+                "column": 5
+              },
+              "end": {
+                "line": 182,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 177,
+              "column": 66
+            },
+            "end": {
+              "line": 177,
+              "column": 68
+            }
+          },
+          "replacement": "!=",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_177_col_66.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_177_col_66.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.648844971,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.202498141,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:196:9: replace SynCookie::check_key -> Result<Recovered, CookieError> with Ok(Default::default())",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::check_key",
+            "return_type": "-> Result<Recovered, CookieError>",
+            "span": {
+              "start": {
+                "line": 186,
+                "column": 5
+              },
+              "end": {
+                "line": 222,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 196,
+              "column": 9
+            },
+            "end": {
+              "line": 221,
+              "column": 11
+            }
+          },
+          "replacement": "Ok(Default::default())",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "Unviable",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_196_col_9.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_196_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.403758253,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:198:46: replace & with | in SynCookie::check_key",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::check_key",
+            "return_type": "-> Result<Recovered, CookieError>",
+            "span": {
+              "start": {
+                "line": 186,
+                "column": 5
+              },
+              "end": {
+                "line": 222,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 198,
+              "column": 46
+            },
+            "end": {
+              "line": 198,
+              "column": 47
+            }
+          },
+          "replacement": "|",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_198_col_46.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_198_col_46.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.306451142,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.30255889,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:198:46: replace & with ^ in SynCookie::check_key",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::check_key",
+            "return_type": "-> Result<Recovered, CookieError>",
+            "span": {
+              "start": {
+                "line": 186,
+                "column": 5
+              },
+              "end": {
+                "line": 222,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 198,
+              "column": 46
+            },
+            "end": {
+              "line": 198,
+              "column": 47
+            }
+          },
+          "replacement": "^",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_198_col_46_001.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_198_col_46_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.5866108799999998,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.203629478,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:198:30: replace >> with << in SynCookie::check_key",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::check_key",
+            "return_type": "-> Result<Recovered, CookieError>",
+            "span": {
+              "start": {
+                "line": 186,
+                "column": 5
+              },
+              "end": {
+                "line": 222,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 198,
+              "column": 30
+            },
+            "end": {
+              "line": 198,
+              "column": 32
+            }
+          },
+          "replacement": "<<",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_198_col_30.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_198_col_30.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.750700336,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.599173317,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:199:22: replace & with | in SynCookie::check_key",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::check_key",
+            "return_type": "-> Result<Recovered, CookieError>",
+            "span": {
+              "start": {
+                "line": 186,
+                "column": 5
+              },
+              "end": {
+                "line": 222,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 199,
+              "column": 22
+            },
+            "end": {
+              "line": 199,
+              "column": 23
+            }
+          },
+          "replacement": "|",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_199_col_22.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_199_col_22.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 2.74251119,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.355567924,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:199:22: replace & with ^ in SynCookie::check_key",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::check_key",
+            "return_type": "-> Result<Recovered, CookieError>",
+            "span": {
+              "start": {
+                "line": 186,
+                "column": 5
+              },
+              "end": {
+                "line": 222,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 199,
+              "column": 22
+            },
+            "end": {
+              "line": 199,
+              "column": 23
+            }
+          },
+          "replacement": "^",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_199_col_22_001.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_199_col_22_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 2.6012445570000002,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.50473524,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:202:16: replace > with == in SynCookie::check_key",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::check_key",
+            "return_type": "-> Result<Recovered, CookieError>",
+            "span": {
+              "start": {
+                "line": 186,
+                "column": 5
+              },
+              "end": {
+                "line": 222,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 202,
+              "column": 16
+            },
+            "end": {
+              "line": 202,
+              "column": 17
+            }
+          },
+          "replacement": "==",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_202_col_16.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_202_col_16.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 2.992374355,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.849700133,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:202:16: replace > with < in SynCookie::check_key",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::check_key",
+            "return_type": "-> Result<Recovered, CookieError>",
+            "span": {
+              "start": {
+                "line": 186,
+                "column": 5
+              },
+              "end": {
+                "line": 222,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 202,
+              "column": 16
+            },
+            "end": {
+              "line": 202,
+              "column": 17
+            }
+          },
+          "replacement": "<",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_202_col_16_001.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_202_col_16_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 4.849583928,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.505713092,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:113:32: replace * with / in SynCookie::with_defaults",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::with_defaults",
+            "return_type": "-> SynCookie",
+            "span": {
+              "start": {
+                "line": 109,
+                "column": 5
+              },
+              "end": {
+                "line": 114,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 113,
+              "column": 32
+            },
+            "end": {
+              "line": 113,
+              "column": 33
+            }
+          },
+          "replacement": "/",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_113_col_32_001.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_113_col_32_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 59.171307823,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.599001262,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:125:9: replace SynCookie::epoch -> u64 with 0",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::epoch",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 124,
+                "column": 5
+              },
+              "end": {
+                "line": 126,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 125,
+              "column": 9
+            },
+            "end": {
+              "line": 125,
+              "column": 37
+            }
+          },
+          "replacement": "0",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_125_col_9.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_125_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 60.619923936,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.557142606,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:202:16: replace > with >= in SynCookie::check_key",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::check_key",
+            "return_type": "-> Result<Recovered, CookieError>",
+            "span": {
+              "start": {
+                "line": 186,
+                "column": 5
+              },
+              "end": {
+                "line": 222,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 202,
+              "column": 16
+            },
+            "end": {
+              "line": 202,
+              "column": 17
+            }
+          },
+          "replacement": ">=",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_202_col_16_002.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_202_col_16_002.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 4.391061213,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.559606145,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/mac.rs:22:9: replace CookieKey::from_u64s -> CookieKey with Default::default()",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/mac.rs",
+          "function": {
+            "function_name": "CookieKey::from_u64s",
+            "return_type": "-> CookieKey",
+            "span": {
+              "start": {
+                "line": 20,
+                "column": 5
+              },
+              "end": {
+                "line": 23,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 22,
+              "column": 9
+            },
+            "end": {
+              "line": 22,
+              "column": 29
+            }
+          },
+          "replacement": "Default::default()",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "Unviable",
+      "log_path": "log/crates__deflect-syncookie__src__mac.rs_line_22_col_9.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__mac.rs_line_22_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 2.186431269,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:213:45: replace & with | in SynCookie::check_key",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::check_key",
+            "return_type": "-> Result<Recovered, CookieError>",
+            "span": {
+              "start": {
+                "line": 186,
+                "column": 5
+              },
+              "end": {
+                "line": 222,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 213,
+              "column": 45
+            },
+            "end": {
+              "line": 213,
+              "column": 46
+            }
+          },
+          "replacement": "|",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_213_col_45.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_213_col_45.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.888359947,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 1.151180828,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:213:45: replace & with ^ in SynCookie::check_key",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::check_key",
+            "return_type": "-> Result<Recovered, CookieError>",
+            "span": {
+              "start": {
+                "line": 186,
+                "column": 5
+              },
+              "end": {
+                "line": 222,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 213,
+              "column": 45
+            },
+            "end": {
+              "line": 213,
+              "column": 46
+            }
+          },
+          "replacement": "^",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_213_col_45_001.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_213_col_45_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.880920527,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 1.200971929,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/mac.rs:27:9: replace CookieKey::from_bytes -> CookieKey with Default::default()",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/mac.rs",
+          "function": {
+            "function_name": "CookieKey::from_bytes",
+            "return_type": "-> CookieKey",
+            "span": {
+              "start": {
+                "line": 25,
                 "column": 5
               },
               "end": {
@@ -66,12 +1907,12 @@
         }
       },
       "summary": "Unviable",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_27_col_9.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_27_col_9.diff",
+      "log_path": "log/crates__deflect-syncookie__src__mac.rs_line_27_col_9.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__mac.rs_line_27_col_9.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 0.302230234,
+          "duration": 1.949124067,
           "process_status": {
             "Failure": 101
           },
@@ -80,7 +1921,7 @@
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         }
       ]
@@ -88,110 +1929,186 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:75:9: replace Trigger::reassess -> Phase with Default::default()",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
+          "name": "crates/deflect-syncookie/src/lib.rs:113:32: replace * with + in SynCookie::with_defaults",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
           "function": {
-            "function_name": "Trigger::reassess",
-            "return_type": "-> Phase",
+            "function_name": "SynCookie::with_defaults",
+            "return_type": "-> SynCookie",
             "span": {
               "start": {
-                "line": 72,
+                "line": 109,
                 "column": 5
               },
               "end": {
-                "line": 94,
+                "line": 114,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 75,
+              "line": 113,
+              "column": 32
+            },
+            "end": {
+              "line": 113,
+              "column": 33
+            }
+          },
+          "replacement": "+",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_113_col_32.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_113_col_32.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 65.070951427,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.56037362,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:214:20: replace >= with < in SynCookie::check_key",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::check_key",
+            "return_type": "-> Result<Recovered, CookieError>",
+            "span": {
+              "start": {
+                "line": 186,
+                "column": 5
+              },
+              "end": {
+                "line": 222,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 214,
+              "column": 20
+            },
+            "end": {
+              "line": 214,
+              "column": 22
+            }
+          },
+          "replacement": "<",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_214_col_20.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_214_col_20.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 4.289415884,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.204433084,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/lib.rs:120:9: replace SynCookie::rotate with ()",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/lib.rs",
+          "function": {
+            "function_name": "SynCookie::rotate",
+            "return_type": "",
+            "span": {
+              "start": {
+                "line": 116,
+                "column": 5
+              },
+              "end": {
+                "line": 122,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 120,
               "column": 9
             },
             "end": {
-              "line": 93,
-              "column": 19
+              "line": 121,
+              "column": 28
             }
           },
-          "replacement": "Default::default()",
+          "replacement": "()",
           "genre": "FnValue"
         }
       },
-      "summary": "Unviable",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_75_col_9.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_75_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 0.571098268,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:79:57: replace || with && in Trigger::reassess",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
-          "function": {
-            "function_name": "Trigger::reassess",
-            "return_type": "-> Phase",
-            "span": {
-              "start": {
-                "line": 72,
-                "column": 5
-              },
-              "end": {
-                "line": 94,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 79,
-              "column": 57
-            },
-            "end": {
-              "line": 79,
-              "column": 59
-            }
-          },
-          "replacement": "&&",
-          "genre": "BinaryOperator"
-        }
-      },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_79_col_57.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_79_col_57.diff",
+      "log_path": "log/crates__deflect-syncookie__src__lib.rs_line_120_col_9.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__lib.rs_line_120_col_9.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 4.700770457,
+          "duration": 65.570880913,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.498820793,
+          "duration": 0.598493506,
           "process_status": {
             "Failure": 101
           },
@@ -199,7 +2116,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         }
       ]
@@ -207,659 +2124,31 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:79:34: replace >= with < in Trigger::reassess",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
+          "name": "crates/deflect-syncookie/src/mac.rs:53:5: replace mac -> u32 with 0",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/mac.rs",
           "function": {
-            "function_name": "Trigger::reassess",
-            "return_type": "-> Phase",
+            "function_name": "mac",
+            "return_type": "-> u32",
             "span": {
               "start": {
-                "line": 72,
-                "column": 5
+                "line": 44,
+                "column": 1
               },
               "end": {
-                "line": 94,
-                "column": 6
+                "line": 68,
+                "column": 2
               }
             }
           },
           "span": {
             "start": {
-              "line": 79,
-              "column": 34
+              "line": 53,
+              "column": 5
             },
             "end": {
-              "line": 79,
-              "column": 36
-            }
-          },
-          "replacement": "<",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_79_col_34.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_79_col_34.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.892883464,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.554395838,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:79:74: replace >= with < in Trigger::reassess",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
-          "function": {
-            "function_name": "Trigger::reassess",
-            "return_type": "-> Phase",
-            "span": {
-              "start": {
-                "line": 72,
-                "column": 5
-              },
-              "end": {
-                "line": 94,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 79,
-              "column": 74
-            },
-            "end": {
-              "line": 79,
-              "column": 76
-            }
-          },
-          "replacement": "<",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_79_col_74.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_79_col_74.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.646176964,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.549262325,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:86:55: replace && with || in Trigger::reassess",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
-          "function": {
-            "function_name": "Trigger::reassess",
-            "return_type": "-> Phase",
-            "span": {
-              "start": {
-                "line": 72,
-                "column": 5
-              },
-              "end": {
-                "line": 94,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 86,
-              "column": 55
-            },
-            "end": {
-              "line": 86,
-              "column": 57
-            }
-          },
-          "replacement": "||",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_86_col_55.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_86_col_55.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 5.147607653,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.847949721,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:67:9: replace Trigger::observe -> Phase with Default::default()",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
-          "function": {
-            "function_name": "Trigger::observe",
-            "return_type": "-> Phase",
-            "span": {
-              "start": {
-                "line": 64,
-                "column": 5
-              },
-              "end": {
-                "line": 70,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
               "line": 67,
-              "column": 9
-            },
-            "end": {
-              "line": 69,
-              "column": 33
-            }
-          },
-          "replacement": "Default::default()",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "Unviable",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_67_col_9.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_67_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 25.964585803,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:86:34: replace < with == in Trigger::reassess",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
-          "function": {
-            "function_name": "Trigger::reassess",
-            "return_type": "-> Phase",
-            "span": {
-              "start": {
-                "line": 72,
-                "column": 5
-              },
-              "end": {
-                "line": 94,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 86,
-              "column": 34
-            },
-            "end": {
-              "line": 86,
-              "column": 35
-            }
-          },
-          "replacement": "==",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_86_col_34.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_86_col_34.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.746736675,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.450033775,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:86:34: replace < with <= in Trigger::reassess",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
-          "function": {
-            "function_name": "Trigger::reassess",
-            "return_type": "-> Phase",
-            "span": {
-              "start": {
-                "line": 72,
-                "column": 5
-              },
-              "end": {
-                "line": 94,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 86,
-              "column": 34
-            },
-            "end": {
-              "line": 86,
-              "column": 35
-            }
-          },
-          "replacement": "<=",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_86_col_34_002.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_86_col_34_002.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.843102794,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.701314078,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:86:72: replace < with == in Trigger::reassess",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
-          "function": {
-            "function_name": "Trigger::reassess",
-            "return_type": "-> Phase",
-            "span": {
-              "start": {
-                "line": 72,
-                "column": 5
-              },
-              "end": {
-                "line": 94,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 86,
-              "column": 72
-            },
-            "end": {
-              "line": 86,
-              "column": 73
-            }
-          },
-          "replacement": "==",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_86_col_72.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_86_col_72.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.7474720379999997,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.154208435,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:86:72: replace < with > in Trigger::reassess",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
-          "function": {
-            "function_name": "Trigger::reassess",
-            "return_type": "-> Phase",
-            "span": {
-              "start": {
-                "line": 72,
-                "column": 5
-              },
-              "end": {
-                "line": 94,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 86,
-              "column": 72
-            },
-            "end": {
-              "line": 86,
-              "column": 73
-            }
-          },
-          "replacement": ">",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_86_col_72_001.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_86_col_72_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 1.004221755,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.102532202,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:86:72: replace < with <= in Trigger::reassess",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
-          "function": {
-            "function_name": "Trigger::reassess",
-            "return_type": "-> Phase",
-            "span": {
-              "start": {
-                "line": 72,
-                "column": 5
-              },
-              "end": {
-                "line": 94,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 86,
-              "column": 72
-            },
-            "end": {
-              "line": 86,
-              "column": 73
-            }
-          },
-          "replacement": "<=",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_86_col_72_002.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_86_col_72_002.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 1.736555115,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.304698737,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:98:9: replace Trigger::phase -> Phase with Default::default()",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
-          "function": {
-            "function_name": "Trigger::phase",
-            "return_type": "-> Phase",
-            "span": {
-              "start": {
-                "line": 96,
-                "column": 5
-              },
-              "end": {
-                "line": 99,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 98,
-              "column": 9
-            },
-            "end": {
-              "line": 98,
-              "column": 19
-            }
-          },
-          "replacement": "Default::default()",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "Unviable",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_98_col_9.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_98_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 0.606405623,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:103:9: replace Trigger::last_pps -> u64 with 0",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
-          "function": {
-            "function_name": "Trigger::last_pps",
-            "return_type": "-> u64",
-            "span": {
-              "start": {
-                "line": 101,
-                "column": 5
-              },
-              "end": {
-                "line": 104,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 103,
-              "column": 9
-            },
-            "end": {
-              "line": 103,
-              "column": 22
+              "column": 6
             }
           },
           "replacement": "0",
@@ -867,24 +2156,24 @@
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_103_col_9.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_103_col_9.diff",
+      "log_path": "log/crates__deflect-syncookie__src__mac.rs_line_53_col_5.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__mac.rs_line_53_col_5.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 2.449733152,
+          "duration": 3.8450623950000002,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.2052906,
+          "duration": 0.999818011,
           "process_status": {
             "Failure": 101
           },
@@ -892,7 +2181,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         }
       ]
@@ -900,31 +2189,96 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:103:9: replace Trigger::last_pps -> u64 with 1",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
+          "name": "crates/deflect-syncookie/src/mac.rs:40:9: replace <impl core::fmt::Debug for CookieKey>::fmt -> core::fmt::Result with Ok(Default::default())",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/mac.rs",
           "function": {
-            "function_name": "Trigger::last_pps",
-            "return_type": "-> u64",
+            "function_name": "<impl core::fmt::Debug for CookieKey>::fmt",
+            "return_type": "-> core::fmt::Result",
             "span": {
               "start": {
-                "line": 101,
+                "line": 39,
                 "column": 5
               },
               "end": {
-                "line": 104,
+                "line": 41,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 103,
+              "line": 40,
               "column": 9
             },
             "end": {
-              "line": 103,
-              "column": 22
+              "line": 40,
+              "column": 37
+            }
+          },
+          "replacement": "Ok(Default::default())",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-syncookie__src__mac.rs_line_40_col_9.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__mac.rs_line_40_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.6996356280000002,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 1.299061324,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-syncookie@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-syncookie/src/mac.rs:53:5: replace mac -> u32 with 1",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/mac.rs",
+          "function": {
+            "function_name": "mac",
+            "return_type": "-> u32",
+            "span": {
+              "start": {
+                "line": 44,
+                "column": 1
+              },
+              "end": {
+                "line": 68,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 53,
+              "column": 5
+            },
+            "end": {
+              "line": 67,
+              "column": 6
             }
           },
           "replacement": "1",
@@ -932,24 +2286,24 @@
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_103_col_9_001.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_103_col_9_001.diff",
+      "log_path": "log/crates__deflect-syncookie__src__mac.rs_line_53_col_5_001.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__mac.rs_line_53_col_5_001.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 1.139561058,
+          "duration": 4.797638177,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.354182168,
+          "duration": 0.549625275,
           "process_status": {
             "Failure": 101
           },
@@ -957,7 +2311,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         }
       ]
@@ -965,121 +2319,56 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:108:9: replace Trigger::last_bps -> u64 with 0",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
+          "name": "crates/deflect-syncookie/src/mac.rs:66:22: replace ^ with & in mac",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/mac.rs",
           "function": {
-            "function_name": "Trigger::last_bps",
-            "return_type": "-> u64",
+            "function_name": "mac",
+            "return_type": "-> u32",
             "span": {
               "start": {
-                "line": 106,
-                "column": 5
+                "line": 44,
+                "column": 1
               },
               "end": {
-                "line": 109,
-                "column": 6
+                "line": 68,
+                "column": 2
               }
             }
           },
           "span": {
             "start": {
-              "line": 108,
-              "column": 9
-            },
-            "end": {
-              "line": 108,
+              "line": 66,
               "column": 22
-            }
-          },
-          "replacement": "0",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_108_col_9.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_108_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.244394561,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.408645756,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:86:34: replace < with > in Trigger::reassess",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
-          "function": {
-            "function_name": "Trigger::reassess",
-            "return_type": "-> Phase",
-            "span": {
-              "start": {
-                "line": 72,
-                "column": 5
-              },
-              "end": {
-                "line": 94,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 86,
-              "column": 34
             },
             "end": {
-              "line": 86,
-              "column": 35
+              "line": 66,
+              "column": 23
             }
           },
-          "replacement": ">",
+          "replacement": "&",
           "genre": "BinaryOperator"
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_86_col_34_001.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_86_col_34_001.diff",
+      "log_path": "log/crates__deflect-syncookie__src__mac.rs_line_66_col_22_001.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__mac.rs_line_66_col_22_001.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 22.798170187,
+          "duration": 4.796677586,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.355583355,
+          "duration": 0.308225592,
           "process_status": {
             "Failure": 101
           },
@@ -1087,7 +2376,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         }
       ]
@@ -1095,251 +2384,56 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:108:9: replace Trigger::last_bps -> u64 with 1",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
+          "name": "crates/deflect-syncookie/src/mac.rs:66:22: replace ^ with | in mac",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/mac.rs",
           "function": {
-            "function_name": "Trigger::last_bps",
-            "return_type": "-> u64",
+            "function_name": "mac",
+            "return_type": "-> u32",
             "span": {
               "start": {
-                "line": 106,
-                "column": 5
+                "line": 44,
+                "column": 1
               },
               "end": {
-                "line": 109,
-                "column": 6
+                "line": 68,
+                "column": 2
               }
             }
           },
           "span": {
             "start": {
-              "line": 108,
-              "column": 9
-            },
-            "end": {
-              "line": 108,
+              "line": 66,
               "column": 22
-            }
-          },
-          "replacement": "1",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_108_col_9_001.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_108_col_9_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.735930918,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.307969477,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:41:9: replace SlidingWindow::slot_index -> usize with 0",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
-          "function": {
-            "function_name": "SlidingWindow::slot_index",
-            "return_type": "-> usize",
-            "span": {
-              "start": {
-                "line": 40,
-                "column": 5
-              },
-              "end": {
-                "line": 43,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 41,
-              "column": 9
             },
             "end": {
-              "line": 42,
-              "column": 81
+              "line": 66,
+              "column": 23
             }
           },
-          "replacement": "0",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_41_col_9.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_41_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.192639501,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.506140658,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:41:9: replace SlidingWindow::slot_index -> usize with 1",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
-          "function": {
-            "function_name": "SlidingWindow::slot_index",
-            "return_type": "-> usize",
-            "span": {
-              "start": {
-                "line": 40,
-                "column": 5
-              },
-              "end": {
-                "line": 43,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 41,
-              "column": 9
-            },
-            "end": {
-              "line": 42,
-              "column": 81
-            }
-          },
-          "replacement": "1",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_41_col_9_001.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_41_col_9_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.6905874340000002,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.748568485,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:28:73: replace / with % in Watermarks::from_high",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
-          "function": {
-            "function_name": "Watermarks::from_high",
-            "return_type": "-> Watermarks",
-            "span": {
-              "start": {
-                "line": 24,
-                "column": 5
-              },
-              "end": {
-                "line": 35,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 28,
-              "column": 73
-            },
-            "end": {
-              "line": 28,
-              "column": 74
-            }
-          },
-          "replacement": "%",
+          "replacement": "|",
           "genre": "BinaryOperator"
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_28_col_73_001.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_28_col_73_001.diff",
+      "log_path": "log/crates__deflect-syncookie__src__mac.rs_line_66_col_22.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__mac.rs_line_66_col_22.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 53.867104525,
+          "duration": 4.88293379,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.549132251,
+          "duration": 0.40612951,
           "process_status": {
             "Failure": 101
           },
@@ -1347,7 +2441,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         }
       ]
@@ -1355,56 +2449,56 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:42:34: replace % with / in SlidingWindow::slot_index",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
+          "name": "crates/deflect-syncookie/src/mac.rs:66:15: replace >> with << in mac",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/mac.rs",
           "function": {
-            "function_name": "SlidingWindow::slot_index",
-            "return_type": "-> usize",
+            "function_name": "mac",
+            "return_type": "-> u32",
             "span": {
               "start": {
-                "line": 40,
-                "column": 5
+                "line": 44,
+                "column": 1
               },
               "end": {
-                "line": 43,
-                "column": 6
+                "line": 68,
+                "column": 2
               }
             }
           },
           "span": {
             "start": {
-              "line": 42,
-              "column": 34
+              "line": 66,
+              "column": 15
             },
             "end": {
-              "line": 42,
-              "column": 35
+              "line": 66,
+              "column": 17
             }
           },
-          "replacement": "/",
+          "replacement": "<<",
           "genre": "BinaryOperator"
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_42_col_34.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_42_col_34.diff",
+      "log_path": "log/crates__deflect-syncookie__src__mac.rs_line_66_col_15.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__mac.rs_line_66_col_15.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 4.290902159,
+          "duration": 4.549214608,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.499412472,
+          "duration": 0.449268387,
           "process_status": {
             "Failure": 101
           },
@@ -1412,7 +2506,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         }
       ]
@@ -1420,161 +2514,31 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:28:50: replace * with + in Watermarks::from_high",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
+          "name": "crates/deflect-syncookie/src/mac.rs:71:5: replace write_addr with ()",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/mac.rs",
           "function": {
-            "function_name": "Watermarks::from_high",
-            "return_type": "-> Watermarks",
-            "span": {
-              "start": {
-                "line": 24,
-                "column": 5
-              },
-              "end": {
-                "line": 35,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 28,
-              "column": 50
-            },
-            "end": {
-              "line": 28,
-              "column": 51
-            }
-          },
-          "replacement": "+",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_28_col_50.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_28_col_50.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 57.066715126,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.600557357,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:42:34: replace % with + in SlidingWindow::slot_index",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
-          "function": {
-            "function_name": "SlidingWindow::slot_index",
-            "return_type": "-> usize",
-            "span": {
-              "start": {
-                "line": 40,
-                "column": 5
-              },
-              "end": {
-                "line": 43,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 42,
-              "column": 34
-            },
-            "end": {
-              "line": 42,
-              "column": 35
-            }
-          },
-          "replacement": "+",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_42_col_34_001.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_42_col_34_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.748110661,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.355193362,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:48:9: replace SlidingWindow::expire_to with ()",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
-          "function": {
-            "function_name": "SlidingWindow::expire_to",
+            "function_name": "write_addr",
             "return_type": "",
             "span": {
               "start": {
-                "line": 45,
-                "column": 5
+                "line": 70,
+                "column": 1
               },
               "end": {
-                "line": 58,
-                "column": 6
+                "line": 81,
+                "column": 2
               }
             }
           },
           "span": {
             "start": {
-              "line": 48,
-              "column": 9
+              "line": 71,
+              "column": 5
             },
             "end": {
-              "line": 57,
-              "column": 35
+              "line": 80,
+              "column": 6
             }
           },
           "replacement": "()",
@@ -1582,24 +2546,24 @@
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_48_col_9.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_48_col_9.diff",
+      "log_path": "log/crates__deflect-syncookie__src__mac.rs_line_71_col_5.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__mac.rs_line_71_col_5.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 4.348837184,
+          "duration": 3.093628391,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.451333918,
+          "duration": 0.45057908,
           "process_status": {
             "Failure": 101
           },
@@ -1607,7 +2571,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         }
       ]
@@ -1615,681 +2579,31 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:28:50: replace * with / in Watermarks::from_high",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
+          "name": "crates/deflect-syncookie/src/mss.rs:11:5: replace encode_mss -> u8 with 0",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/mss.rs",
           "function": {
-            "function_name": "Watermarks::from_high",
-            "return_type": "-> Watermarks",
+            "function_name": "encode_mss",
+            "return_type": "-> u8",
             "span": {
               "start": {
+                "line": 7,
+                "column": 1
+              },
+              "end": {
                 "line": 24,
-                "column": 5
-              },
-              "end": {
-                "line": 35,
-                "column": 6
+                "column": 2
               }
             }
           },
           "span": {
             "start": {
-              "line": 28,
-              "column": 50
+              "line": 11,
+              "column": 5
             },
             "end": {
-              "line": 28,
-              "column": 51
-            }
-          },
-          "replacement": "/",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_28_col_50_001.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_28_col_50_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 61.713955476,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.849383689,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/trigger.rs:28:73: replace / with * in Watermarks::from_high",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/trigger.rs",
-          "function": {
-            "function_name": "Watermarks::from_high",
-            "return_type": "-> Watermarks",
-            "span": {
-              "start": {
-                "line": 24,
-                "column": 5
-              },
-              "end": {
-                "line": 35,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 28,
-              "column": 73
-            },
-            "end": {
-              "line": 28,
-              "column": 74
-            }
-          },
-          "replacement": "*",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_28_col_73.log",
-      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_28_col_73.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 61.767762731,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.853088493,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:52:33: replace != with == in SlidingWindow::expire_to",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
-          "function": {
-            "function_name": "SlidingWindow::expire_to",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 45,
-                "column": 5
-              },
-              "end": {
-                "line": 58,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 52,
-              "column": 33
-            },
-            "end": {
-              "line": 52,
-              "column": 35
-            }
-          },
-          "replacement": "==",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_52_col_33.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_52_col_33.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 5.441699435,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.355395809,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:49:55: replace - with + in SlidingWindow::expire_to",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
-          "function": {
-            "function_name": "SlidingWindow::expire_to",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 45,
-                "column": 5
-              },
-              "end": {
-                "line": 58,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 49,
-              "column": 55
-            },
-            "end": {
-              "line": 49,
-              "column": 56
-            }
-          },
-          "replacement": "+",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_49_col_55.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_49_col_55.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 5.497708355,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.355164841,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:49:55: replace - with / in SlidingWindow::expire_to",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
-          "function": {
-            "function_name": "SlidingWindow::expire_to",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 45,
-                "column": 5
-              },
-              "end": {
-                "line": 58,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 49,
-              "column": 55
-            },
-            "end": {
-              "line": 49,
-              "column": 56
-            }
-          },
-          "replacement": "/",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_49_col_55_001.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_49_col_55_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 5.496320698,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.357601012,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:62:9: replace SlidingWindow::record with ()",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
-          "function": {
-            "function_name": "SlidingWindow::record",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 60,
-                "column": 5
-              },
-              "end": {
-                "line": 66,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 62,
-              "column": 9
-            },
-            "end": {
-              "line": 65,
-              "column": 70
-            }
-          },
-          "replacement": "()",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_62_col_9.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_62_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.838657044,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.797967753,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:62:34: replace / with * in SlidingWindow::record",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
-          "function": {
-            "function_name": "SlidingWindow::record",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 60,
-                "column": 5
-              },
-              "end": {
-                "line": 66,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 62,
-              "column": 34
-            },
-            "end": {
-              "line": 62,
-              "column": 35
-            }
-          },
-          "replacement": "*",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_62_col_34_001.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_62_col_34_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.536405042,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.549053018,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:62:34: replace / with % in SlidingWindow::record",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
-          "function": {
-            "function_name": "SlidingWindow::record",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 60,
-                "column": 5
-              },
-              "end": {
-                "line": 66,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 62,
-              "column": 34
-            },
-            "end": {
-              "line": 62,
-              "column": 35
-            }
-          },
-          "replacement": "%",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_62_col_34.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_62_col_34.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.550009508,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.6083676,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:70:34: replace / with % in SlidingWindow::sum",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
-          "function": {
-            "function_name": "SlidingWindow::sum",
-            "return_type": "-> u64",
-            "span": {
-              "start": {
-                "line": 68,
-                "column": 5
-              },
-              "end": {
-                "line": 73,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 70,
-              "column": 34
-            },
-            "end": {
-              "line": 70,
-              "column": 35
-            }
-          },
-          "replacement": "%",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_70_col_34.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_70_col_34.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.433941647,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.453144819,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:70:9: replace SlidingWindow::sum -> u64 with 1",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
-          "function": {
-            "function_name": "SlidingWindow::sum",
-            "return_type": "-> u64",
-            "span": {
-              "start": {
-                "line": 68,
-                "column": 5
-              },
-              "end": {
-                "line": 73,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 70,
-              "column": 9
-            },
-            "end": {
-              "line": 72,
-              "column": 34
-            }
-          },
-          "replacement": "1",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_70_col_9_001.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_70_col_9_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.8415390780000003,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.647026987,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:70:9: replace SlidingWindow::sum -> u64 with 0",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
-          "function": {
-            "function_name": "SlidingWindow::sum",
-            "return_type": "-> u64",
-            "span": {
-              "start": {
-                "line": 68,
-                "column": 5
-              },
-              "end": {
-                "line": 73,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 70,
-              "column": 9
-            },
-            "end": {
-              "line": 72,
-              "column": 34
+              "line": 23,
+              "column": 8
             }
           },
           "replacement": "0",
@@ -2297,24 +2611,24 @@
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_70_col_9.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_70_col_9.diff",
+      "log_path": "log/crates__deflect-syncookie__src__mss.rs_line_11_col_5.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__mss.rs_line_11_col_5.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 3.793020589,
+          "duration": 3.443836483,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.751499034,
+          "duration": 1.049359234,
           "process_status": {
             "Failure": 101
           },
@@ -2322,7 +2636,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         }
       ]
@@ -2330,56 +2644,56 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:70:34: replace / with * in SlidingWindow::sum",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
+          "name": "crates/deflect-syncookie/src/mss.rs:13:14: replace <= with > in encode_mss",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/mss.rs",
           "function": {
-            "function_name": "SlidingWindow::sum",
-            "return_type": "-> u64",
+            "function_name": "encode_mss",
+            "return_type": "-> u8",
             "span": {
               "start": {
-                "line": 68,
-                "column": 5
+                "line": 7,
+                "column": 1
               },
               "end": {
-                "line": 73,
-                "column": 6
+                "line": 24,
+                "column": 2
               }
             }
           },
           "span": {
             "start": {
-              "line": 70,
-              "column": 34
+              "line": 13,
+              "column": 14
             },
             "end": {
-              "line": 70,
-              "column": 35
+              "line": 13,
+              "column": 16
             }
           },
-          "replacement": "*",
+          "replacement": ">",
           "genre": "BinaryOperator"
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_70_col_34_001.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_70_col_34_001.diff",
+      "log_path": "log/crates__deflect-syncookie__src__mss.rs_line_13_col_14.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__mss.rs_line_13_col_14.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 3.099599364,
+          "duration": 3.488238831,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.750239211,
+          "duration": 0.65772136,
           "process_status": {
             "Failure": 101
           },
@@ -2387,7 +2701,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         }
       ]
@@ -2395,31 +2709,31 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:77:9: replace SlidingWindow::rate_per_sec -> u64 with 0",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
+          "name": "crates/deflect-syncookie/src/mss.rs:30:5: replace decode_mss -> u16 with 0",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/mss.rs",
           "function": {
-            "function_name": "SlidingWindow::rate_per_sec",
-            "return_type": "-> u64",
+            "function_name": "decode_mss",
+            "return_type": "-> u16",
             "span": {
               "start": {
-                "line": 75,
-                "column": 5
+                "line": 26,
+                "column": 1
               },
               "end": {
-                "line": 79,
-                "column": 6
+                "line": 31,
+                "column": 2
               }
             }
           },
           "span": {
             "start": {
-              "line": 77,
-              "column": 9
+              "line": 30,
+              "column": 5
             },
             "end": {
-              "line": 78,
-              "column": 85
+              "line": 30,
+              "column": 38
             }
           },
           "replacement": "0",
@@ -2427,24 +2741,24 @@
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_77_col_9.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_77_col_9.diff",
+      "log_path": "log/crates__deflect-syncookie__src__mss.rs_line_30_col_5.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__mss.rs_line_30_col_5.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 3.147747551,
+          "duration": 3.542204796,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.607001993,
+          "duration": 0.55075868,
           "process_status": {
             "Failure": 101
           },
@@ -2452,7 +2766,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         }
       ]
@@ -2460,31 +2774,31 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:77:9: replace SlidingWindow::rate_per_sec -> u64 with 1",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
+          "name": "crates/deflect-syncookie/src/mss.rs:11:5: replace encode_mss -> u8 with 1",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/mss.rs",
           "function": {
-            "function_name": "SlidingWindow::rate_per_sec",
-            "return_type": "-> u64",
+            "function_name": "encode_mss",
+            "return_type": "-> u8",
             "span": {
               "start": {
-                "line": 75,
-                "column": 5
+                "line": 7,
+                "column": 1
               },
               "end": {
-                "line": 79,
-                "column": 6
+                "line": 24,
+                "column": 2
               }
             }
           },
           "span": {
             "start": {
-              "line": 77,
-              "column": 9
+              "line": 11,
+              "column": 5
             },
             "end": {
-              "line": 78,
-              "column": 85
+              "line": 23,
+              "column": 8
             }
           },
           "replacement": "1",
@@ -2492,24 +2806,24 @@
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_77_col_9_001.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_77_col_9_001.diff",
+      "log_path": "log/crates__deflect-syncookie__src__mss.rs_line_11_col_5_001.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__mss.rs_line_11_col_5_001.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 3.13609889,
+          "duration": 4.243058343,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.65010078,
+          "duration": 0.254668339,
           "process_status": {
             "Failure": 101
           },
@@ -2517,7 +2831,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         }
       ]
@@ -2525,56 +2839,56 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:78:45: replace / with % in SlidingWindow::rate_per_sec",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
+          "name": "crates/deflect-syncookie/src/mss.rs:30:5: replace decode_mss -> u16 with 1",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/mss.rs",
           "function": {
-            "function_name": "SlidingWindow::rate_per_sec",
-            "return_type": "-> u64",
+            "function_name": "decode_mss",
+            "return_type": "-> u16",
             "span": {
               "start": {
-                "line": 75,
-                "column": 5
+                "line": 26,
+                "column": 1
               },
               "end": {
-                "line": 79,
-                "column": 6
+                "line": 31,
+                "column": 2
               }
             }
           },
           "span": {
             "start": {
-              "line": 78,
-              "column": 45
+              "line": 30,
+              "column": 5
             },
             "end": {
-              "line": 78,
-              "column": 46
+              "line": 30,
+              "column": 38
             }
           },
-          "replacement": "%",
-          "genre": "BinaryOperator"
+          "replacement": "1",
+          "genre": "FnValue"
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_78_col_45.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_78_col_45.diff",
+      "log_path": "log/crates__deflect-syncookie__src__mss.rs_line_30_col_5_001.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__mss.rs_line_30_col_5_001.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 2.643465185,
+          "duration": 3.646896263,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.252183454,
+          "duration": 0.355106679,
           "process_status": {
             "Failure": 101
           },
@@ -2582,7 +2896,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         }
       ]
@@ -2590,56 +2904,56 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:78:45: replace / with * in SlidingWindow::rate_per_sec",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
+          "name": "crates/deflect-syncookie/src/mss.rs:30:20: replace & with | in decode_mss",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/mss.rs",
           "function": {
-            "function_name": "SlidingWindow::rate_per_sec",
-            "return_type": "-> u64",
+            "function_name": "decode_mss",
+            "return_type": "-> u16",
             "span": {
               "start": {
-                "line": 75,
-                "column": 5
+                "line": 26,
+                "column": 1
               },
               "end": {
-                "line": 79,
-                "column": 6
+                "line": 31,
+                "column": 2
               }
             }
           },
           "span": {
             "start": {
-              "line": 78,
-              "column": 45
+              "line": 30,
+              "column": 20
             },
             "end": {
-              "line": 78,
-              "column": 46
+              "line": 30,
+              "column": 21
             }
           },
-          "replacement": "*",
+          "replacement": "|",
           "genre": "BinaryOperator"
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_78_col_45_001.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_78_col_45_001.diff",
+      "log_path": "log/crates__deflect-syncookie__src__mss.rs_line_30_col_20.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__mss.rs_line_30_col_20.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 2.847067409,
+          "duration": 2.150495013,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.155368365,
+          "duration": 0.103616262,
           "process_status": {
             "Failure": 101
           },
@@ -2647,7 +2961,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         }
       ]
@@ -2655,56 +2969,56 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:78:29: replace * with + in SlidingWindow::rate_per_sec",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
+          "name": "crates/deflect-syncookie/src/mss.rs:30:20: replace & with ^ in decode_mss",
+          "package": "deflect-syncookie",
+          "file": "crates/deflect-syncookie/src/mss.rs",
           "function": {
-            "function_name": "SlidingWindow::rate_per_sec",
-            "return_type": "-> u64",
+            "function_name": "decode_mss",
+            "return_type": "-> u16",
             "span": {
               "start": {
-                "line": 75,
-                "column": 5
+                "line": 26,
+                "column": 1
               },
               "end": {
-                "line": 79,
-                "column": 6
+                "line": 31,
+                "column": 2
               }
             }
           },
           "span": {
             "start": {
-              "line": 78,
-              "column": 29
+              "line": 30,
+              "column": 20
             },
             "end": {
-              "line": 78,
-              "column": 30
+              "line": 30,
+              "column": 21
             }
           },
-          "replacement": "+",
+          "replacement": "^",
           "genre": "BinaryOperator"
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_78_col_29.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_78_col_29.diff",
+      "log_path": "log/crates__deflect-syncookie__src__mss.rs_line_30_col_20_001.log",
+      "diff_path": "diff/crates__deflect-syncookie__src__mss.rs_line_30_col_20_001.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 2.796337276,
+          "duration": 1.448434007,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.20320979,
+          "duration": 0.101504695,
           "process_status": {
             "Failure": 101
           },
@@ -2712,84 +3026,19 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-detect/src/window.rs:78:29: replace * with / in SlidingWindow::rate_per_sec",
-          "package": "deflect-detect",
-          "file": "crates/deflect-detect/src/window.rs",
-          "function": {
-            "function_name": "SlidingWindow::rate_per_sec",
-            "return_type": "-> u64",
-            "span": {
-              "start": {
-                "line": 75,
-                "column": 5
-              },
-              "end": {
-                "line": 79,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 78,
-              "column": 29
-            },
-            "end": {
-              "line": 78,
-              "column": 30
-            }
-          },
-          "replacement": "/",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-detect__src__window.rs_line_78_col_29_001.log",
-      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_78_col_29_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.2000888339999998,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.102219911,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-detect@0.1.0"
+            "--package=deflect-syncookie@0.1.0"
           ]
         }
       ]
     }
   ],
-  "total_mutants": 43,
+  "total_mutants": 47,
   "missed": 0,
-  "caught": 39,
+  "caught": 42,
   "timeout": 0,
-  "unviable": 4,
+  "unviable": 5,
   "success": 0,
-  "start_time": "2026-10-19T13:14:34.285170691Z",
-  "end_time": "2026-10-19T13:15:53.912219612Z",
+  "start_time": "2026-10-19T13:23:14.399846589Z",
+  "end_time": "2026-10-19T13:24:38.523874731Z",
   "cargo_mutants_version": "27.0.0"
 }

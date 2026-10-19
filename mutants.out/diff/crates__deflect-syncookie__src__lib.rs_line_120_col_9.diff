@@ -1,0 +1,22 @@
+--- crates/deflect-syncookie/src/lib.rs
++++ replace SynCookie::rotate with ()
+@@ -112,18 +112,17 @@
+     pub fn with_defaults(key: CookieKey) -> SynCookie {
+         SynCookie::new(key, 64 * 1_000_000_000, 2)
+     }
+ 
+     /// Rotate the secret: the current key becomes the previous key (still
+     /// accepted on validation during the grace window) and `new_key` takes
+     /// over for issuance. Rotate no more often than the validity window.
+     pub fn rotate(&mut self, new_key: CookieKey) {
+-        self.prev_key = Some(self.key);
+-        self.key = new_key;
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn epoch(&self, now_nanos: u64) -> u64 {
+         now_nanos / self.epoch_nanos
+     }
+ 
+     /// Issue the cookie to place as the SYN-ACK initial sequence number.
+     ///

@@ -1,0 +1,28 @@
+--- crates/deflect-syncookie/src/mac.rs
++++ replace CookieKey::from_bytes -> CookieKey with Default::default()
+@@ -19,24 +19,17 @@
+ impl CookieKey {
+     #[must_use]
+     pub const fn from_u64s(k0: u64, k1: u64) -> CookieKey {
+         CookieKey { k0, k1 }
+     }
+ 
+     #[must_use]
+     pub fn from_bytes(bytes: [u8; 16]) -> CookieKey {
+-        let mut lo = [0u8; 8];
+-        let mut hi = [0u8; 8];
+-        lo.copy_from_slice(&bytes[0..8]);
+-        hi.copy_from_slice(&bytes[8..16]);
+-        CookieKey {
+-            k0: u64::from_le_bytes(lo),
+-            k1: u64::from_le_bytes(hi),
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl core::fmt::Debug for CookieKey {
+     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+         f.write_str("CookieKey(..)")
+     }
+ }
