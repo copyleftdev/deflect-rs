@@ -1,0 +1,22 @@
+--- crates/deflect-enforce/src/nft.rs
++++ replace set_name -> &'static str with ""
+@@ -1,18 +1,15 @@
+ use core::fmt::Write as _;
+ use core::net::IpAddr;
+ use core::time::Duration;
+ 
+ /// Which set an address belongs to, by family.
+ pub(crate) fn set_name(addr: IpAddr) -> &'static str {
+-    match addr {
+-        IpAddr::V4(_) => "banned4",
+-        IpAddr::V6(_) => "banned6",
+-    }
++    "" /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ fn is_host(addr: IpAddr, prefix_len: u8) -> bool {
+     match addr {
+         IpAddr::V4(_) => prefix_len >= 32,
+         IpAddr::V6(_) => prefix_len >= 128,
+     }
+ }

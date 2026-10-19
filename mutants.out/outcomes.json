@@ -8,25 +8,25 @@
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 10.536375801,
+          "duration": 9.522475942,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
+            "--package=deflect-enforce@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.354573539,
+          "duration": 0.203081866,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
+            "--package=deflect-enforce@0.1.0"
           ]
         }
       ]
@@ -34,31 +34,291 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-fingerprint/src/lib.rs:75:9: replace Fingerprinter::with_defaults -> Fingerprinter with Default::default()",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/lib.rs",
+          "name": "crates/deflect-enforce/src/lib.rs:41:9: replace <impl core::fmt::Display for EnforceError>::fmt -> core::fmt::Result with Ok(Default::default())",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
           "function": {
-            "function_name": "Fingerprinter::with_defaults",
-            "return_type": "-> Fingerprinter",
+            "function_name": "<impl core::fmt::Display for EnforceError>::fmt",
+            "return_type": "-> core::fmt::Result",
             "span": {
               "start": {
-                "line": 73,
+                "line": 40,
                 "column": 5
               },
               "end": {
-                "line": 76,
+                "line": 50,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 75,
+              "line": 41,
               "column": 9
             },
             "end": {
-              "line": 75,
-              "column": 45
+              "line": 49,
+              "column": 10
+            }
+          },
+          "replacement": "Ok(Default::default())",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_41_col_9.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_41_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 4.641567568,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.462515734,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/lib.rs:128:9: replace <impl Enforcer for NullEnforcer>::unban -> Result<(), EnforceError> with Ok(())",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
+          "function": {
+            "function_name": "<impl Enforcer for NullEnforcer>::unban",
+            "return_type": "-> Result<(), EnforceError>",
+            "span": {
+              "start": {
+                "line": 127,
+                "column": 5
+              },
+              "end": {
+                "line": 133,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 128,
+              "column": 9
+            },
+            "end": {
+              "line": 132,
+              "column": 15
+            }
+          },
+          "replacement": "Ok(())",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_128_col_9.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_128_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 9.200965181,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.454848982,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/lib.rs:136:9: replace <impl Enforcer for NullEnforcer>::banned_count -> usize with 0",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
+          "function": {
+            "function_name": "<impl Enforcer for NullEnforcer>::banned_count",
+            "return_type": "-> usize",
+            "span": {
+              "start": {
+                "line": 135,
+                "column": 5
+              },
+              "end": {
+                "line": 137,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 136,
+              "column": 9
+            },
+            "end": {
+              "line": 136,
+              "column": 59
+            }
+          },
+          "replacement": "0",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_136_col_9.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_136_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 7.296385024,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.499338771,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/lib.rs:136:9: replace <impl Enforcer for NullEnforcer>::banned_count -> usize with 1",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
+          "function": {
+            "function_name": "<impl Enforcer for NullEnforcer>::banned_count",
+            "return_type": "-> usize",
+            "span": {
+              "start": {
+                "line": 135,
+                "column": 5
+              },
+              "end": {
+                "line": 137,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 136,
+              "column": 9
+            },
+            "end": {
+              "line": 136,
+              "column": 59
+            }
+          },
+          "replacement": "1",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_136_col_9_001.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_136_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 4.346711216,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.400600546,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/lib.rs:165:9: replace ShellNftRunner::system -> ShellNftRunner with Default::default()",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
+          "function": {
+            "function_name": "ShellNftRunner::system",
+            "return_type": "-> ShellNftRunner",
+            "span": {
+              "start": {
+                "line": 162,
+                "column": 5
+              },
+              "end": {
+                "line": 166,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 165,
+              "column": 9
+            },
+            "end": {
+              "line": 165,
+              "column": 35
             }
           },
           "replacement": "Default::default()",
@@ -66,12 +326,12 @@
         }
       },
       "summary": "Unviable",
-      "log_path": "log/crates__deflect-fingerprint__src__lib.rs_line_75_col_9.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__lib.rs_line_75_col_9.diff",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_165_col_9.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_165_col_9.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 0.758513361,
+          "duration": 0.998246899,
           "process_status": {
             "Failure": 101
           },
@@ -80,7 +340,7 @@
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
+            "--package=deflect-enforce@0.1.0"
           ]
         }
       ]
@@ -88,44 +348,109 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-fingerprint/src/lib.rs:129:9: replace Fingerprinter::synthesize -> Option<Fingerprint> with Some(Default::default())",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/lib.rs",
+          "name": "crates/deflect-enforce/src/lib.rs:171:9: replace <impl NftRunner for ShellNftRunner>::run -> Result<(), EnforceError> with Ok(())",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
           "function": {
-            "function_name": "Fingerprinter::synthesize",
-            "return_type": "-> Option<Fingerprint>",
+            "function_name": "<impl NftRunner for ShellNftRunner>::run",
+            "return_type": "-> Result<(), EnforceError>",
             "span": {
               "start": {
-                "line": 117,
+                "line": 170,
                 "column": 5
               },
               "end": {
-                "line": 186,
+                "line": 197,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 129,
+              "line": 171,
               "column": 9
             },
             "end": {
-              "line": 185,
-              "column": 11
+              "line": 196,
+              "column": 10
             }
           },
-          "replacement": "Some(Default::default())",
+          "replacement": "Ok(())",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_171_col_9.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_171_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 5.546855571,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.501981694,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/lib.rs:214:9: replace NftEnforcer<ShellNftRunner>::system -> Result<NftEnforcer<ShellNftRunner>, EnforceError> with Ok(NftEnforcer::new())",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
+          "function": {
+            "function_name": "NftEnforcer<ShellNftRunner>::system",
+            "return_type": "-> Result<NftEnforcer<ShellNftRunner>, EnforceError>",
+            "span": {
+              "start": {
+                "line": 208,
+                "column": 5
+              },
+              "end": {
+                "line": 215,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 214,
+              "column": 9
+            },
+            "end": {
+              "line": 214,
+              "column": 66
+            }
+          },
+          "replacement": "Ok(NftEnforcer::new())",
           "genre": "FnValue"
         }
       },
       "summary": "Unviable",
-      "log_path": "log/crates__deflect-fingerprint__src__lib.rs_line_129_col_9_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__lib.rs_line_129_col_9_001.diff",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_214_col_9.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_214_col_9.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 0.907882977,
+          "duration": 2.144365137,
           "process_status": {
             "Failure": 101
           },
@@ -134,7 +459,7 @@
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
+            "--package=deflect-enforce@0.1.0"
           ]
         }
       ]
@@ -142,64 +467,53 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-fingerprint/src/lib.rs:130:25: replace == with != in Fingerprinter::synthesize",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/lib.rs",
+          "name": "crates/deflect-enforce/src/lib.rs:214:9: replace NftEnforcer<ShellNftRunner>::system -> Result<NftEnforcer<ShellNftRunner>, EnforceError> with Ok(NftEnforcer::from_iter([Default::default()]))",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
           "function": {
-            "function_name": "Fingerprinter::synthesize",
-            "return_type": "-> Option<Fingerprint>",
+            "function_name": "NftEnforcer<ShellNftRunner>::system",
+            "return_type": "-> Result<NftEnforcer<ShellNftRunner>, EnforceError>",
             "span": {
               "start": {
-                "line": 117,
+                "line": 208,
                 "column": 5
               },
               "end": {
-                "line": 186,
+                "line": 215,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 130,
-              "column": 25
+              "line": 214,
+              "column": 9
             },
             "end": {
-              "line": 130,
-              "column": 27
+              "line": 214,
+              "column": 66
             }
           },
-          "replacement": "!=",
-          "genre": "BinaryOperator"
+          "replacement": "Ok(NftEnforcer::from_iter([Default::default()]))",
+          "genre": "FnValue"
         }
       },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__lib.rs_line_130_col_25.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__lib.rs_line_130_col_25.diff",
+      "summary": "Unviable",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_214_col_9_001.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_214_col_9_001.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 6.247218255,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.499871728,
+          "duration": 0.957966462,
           "process_status": {
             "Failure": 101
           },
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
+            "--no-run",
             "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
+            "--package=deflect-enforce@0.1.0"
           ]
         }
       ]
@@ -207,64 +521,53 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-fingerprint/src/lib.rs:136:22: replace >= with < in Fingerprinter::synthesize",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/lib.rs",
+          "name": "crates/deflect-enforce/src/lib.rs:214:9: replace NftEnforcer<ShellNftRunner>::system -> Result<NftEnforcer<ShellNftRunner>, EnforceError> with Ok(NftEnforcer::new(Default::default()))",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
           "function": {
-            "function_name": "Fingerprinter::synthesize",
-            "return_type": "-> Option<Fingerprint>",
+            "function_name": "NftEnforcer<ShellNftRunner>::system",
+            "return_type": "-> Result<NftEnforcer<ShellNftRunner>, EnforceError>",
             "span": {
               "start": {
-                "line": 117,
+                "line": 208,
                 "column": 5
               },
               "end": {
-                "line": 186,
+                "line": 215,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 136,
-              "column": 22
+              "line": 214,
+              "column": 9
             },
             "end": {
-              "line": 136,
-              "column": 24
+              "line": 214,
+              "column": 66
             }
           },
-          "replacement": "<",
-          "genre": "BinaryOperator"
+          "replacement": "Ok(NftEnforcer::new(Default::default()))",
+          "genre": "FnValue"
         }
       },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__lib.rs_line_136_col_22.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__lib.rs_line_136_col_22.diff",
+      "summary": "Unviable",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_214_col_9_002.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_214_col_9_002.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 6.998511019,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.5998036,
+          "duration": 0.803759703,
           "process_status": {
             "Failure": 101
           },
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
+            "--no-run",
             "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
+            "--package=deflect-enforce@0.1.0"
           ]
         }
       ]
@@ -272,64 +575,53 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-fingerprint/src/lib.rs:157:36: replace > with == in Fingerprinter::synthesize",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/lib.rs",
+          "name": "crates/deflect-enforce/src/lib.rs:214:9: replace NftEnforcer<ShellNftRunner>::system -> Result<NftEnforcer<ShellNftRunner>, EnforceError> with Ok(NftEnforcer::from(Default::default()))",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
           "function": {
-            "function_name": "Fingerprinter::synthesize",
-            "return_type": "-> Option<Fingerprint>",
+            "function_name": "NftEnforcer<ShellNftRunner>::system",
+            "return_type": "-> Result<NftEnforcer<ShellNftRunner>, EnforceError>",
             "span": {
               "start": {
-                "line": 117,
+                "line": 208,
                 "column": 5
               },
               "end": {
-                "line": 186,
+                "line": 215,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 157,
-              "column": 36
+              "line": 214,
+              "column": 9
             },
             "end": {
-              "line": 157,
-              "column": 37
+              "line": 214,
+              "column": 66
             }
           },
-          "replacement": "==",
-          "genre": "BinaryOperator"
+          "replacement": "Ok(NftEnforcer::from(Default::default()))",
+          "genre": "FnValue"
         }
       },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__lib.rs_line_157_col_36.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__lib.rs_line_157_col_36.diff",
+      "summary": "Unviable",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_214_col_9_003.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_214_col_9_003.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 8.548162523,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.504590996,
+          "duration": 0.454593364,
           "process_status": {
             "Failure": 101
           },
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
+            "--no-run",
             "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
+            "--package=deflect-enforce@0.1.0"
           ]
         }
       ]
@@ -337,64 +629,53 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-fingerprint/src/lib.rs:157:36: replace > with < in Fingerprinter::synthesize",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/lib.rs",
+          "name": "crates/deflect-enforce/src/lib.rs:227:9: replace NftEnforcer<R>::with_runner -> Result<NftEnforcer<R>, EnforceError> with Ok(NftEnforcer::new())",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
           "function": {
-            "function_name": "Fingerprinter::synthesize",
-            "return_type": "-> Option<Fingerprint>",
+            "function_name": "NftEnforcer<R>::with_runner",
+            "return_type": "-> Result<NftEnforcer<R>, EnforceError>",
             "span": {
               "start": {
-                "line": 117,
+                "line": 219,
                 "column": 5
               },
               "end": {
-                "line": 186,
+                "line": 234,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 157,
-              "column": 36
+              "line": 227,
+              "column": 9
             },
             "end": {
-              "line": 157,
-              "column": 37
+              "line": 233,
+              "column": 11
             }
           },
-          "replacement": "<",
-          "genre": "BinaryOperator"
+          "replacement": "Ok(NftEnforcer::new())",
+          "genre": "FnValue"
         }
       },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__lib.rs_line_157_col_36_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__lib.rs_line_157_col_36_001.diff",
+      "summary": "Unviable",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_227_col_9.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_227_col_9.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 5.253945512,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.596591119,
+          "duration": 0.985065574,
           "process_status": {
             "Failure": 101
           },
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
+            "--no-run",
             "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
+            "--package=deflect-enforce@0.1.0"
           ]
         }
       ]
@@ -402,324 +683,53 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-fingerprint/src/lib.rs:157:36: replace > with >= in Fingerprinter::synthesize",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/lib.rs",
+          "name": "crates/deflect-enforce/src/lib.rs:106:9: replace NullEnforcer::snapshot -> Vec<(IpAddr, u8)> with vec![(Default::default(), 0)]",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
           "function": {
-            "function_name": "Fingerprinter::synthesize",
-            "return_type": "-> Option<Fingerprint>",
+            "function_name": "NullEnforcer::snapshot",
+            "return_type": "-> Vec<(IpAddr, u8)>",
             "span": {
               "start": {
-                "line": 117,
+                "line": 100,
                 "column": 5
               },
               "end": {
-                "line": 186,
+                "line": 110,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 157,
-              "column": 36
+              "line": 106,
+              "column": 9
             },
             "end": {
-              "line": 157,
-              "column": 37
-            }
-          },
-          "replacement": ">=",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__lib.rs_line_157_col_36_002.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__lib.rs_line_157_col_36_002.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 7.448442627,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.54956333,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/lib.rs:162:53: replace && with || in Fingerprinter::synthesize",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/lib.rs",
-          "function": {
-            "function_name": "Fingerprinter::synthesize",
-            "return_type": "-> Option<Fingerprint>",
-            "span": {
-              "start": {
-                "line": 117,
-                "column": 5
-              },
-              "end": {
-                "line": 186,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 162,
-              "column": 53
-            },
-            "end": {
-              "line": 162,
-              "column": 55
-            }
-          },
-          "replacement": "||",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__lib.rs_line_162_col_53.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__lib.rs_line_162_col_53.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.946744123,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.305026601,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/lib.rs:162:31: replace && with || in Fingerprinter::synthesize",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/lib.rs",
-          "function": {
-            "function_name": "Fingerprinter::synthesize",
-            "return_type": "-> Option<Fingerprint>",
-            "span": {
-              "start": {
-                "line": 117,
-                "column": 5
-              },
-              "end": {
-                "line": 186,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 162,
-              "column": 31
-            },
-            "end": {
-              "line": 162,
-              "column": 33
-            }
-          },
-          "replacement": "||",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__lib.rs_line_162_col_31.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__lib.rs_line_162_col_31.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 1.5061430279999999,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.285870269,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/lib.rs:173:39: replace != with == in Fingerprinter::synthesize",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/lib.rs",
-          "function": {
-            "function_name": "Fingerprinter::synthesize",
-            "return_type": "-> Option<Fingerprint>",
-            "span": {
-              "start": {
-                "line": 117,
-                "column": 5
-              },
-              "end": {
-                "line": 186,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 173,
-              "column": 39
-            },
-            "end": {
-              "line": 173,
-              "column": 41
-            }
-          },
-          "replacement": "==",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__lib.rs_line_173_col_39.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__lib.rs_line_173_col_39.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.498284855,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.457717252,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/lib.rs:109:9: replace Fingerprinter::reset with ()",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/lib.rs",
-          "function": {
-            "function_name": "Fingerprinter::reset",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 104,
-                "column": 5
-              },
-              "end": {
-                "line": 115,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
               "line": 109,
-              "column": 9
-            },
-            "end": {
-              "line": 114,
-              "column": 26
+              "column": 10
             }
           },
-          "replacement": "()",
+          "replacement": "vec![(Default::default(), 0)]",
           "genre": "FnValue"
         }
       },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__lib.rs_line_109_col_9.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__lib.rs_line_109_col_9.diff",
+      "summary": "Unviable",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_106_col_9_001.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_106_col_9_001.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 54.439016173,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.399357937,
+          "duration": 40.276021449,
           "process_status": {
             "Failure": 101
           },
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
+            "--no-run",
             "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
+            "--package=deflect-enforce@0.1.0"
           ]
         }
       ]
@@ -727,1279 +737,44 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-fingerprint/src/lib.rs:190:9: replace Fingerprinter::capacity -> usize with 0",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/lib.rs",
+          "name": "crates/deflect-enforce/src/lib.rs:227:9: replace NftEnforcer<R>::with_runner -> Result<NftEnforcer<R>, EnforceError> with Ok(NftEnforcer::from_iter([Default::default()]))",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
           "function": {
-            "function_name": "Fingerprinter::capacity",
-            "return_type": "-> usize",
+            "function_name": "NftEnforcer<R>::with_runner",
+            "return_type": "-> Result<NftEnforcer<R>, EnforceError>",
             "span": {
               "start": {
-                "line": 188,
+                "line": 219,
                 "column": 5
               },
               "end": {
-                "line": 191,
+                "line": 234,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 190,
+              "line": 227,
               "column": 9
             },
             "end": {
-              "line": 190,
-              "column": 22
-            }
-          },
-          "replacement": "0",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__lib.rs_line_190_col_9.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__lib.rs_line_190_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 5.449115329,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.399560104,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/lib.rs:190:9: replace Fingerprinter::capacity -> usize with 1",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/lib.rs",
-          "function": {
-            "function_name": "Fingerprinter::capacity",
-            "return_type": "-> usize",
-            "span": {
-              "start": {
-                "line": 188,
-                "column": 5
-              },
-              "end": {
-                "line": 191,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 190,
-              "column": 9
-            },
-            "end": {
-              "line": 190,
-              "column": 22
-            }
-          },
-          "replacement": "1",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__lib.rs_line_190_col_9_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__lib.rs_line_190_col_9_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.151714238,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.202327061,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:32:9: replace TopValues<V>::observe with ()",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::observe",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 31,
-                "column": 5
-              },
-              "end": {
-                "line": 47,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 32,
-              "column": 9
-            },
-            "end": {
-              "line": 46,
-              "column": 46
-            }
-          },
-          "replacement": "()",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_32_col_9.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_32_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.449818082,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.253305785,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:32:20: replace += with -= in TopValues<V>::observe",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::observe",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 31,
-                "column": 5
-              },
-              "end": {
-                "line": 47,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 32,
-              "column": 20
-            },
-            "end": {
-              "line": 32,
-              "column": 22
-            }
-          },
-          "replacement": "-=",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_32_col_20.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_32_col_20.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 1.7596678,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.152725602,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:32:20: replace += with *= in TopValues<V>::observe",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::observe",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 31,
-                "column": 5
-              },
-              "end": {
-                "line": 47,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 32,
-              "column": 20
-            },
-            "end": {
-              "line": 32,
-              "column": 22
-            }
-          },
-          "replacement": "*=",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_32_col_20_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_32_col_20_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.346940906,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.306184507,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:33:71: replace == with != in TopValues<V>::observe",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::observe",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 31,
-                "column": 5
-              },
-              "end": {
-                "line": 47,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 33,
-              "column": 71
-            },
-            "end": {
-              "line": 33,
-              "column": 73
-            }
-          },
-          "replacement": "!=",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_33_col_71.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_33_col_71.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.156491608,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.728037652,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:34:21: replace += with -= in TopValues<V>::observe",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::observe",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 31,
-                "column": 5
-              },
-              "end": {
-                "line": 47,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 34,
-              "column": 21
-            },
-            "end": {
-              "line": 34,
-              "column": 23
-            }
-          },
-          "replacement": "-=",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_34_col_21.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_34_col_21.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.288699592,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.349715117,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:34:21: replace += with *= in TopValues<V>::observe",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::observe",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 31,
-                "column": 5
-              },
-              "end": {
-                "line": 47,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 34,
-              "column": 21
-            },
-            "end": {
-              "line": 34,
-              "column": 23
-            }
-          },
-          "replacement": "*=",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_34_col_21_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_34_col_21_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.9941983519999997,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.355759686,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:37:31: replace < with == in TopValues<V>::observe",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::observe",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 31,
-                "column": 5
-              },
-              "end": {
-                "line": 47,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 37,
-              "column": 31
-            },
-            "end": {
-              "line": 37,
-              "column": 32
-            }
-          },
-          "replacement": "==",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_37_col_31.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_37_col_31.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.746208514,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.499481275,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/lib.rs:97:9: replace Fingerprinter::sampled -> u64 with 0",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/lib.rs",
-          "function": {
-            "function_name": "Fingerprinter::sampled",
-            "return_type": "-> u64",
-            "span": {
-              "start": {
-                "line": 91,
-                "column": 5
-              },
-              "end": {
-                "line": 102,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 97,
-              "column": 9
-            },
-            "end": {
-              "line": 101,
-              "column": 21
-            }
-          },
-          "replacement": "0",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__lib.rs_line_97_col_9.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__lib.rs_line_97_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 70.850374335,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.608597026,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:37:31: replace < with > in TopValues<V>::observe",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::observe",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 31,
-                "column": 5
-              },
-              "end": {
-                "line": 47,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 37,
-              "column": 31
-            },
-            "end": {
-              "line": 37,
-              "column": 32
-            }
-          },
-          "replacement": ">",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_37_col_31_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_37_col_31_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.398903277,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.559130711,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/lib.rs:129:9: replace Fingerprinter::synthesize -> Option<Fingerprint> with None",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/lib.rs",
-          "function": {
-            "function_name": "Fingerprinter::synthesize",
-            "return_type": "-> Option<Fingerprint>",
-            "span": {
-              "start": {
-                "line": 117,
-                "column": 5
-              },
-              "end": {
-                "line": 186,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 129,
-              "column": 9
-            },
-            "end": {
-              "line": 185,
+              "line": 233,
               "column": 11
             }
           },
-          "replacement": "None",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__lib.rs_line_129_col_9.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__lib.rs_line_129_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 71.438842459,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.650504174,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:37:31: replace < with <= in TopValues<V>::observe",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::observe",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 31,
-                "column": 5
-              },
-              "end": {
-                "line": 47,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 37,
-              "column": 31
-            },
-            "end": {
-              "line": 37,
-              "column": 32
-            }
-          },
-          "replacement": "<=",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_37_col_31_002.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_37_col_31_002.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.494172362,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 1.050885794,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:44:21: replace -= with += in TopValues<V>::observe",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::observe",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 31,
-                "column": 5
-              },
-              "end": {
-                "line": 47,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 44,
-              "column": 21
-            },
-            "end": {
-              "line": 44,
-              "column": 23
-            }
-          },
-          "replacement": "+=",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_44_col_21.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_44_col_21.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 5.747023466,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.951159167,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:44:21: replace -= with /= in TopValues<V>::observe",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::observe",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 31,
-                "column": 5
-              },
-              "end": {
-                "line": 47,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 44,
-              "column": 21
-            },
-            "end": {
-              "line": 44,
-              "column": 23
-            }
-          },
-          "replacement": "/=",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_44_col_21_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_44_col_21_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 5.947584012,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.799516939,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/lib.rs:97:9: replace Fingerprinter::sampled -> u64 with 1",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/lib.rs",
-          "function": {
-            "function_name": "Fingerprinter::sampled",
-            "return_type": "-> u64",
-            "span": {
-              "start": {
-                "line": 91,
-                "column": 5
-              },
-              "end": {
-                "line": 102,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 97,
-              "column": 9
-            },
-            "end": {
-              "line": 101,
-              "column": 21
-            }
-          },
-          "replacement": "1",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__lib.rs_line_97_col_9_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__lib.rs_line_97_col_9_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 77.544095967,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.65070082,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/lib.rs:83:9: replace Fingerprinter::observe with ()",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/lib.rs",
-          "function": {
-            "function_name": "Fingerprinter::observe",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 78,
-                "column": 5
-              },
-              "end": {
-                "line": 89,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 83,
-              "column": 9
-            },
-            "end": {
-              "line": 88,
-              "column": 64
-            }
-          },
-          "replacement": "()",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__lib.rs_line_83_col_9.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__lib.rs_line_83_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 78.600936628,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.509842562,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:46:41: replace > with == in TopValues<V>::observe",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::observe",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 31,
-                "column": 5
-              },
-              "end": {
-                "line": 47,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 46,
-              "column": 41
-            },
-            "end": {
-              "line": 46,
-              "column": 42
-            }
-          },
-          "replacement": "==",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_46_col_41.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_46_col_41.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 6.945604023,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.505753152,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:46:41: replace > with < in TopValues<V>::observe",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::observe",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 31,
-                "column": 5
-              },
-              "end": {
-                "line": 47,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 46,
-              "column": 41
-            },
-            "end": {
-              "line": 46,
-              "column": 42
-            }
-          },
-          "replacement": "<",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_46_col_41_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_46_col_41_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.053606709,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.505864386,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:57:9: replace TopValues<V>::leader -> Option<(V, u64)> with Some((Default::default(), 0))",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::leader",
-            "return_type": "-> Option<(V, u64)>",
-            "span": {
-              "start": {
-                "line": 54,
-                "column": 5
-              },
-              "end": {
-                "line": 58,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 57,
-              "column": 9
-            },
-            "end": {
-              "line": 57,
-              "column": 61
-            }
-          },
-          "replacement": "Some((Default::default(), 0))",
+          "replacement": "Ok(NftEnforcer::from_iter([Default::default()]))",
           "genre": "FnValue"
         }
       },
       "summary": "Unviable",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_57_col_9_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_57_col_9_001.diff",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_227_col_9_001.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_227_col_9_001.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 2.644602115,
+          "duration": 1.198727343,
           "process_status": {
             "Failure": 101
           },
@@ -2008,7 +783,7 @@
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
+            "--package=deflect-enforce@0.1.0"
           ]
         }
       ]
@@ -2016,44 +791,44 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:57:9: replace TopValues<V>::leader -> Option<(V, u64)> with Some((Default::default(), 1))",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
+          "name": "crates/deflect-enforce/src/lib.rs:227:9: replace NftEnforcer<R>::with_runner -> Result<NftEnforcer<R>, EnforceError> with Ok(NftEnforcer::from(Default::default()))",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
           "function": {
-            "function_name": "TopValues<V>::leader",
-            "return_type": "-> Option<(V, u64)>",
+            "function_name": "NftEnforcer<R>::with_runner",
+            "return_type": "-> Result<NftEnforcer<R>, EnforceError>",
             "span": {
               "start": {
-                "line": 54,
+                "line": 219,
                 "column": 5
               },
               "end": {
-                "line": 58,
+                "line": 234,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 57,
+              "line": 227,
               "column": 9
             },
             "end": {
-              "line": 57,
-              "column": 61
+              "line": 233,
+              "column": 11
             }
           },
-          "replacement": "Some((Default::default(), 1))",
+          "replacement": "Ok(NftEnforcer::from(Default::default()))",
           "genre": "FnValue"
         }
       },
       "summary": "Unviable",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_57_col_9_002.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_57_col_9_002.diff",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_227_col_9_003.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_227_col_9_003.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 2.787271621,
+          "duration": 1.5497689110000001,
           "process_status": {
             "Failure": 101
           },
@@ -2062,7 +837,7 @@
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
+            "--package=deflect-enforce@0.1.0"
           ]
         }
       ]
@@ -2070,56 +845,56 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:51:9: replace TopValues<V>::total -> u64 with 0",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
+          "name": "crates/deflect-enforce/src/lib.rs:120:9: replace <impl Enforcer for NullEnforcer>::ban -> Result<(), EnforceError> with Ok(())",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
           "function": {
-            "function_name": "TopValues<V>::total",
-            "return_type": "-> u64",
+            "function_name": "<impl Enforcer for NullEnforcer>::ban",
+            "return_type": "-> Result<(), EnforceError>",
             "span": {
               "start": {
-                "line": 49,
+                "line": 114,
                 "column": 5
               },
               "end": {
-                "line": 52,
+                "line": 125,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 51,
+              "line": 120,
               "column": 9
             },
             "end": {
-              "line": 51,
-              "column": 19
+              "line": 124,
+              "column": 15
             }
           },
-          "replacement": "0",
+          "replacement": "Ok(())",
           "genre": "FnValue"
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_51_col_9_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_51_col_9_001.diff",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_120_col_9.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_120_col_9.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 3.998380793,
+          "duration": 42.469533251,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
+            "--package=deflect-enforce@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.911435729,
+          "duration": 0.549618382,
           "process_status": {
             "Failure": 101
           },
@@ -2127,7 +902,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
+            "--package=deflect-enforce@0.1.0"
           ]
         }
       ]
@@ -2135,629 +910,44 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:46:41: replace > with >= in TopValues<V>::observe",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
+          "name": "crates/deflect-enforce/src/lib.rs:106:9: replace NullEnforcer::snapshot -> Vec<(IpAddr, u8)> with vec![(Default::default(), 1)]",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
           "function": {
-            "function_name": "TopValues<V>::observe",
-            "return_type": "",
+            "function_name": "NullEnforcer::snapshot",
+            "return_type": "-> Vec<(IpAddr, u8)>",
             "span": {
               "start": {
-                "line": 31,
+                "line": 100,
                 "column": 5
               },
               "end": {
-                "line": 47,
+                "line": 110,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 46,
-              "column": 41
-            },
-            "end": {
-              "line": 46,
-              "column": 42
-            }
-          },
-          "replacement": ">=",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_46_col_41_002.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_46_col_41_002.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.247255228,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.858769952,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:51:9: replace TopValues<V>::total -> u64 with 1",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::total",
-            "return_type": "-> u64",
-            "span": {
-              "start": {
-                "line": 49,
-                "column": 5
-              },
-              "end": {
-                "line": 52,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 51,
+              "line": 106,
               "column": 9
             },
             "end": {
-              "line": 51,
-              "column": 19
-            }
-          },
-          "replacement": "1",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_51_col_9.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_51_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.099269365,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.962472764,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:57:9: replace TopValues<V>::leader -> Option<(V, u64)> with None",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::leader",
-            "return_type": "-> Option<(V, u64)>",
-            "span": {
-              "start": {
-                "line": 54,
-                "column": 5
-              },
-              "end": {
-                "line": 58,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 57,
-              "column": 9
-            },
-            "end": {
-              "line": 57,
-              "column": 61
-            }
-          },
-          "replacement": "None",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_57_col_9.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_57_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 6.093390667,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.692966279,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:63:9: replace TopValues<V>::leader_share_pct -> u8 with 0",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::leader_share_pct",
-            "return_type": "-> u8",
-            "span": {
-              "start": {
-                "line": 60,
-                "column": 5
-              },
-              "end": {
-                "line": 68,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 63,
-              "column": 9
-            },
-            "end": {
-              "line": 67,
-              "column": 62
-            }
-          },
-          "replacement": "0",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_63_col_9.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_63_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 7.24665613,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.500139857,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:67:34: replace / with % in TopValues<V>::leader_share_pct",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::leader_share_pct",
-            "return_type": "-> u8",
-            "span": {
-              "start": {
-                "line": 60,
-                "column": 5
-              },
-              "end": {
-                "line": 68,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 67,
-              "column": 34
-            },
-            "end": {
-              "line": 67,
-              "column": 35
-            }
-          },
-          "replacement": "%",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_67_col_34.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_67_col_34.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 6.435108781,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.30753778,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:67:34: replace / with * in TopValues<V>::leader_share_pct",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::leader_share_pct",
-            "return_type": "-> u8",
-            "span": {
-              "start": {
-                "line": 60,
-                "column": 5
-              },
-              "end": {
-                "line": 68,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 67,
-              "column": 34
-            },
-            "end": {
-              "line": 67,
-              "column": 35
-            }
-          },
-          "replacement": "*",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_67_col_34_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_67_col_34_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 6.222515637,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.514795227,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:64:23: replace == with != in TopValues<V>::leader_share_pct",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::leader_share_pct",
-            "return_type": "-> u8",
-            "span": {
-              "start": {
-                "line": 60,
-                "column": 5
-              },
-              "end": {
-                "line": 68,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 64,
-              "column": 23
-            },
-            "end": {
-              "line": 64,
-              "column": 25
-            }
-          },
-          "replacement": "!=",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_64_col_23.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_64_col_23.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 6.329646156,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.527189037,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:63:9: replace TopValues<V>::leader_share_pct -> u8 with 1",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::leader_share_pct",
-            "return_type": "-> u8",
-            "span": {
-              "start": {
-                "line": 60,
-                "column": 5
-              },
-              "end": {
-                "line": 68,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 63,
-              "column": 9
-            },
-            "end": {
-              "line": 67,
-              "column": 62
-            }
-          },
-          "replacement": "1",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_63_col_9_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_63_col_9_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 7.141226325,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.534793696,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:67:28: replace * with + in TopValues<V>::leader_share_pct",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::leader_share_pct",
-            "return_type": "-> u8",
-            "span": {
-              "start": {
-                "line": 60,
-                "column": 5
-              },
-              "end": {
-                "line": 68,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 67,
-              "column": 28
-            },
-            "end": {
-              "line": 67,
-              "column": 29
-            }
-          },
-          "replacement": "+",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_67_col_28.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_67_col_28.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.241818537,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.253007125,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:18:9: replace Prefix::from_payload -> Prefix with Default::default()",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Prefix::from_payload",
-            "return_type": "-> Prefix",
-            "span": {
-              "start": {
-                "line": 16,
-                "column": 5
-              },
-              "end": {
-                "line": 26,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 18,
-              "column": 9
-            },
-            "end": {
-              "line": 25,
+              "line": 109,
               "column": 10
             }
           },
-          "replacement": "Default::default()",
+          "replacement": "vec![(Default::default(), 1)]",
           "genre": "FnValue"
         }
       },
       "summary": "Unviable",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_18_col_9.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_18_col_9.diff",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_106_col_9_002.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_106_col_9_002.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 1.048212339,
+          "duration": 44.725883229,
           "process_status": {
             "Failure": 101
           },
@@ -2766,7 +956,7 @@
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
+            "--package=deflect-enforce@0.1.0"
           ]
         }
       ]
@@ -2774,1721 +964,31 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:30:9: replace Prefix::as_slice -> &[u8] with Vec::leak(Vec::new())",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
+          "name": "crates/deflect-enforce/src/lib.rs:238:9: replace NftEnforcer<R>::table -> &str with \"xyzzy\"",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
           "function": {
-            "function_name": "Prefix::as_slice",
-            "return_type": "-> &[u8]",
+            "function_name": "NftEnforcer<R>::table",
+            "return_type": "-> &str",
             "span": {
               "start": {
-                "line": 28,
+                "line": 236,
                 "column": 5
               },
               "end": {
-                "line": 31,
+                "line": 239,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 30,
+              "line": 238,
               "column": 9
             },
             "end": {
-              "line": 30,
-              "column": 41
-            }
-          },
-          "replacement": "Vec::leak(Vec::new())",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_30_col_9.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_30_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.198917299,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.799764608,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:71:9: replace TopValues<V>::clear with ()",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::clear",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 70,
-                "column": 5
-              },
-              "end": {
-                "line": 73,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 71,
-              "column": 9
-            },
-            "end": {
-              "line": 72,
-              "column": 24
-            }
-          },
-          "replacement": "()",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_71_col_9.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_71_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.139629225,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.947139802,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:30:9: replace Prefix::as_slice -> &[u8] with Vec::leak(vec![0])",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Prefix::as_slice",
-            "return_type": "-> &[u8]",
-            "span": {
-              "start": {
-                "line": 28,
-                "column": 5
-              },
-              "end": {
-                "line": 31,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 30,
-              "column": 9
-            },
-            "end": {
-              "line": 30,
-              "column": 41
-            }
-          },
-          "replacement": "Vec::leak(vec![0])",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_30_col_9_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_30_col_9_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.948188769,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.600503652,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/counter.rs:67:28: replace * with / in TopValues<V>::leader_share_pct",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/counter.rs",
-          "function": {
-            "function_name": "TopValues<V>::leader_share_pct",
-            "return_type": "-> u8",
-            "span": {
-              "start": {
-                "line": 60,
-                "column": 5
-              },
-              "end": {
-                "line": 68,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 67,
-              "column": 28
-            },
-            "end": {
-              "line": 67,
-              "column": 29
-            }
-          },
-          "replacement": "/",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__counter.rs_line_67_col_28_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__counter.rs_line_67_col_28_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.947422245,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.650145633,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:30:9: replace Prefix::as_slice -> &[u8] with Vec::leak(vec![1])",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Prefix::as_slice",
-            "return_type": "-> &[u8]",
-            "span": {
-              "start": {
-                "line": 28,
-                "column": 5
-              },
-              "end": {
-                "line": 31,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 30,
-              "column": 9
-            },
-            "end": {
-              "line": 30,
-              "column": 41
-            }
-          },
-          "replacement": "Vec::leak(vec![1])",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_30_col_9_002.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_30_col_9_002.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 5.143140019,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.255231475,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:35:9: replace Prefix::matches -> bool with true",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Prefix::matches",
-            "return_type": "-> bool",
-            "span": {
-              "start": {
-                "line": 33,
-                "column": 5
-              },
-              "end": {
-                "line": 36,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 35,
-              "column": 9
-            },
-            "end": {
-              "line": 35,
-              "column": 45
-            }
-          },
-          "replacement": "true",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_35_col_9.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_35_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.35030648,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.406546904,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:35:9: replace Prefix::matches -> bool with false",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Prefix::matches",
-            "return_type": "-> bool",
-            "span": {
-              "start": {
-                "line": 33,
-                "column": 5
-              },
-              "end": {
-                "line": 36,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 35,
-              "column": 9
-            },
-            "end": {
-              "line": 35,
-              "column": 45
-            }
-          },
-          "replacement": "false",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_35_col_9_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_35_col_9_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.497141785,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.8033263,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:58:9: replace Fingerprint::specificity -> u8 with 0",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Fingerprint::specificity",
-            "return_type": "-> u8",
-            "span": {
-              "start": {
-                "line": 55,
-                "column": 5
-              },
-              "end": {
-                "line": 63,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 58,
-              "column": 9
-            },
-            "end": {
-              "line": 62,
-              "column": 46
-            }
-          },
-          "replacement": "0",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_58_col_9.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_58_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 5.092562848,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 1.248218378,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:62:13: replace + with - in Fingerprint::specificity",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Fingerprint::specificity",
-            "return_type": "-> u8",
-            "span": {
-              "start": {
-                "line": 55,
-                "column": 5
-              },
-              "end": {
-                "line": 63,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 62,
-              "column": 13
-            },
-            "end": {
-              "line": 62,
-              "column": 14
-            }
-          },
-          "replacement": "-",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_62_col_13.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_62_col_13.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 5.889390153,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.550705926,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:61:13: replace + with - in Fingerprint::specificity",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Fingerprint::specificity",
-            "return_type": "-> u8",
-            "span": {
-              "start": {
-                "line": 55,
-                "column": 5
-              },
-              "end": {
-                "line": 63,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 61,
-              "column": 13
-            },
-            "end": {
-              "line": 61,
-              "column": 14
-            }
-          },
-          "replacement": "-",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_61_col_13.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_61_col_13.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 5.938029512,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.353919238,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:62:13: replace + with * in Fingerprint::specificity",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Fingerprint::specificity",
-            "return_type": "-> u8",
-            "span": {
-              "start": {
-                "line": 55,
-                "column": 5
-              },
-              "end": {
-                "line": 63,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 62,
-              "column": 13
-            },
-            "end": {
-              "line": 62,
-              "column": 14
-            }
-          },
-          "replacement": "*",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_62_col_13_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_62_col_13_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 6.191246914,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.356621934,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:58:9: replace Fingerprint::specificity -> u8 with 1",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Fingerprint::specificity",
-            "return_type": "-> u8",
-            "span": {
-              "start": {
-                "line": 55,
-                "column": 5
-              },
-              "end": {
-                "line": 63,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 58,
-              "column": 9
-            },
-            "end": {
-              "line": 62,
-              "column": 46
-            }
-          },
-          "replacement": "1",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_58_col_9_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_58_col_9_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 6.341142847,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.356574442,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:61:13: replace + with * in Fingerprint::specificity",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Fingerprint::specificity",
-            "return_type": "-> u8",
-            "span": {
-              "start": {
-                "line": 55,
-                "column": 5
-              },
-              "end": {
-                "line": 63,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 61,
-              "column": 13
-            },
-            "end": {
-              "line": 61,
-              "column": 14
-            }
-          },
-          "replacement": "*",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_61_col_13_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_61_col_13_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.235493086,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.649354117,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:60:13: replace + with - in Fingerprint::specificity",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Fingerprint::specificity",
-            "return_type": "-> u8",
-            "span": {
-              "start": {
-                "line": 55,
-                "column": 5
-              },
-              "end": {
-                "line": 63,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 60,
-              "column": 13
-            },
-            "end": {
-              "line": 60,
-              "column": 14
-            }
-          },
-          "replacement": "-",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_60_col_13.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_60_col_13.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.444414985,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.651183666,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:60:13: replace + with * in Fingerprint::specificity",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Fingerprint::specificity",
-            "return_type": "-> u8",
-            "span": {
-              "start": {
-                "line": 55,
-                "column": 5
-              },
-              "end": {
-                "line": 63,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 60,
-              "column": 13
-            },
-            "end": {
-              "line": 60,
-              "column": 14
-            }
-          },
-          "replacement": "*",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_60_col_13_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_60_col_13_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.445918761,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.899659208,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:59:13: replace + with * in Fingerprint::specificity",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Fingerprint::specificity",
-            "return_type": "-> u8",
-            "span": {
-              "start": {
-                "line": 55,
-                "column": 5
-              },
-              "end": {
-                "line": 63,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 59,
-              "column": 13
-            },
-            "end": {
-              "line": 59,
-              "column": 14
-            }
-          },
-          "replacement": "*",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_59_col_13_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_59_col_13_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.036822721,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.455790612,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:67:9: replace Fingerprint::matches -> bool with true",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Fingerprint::matches",
-            "return_type": "-> bool",
-            "span": {
-              "start": {
-                "line": 65,
-                "column": 5
-              },
-              "end": {
-                "line": 93,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 67,
-              "column": 9
-            },
-            "end": {
-              "line": 92,
-              "column": 13
-            }
-          },
-          "replacement": "true",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_67_col_9.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_67_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.135512094,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.453402716,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:59:13: replace + with - in Fingerprint::specificity",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Fingerprint::specificity",
-            "return_type": "-> u8",
-            "span": {
-              "start": {
-                "line": 55,
-                "column": 5
-              },
-              "end": {
-                "line": 63,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 59,
-              "column": 13
-            },
-            "end": {
-              "line": 59,
-              "column": 14
-            }
-          },
-          "replacement": "-",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_59_col_13.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_59_col_13.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.143216407,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.649134711,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:67:9: replace Fingerprint::matches -> bool with false",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Fingerprint::matches",
-            "return_type": "-> bool",
-            "span": {
-              "start": {
-                "line": 65,
-                "column": 5
-              },
-              "end": {
-                "line": 93,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 67,
-              "column": 9
-            },
-            "end": {
-              "line": 92,
-              "column": 13
-            }
-          },
-          "replacement": "false",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_67_col_9_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_67_col_9_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.145597168,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.548686702,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:68:19: replace != with == in Fingerprint::matches",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Fingerprint::matches",
-            "return_type": "-> bool",
-            "span": {
-              "start": {
-                "line": 65,
-                "column": 5
-              },
-              "end": {
-                "line": 93,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 68,
-              "column": 19
-            },
-            "end": {
-              "line": 68,
-              "column": 21
-            }
-          },
-          "replacement": "==",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_68_col_19.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_68_col_19.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.73664874,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.699386651,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:73:21: replace != with == in Fingerprint::matches",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Fingerprint::matches",
-            "return_type": "-> bool",
-            "span": {
-              "start": {
-                "line": 65,
-                "column": 5
-              },
-              "end": {
-                "line": 93,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 73,
-              "column": 21
-            },
-            "end": {
-              "line": 73,
-              "column": 23
-            }
-          },
-          "replacement": "==",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_73_col_21.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_73_col_21.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.2962516649999998,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 1.198455533,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:88:16: delete ! in Fingerprint::matches",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Fingerprint::matches",
-            "return_type": "-> bool",
-            "span": {
-              "start": {
-                "line": 65,
-                "column": 5
-              },
-              "end": {
-                "line": 93,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 88,
-              "column": 16
-            },
-            "end": {
-              "line": 88,
-              "column": 17
-            }
-          },
-          "replacement": "",
-          "genre": "UnaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_88_col_16.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_88_col_16.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.04725456,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.801172992,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:83:22: replace != with == in Fingerprint::matches",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Fingerprint::matches",
-            "return_type": "-> bool",
-            "span": {
-              "start": {
-                "line": 65,
-                "column": 5
-              },
-              "end": {
-                "line": 93,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 83,
-              "column": 22
-            },
-            "end": {
-              "line": 83,
-              "column": 24
-            }
-          },
-          "replacement": "==",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_83_col_22.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_83_col_22.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.148208224,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.800916724,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:78:20: replace != with == in Fingerprint::matches",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "Fingerprint::matches",
-            "return_type": "-> bool",
-            "span": {
-              "start": {
-                "line": 65,
-                "column": 5
-              },
-              "end": {
-                "line": 93,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 78,
+              "line": 238,
               "column": 20
-            },
-            "end": {
-              "line": 78,
-              "column": 22
-            }
-          },
-          "replacement": "==",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_78_col_20.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_78_col_20.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.287976389,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.809478882,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:98:9: replace <impl Stage for Fingerprint>::evaluate -> Verdict with Default::default()",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "<impl Stage for Fingerprint>::evaluate",
-            "return_type": "-> Verdict",
-            "span": {
-              "start": {
-                "line": 97,
-                "column": 5
-              },
-              "end": {
-                "line": 103,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 98,
-              "column": 9
-            },
-            "end": {
-              "line": 102,
-              "column": 10
-            }
-          },
-          "replacement": "Default::default()",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_98_col_9.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_98_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.796470024,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.399468011,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:106:9: replace <impl Stage for Fingerprint>::name -> &'static str with \"\"",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "<impl Stage for Fingerprint>::name",
-            "return_type": "-> &'static str",
-            "span": {
-              "start": {
-                "line": 105,
-                "column": 5
-              },
-              "end": {
-                "line": 107,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 106,
-              "column": 9
-            },
-            "end": {
-              "line": 106,
-              "column": 22
-            }
-          },
-          "replacement": "\"\"",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_106_col_9.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_106_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.051997755,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.102803492,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-fingerprint/src/fingerprint.rs:106:9: replace <impl Stage for Fingerprint>::name -> &'static str with \"xyzzy\"",
-          "package": "deflect-fingerprint",
-          "file": "crates/deflect-fingerprint/src/fingerprint.rs",
-          "function": {
-            "function_name": "<impl Stage for Fingerprint>::name",
-            "return_type": "-> &'static str",
-            "span": {
-              "start": {
-                "line": 105,
-                "column": 5
-              },
-              "end": {
-                "line": 107,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 106,
-              "column": 9
-            },
-            "end": {
-              "line": 106,
-              "column": 22
             }
           },
           "replacement": "\"xyzzy\"",
@@ -4496,24 +996,24 @@
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-fingerprint__src__fingerprint.rs_line_106_col_9_001.log",
-      "diff_path": "diff/crates__deflect-fingerprint__src__fingerprint.rs_line_106_col_9_001.diff",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_238_col_9_001.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_238_col_9_001.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 1.648986479,
+          "duration": 3.348294852,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
+            "--package=deflect-enforce@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.156596564,
+          "duration": 0.308355376,
           "process_status": {
             "Failure": 101
           },
@@ -4521,19 +1021,1178 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-fingerprint@0.1.0"
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/lib.rs:238:9: replace NftEnforcer<R>::table -> &str with \"\"",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
+          "function": {
+            "function_name": "NftEnforcer<R>::table",
+            "return_type": "-> &str",
+            "span": {
+              "start": {
+                "line": 236,
+                "column": 5
+              },
+              "end": {
+                "line": 239,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 238,
+              "column": 9
+            },
+            "end": {
+              "line": 238,
+              "column": 20
+            }
+          },
+          "replacement": "\"\"",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_238_col_9.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_238_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.99575618,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.205163781,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/lib.rs:254:9: replace <impl Enforcer for NftEnforcer<R>>::unban -> Result<(), EnforceError> with Ok(())",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
+          "function": {
+            "function_name": "<impl Enforcer for NftEnforcer<R>>::unban",
+            "return_type": "-> Result<(), EnforceError>",
+            "span": {
+              "start": {
+                "line": 253,
+                "column": 5
+              },
+              "end": {
+                "line": 261,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 254,
+              "column": 9
+            },
+            "end": {
+              "line": 260,
+              "column": 15
+            }
+          },
+          "replacement": "Ok(())",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_254_col_9.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_254_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.53833205,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.304239996,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/lib.rs:264:9: replace <impl Enforcer for NftEnforcer<R>>::banned_count -> usize with 0",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
+          "function": {
+            "function_name": "<impl Enforcer for NftEnforcer<R>>::banned_count",
+            "return_type": "-> usize",
+            "span": {
+              "start": {
+                "line": 263,
+                "column": 5
+              },
+              "end": {
+                "line": 265,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 264,
+              "column": 9
+            },
+            "end": {
+              "line": 264,
+              "column": 59
+            }
+          },
+          "replacement": "0",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_264_col_9.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_264_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.6913727330000001,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.152610248,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/lib.rs:264:9: replace <impl Enforcer for NftEnforcer<R>>::banned_count -> usize with 1",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
+          "function": {
+            "function_name": "<impl Enforcer for NftEnforcer<R>>::banned_count",
+            "return_type": "-> usize",
+            "span": {
+              "start": {
+                "line": 263,
+                "column": 5
+              },
+              "end": {
+                "line": 265,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 264,
+              "column": 9
+            },
+            "end": {
+              "line": 264,
+              "column": 59
+            }
+          },
+          "replacement": "1",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_264_col_9_001.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_264_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 2.393865581,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.652691742,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/nft.rs:7:5: replace set_name -> &'static str with \"\"",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/nft.rs",
+          "function": {
+            "function_name": "set_name",
+            "return_type": "-> &'static str",
+            "span": {
+              "start": {
+                "line": 5,
+                "column": 1
+              },
+              "end": {
+                "line": 11,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 7,
+              "column": 5
+            },
+            "end": {
+              "line": 10,
+              "column": 6
+            }
+          },
+          "replacement": "\"\"",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__nft.rs_line_7_col_5.log",
+      "diff_path": "diff/crates__deflect-enforce__src__nft.rs_line_7_col_5.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 2.947057746,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.547476065,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/nft.rs:7:5: replace set_name -> &'static str with \"xyzzy\"",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/nft.rs",
+          "function": {
+            "function_name": "set_name",
+            "return_type": "-> &'static str",
+            "span": {
+              "start": {
+                "line": 5,
+                "column": 1
+              },
+              "end": {
+                "line": 11,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 7,
+              "column": 5
+            },
+            "end": {
+              "line": 10,
+              "column": 6
+            }
+          },
+          "replacement": "\"xyzzy\"",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__nft.rs_line_7_col_5_001.log",
+      "diff_path": "diff/crates__deflect-enforce__src__nft.rs_line_7_col_5_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.742160454,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.499616631,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/nft.rs:14:5: replace is_host -> bool with true",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/nft.rs",
+          "function": {
+            "function_name": "is_host",
+            "return_type": "-> bool",
+            "span": {
+              "start": {
+                "line": 13,
+                "column": 1
+              },
+              "end": {
+                "line": 18,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 14,
+              "column": 5
+            },
+            "end": {
+              "line": 17,
+              "column": 6
+            }
+          },
+          "replacement": "true",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__nft.rs_line_14_col_5.log",
+      "diff_path": "diff/crates__deflect-enforce__src__nft.rs_line_14_col_5.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.747310935,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.305588779,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/lib.rs:227:9: replace NftEnforcer<R>::with_runner -> Result<NftEnforcer<R>, EnforceError> with Ok(NftEnforcer::new(Default::default()))",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
+          "function": {
+            "function_name": "NftEnforcer<R>::with_runner",
+            "return_type": "-> Result<NftEnforcer<R>, EnforceError>",
+            "span": {
+              "start": {
+                "line": 219,
+                "column": 5
+              },
+              "end": {
+                "line": 234,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 227,
+              "column": 9
+            },
+            "end": {
+              "line": 233,
+              "column": 11
+            }
+          },
+          "replacement": "Ok(NftEnforcer::new(Default::default()))",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "Unviable",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_227_col_9_002.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_227_col_9_002.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 16.24954192,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/nft.rs:14:5: replace is_host -> bool with false",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/nft.rs",
+          "function": {
+            "function_name": "is_host",
+            "return_type": "-> bool",
+            "span": {
+              "start": {
+                "line": 13,
+                "column": 1
+              },
+              "end": {
+                "line": 18,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 14,
+              "column": 5
+            },
+            "end": {
+              "line": 17,
+              "column": 6
+            }
+          },
+          "replacement": "false",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__nft.rs_line_14_col_5_001.log",
+      "diff_path": "diff/crates__deflect-enforce__src__nft.rs_line_14_col_5_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.598925676,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.650073307,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/nft.rs:15:37: replace >= with < in is_host",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/nft.rs",
+          "function": {
+            "function_name": "is_host",
+            "return_type": "-> bool",
+            "span": {
+              "start": {
+                "line": 13,
+                "column": 1
+              },
+              "end": {
+                "line": 18,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 15,
+              "column": 37
+            },
+            "end": {
+              "line": 15,
+              "column": 39
+            }
+          },
+          "replacement": "<",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__nft.rs_line_15_col_37.log",
+      "diff_path": "diff/crates__deflect-enforce__src__nft.rs_line_15_col_37.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 4.190793638,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.950452183,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/lib.rs:83:9: replace Enforcer::ban_source -> Result<(), EnforceError> with Ok(())",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
+          "function": {
+            "function_name": "Enforcer::ban_source",
+            "return_type": "-> Result<(), EnforceError>",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 84,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 83,
+              "column": 9
+            },
+            "end": {
+              "line": 83,
+              "column": 46
+            }
+          },
+          "replacement": "Ok(())",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_83_col_9.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_83_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 62.928618111,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.848555449,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/lib.rs:106:9: replace NullEnforcer::snapshot -> Vec<(IpAddr, u8)> with vec![]",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
+          "function": {
+            "function_name": "NullEnforcer::snapshot",
+            "return_type": "-> Vec<(IpAddr, u8)>",
+            "span": {
+              "start": {
+                "line": 100,
+                "column": 5
+              },
+              "end": {
+                "line": 110,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 106,
+              "column": 9
+            },
+            "end": {
+              "line": 109,
+              "column": 10
+            }
+          },
+          "replacement": "vec![]",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_106_col_9.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_106_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 65.877976355,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.750292876,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/nft.rs:16:37: replace >= with < in is_host",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/nft.rs",
+          "function": {
+            "function_name": "is_host",
+            "return_type": "-> bool",
+            "span": {
+              "start": {
+                "line": 13,
+                "column": 1
+              },
+              "end": {
+                "line": 18,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 16,
+              "column": 37
+            },
+            "end": {
+              "line": 16,
+              "column": 39
+            }
+          },
+          "replacement": "<",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__nft.rs_line_16_col_37.log",
+      "diff_path": "diff/crates__deflect-enforce__src__nft.rs_line_16_col_37.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 11.396878434,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.700214263,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/nft.rs:23:5: replace element -> alloc::string::String with Default::default()",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/nft.rs",
+          "function": {
+            "function_name": "element",
+            "return_type": "-> alloc::string::String",
+            "span": {
+              "start": {
+                "line": 20,
+                "column": 1
+              },
+              "end": {
+                "line": 31,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 23,
+              "column": 5
+            },
+            "end": {
+              "line": 30,
+              "column": 6
+            }
+          },
+          "replacement": "Default::default()",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__nft.rs_line_23_col_5.log",
+      "diff_path": "diff/crates__deflect-enforce__src__nft.rs_line_23_col_5.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 7.894334248,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.651447884,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/nft.rs:41:5: replace setup_script -> alloc::string::String with Default::default()",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/nft.rs",
+          "function": {
+            "function_name": "setup_script",
+            "return_type": "-> alloc::string::String",
+            "span": {
+              "start": {
+                "line": 33,
+                "column": 1
+              },
+              "end": {
+                "line": 52,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 41,
+              "column": 5
+            },
+            "end": {
+              "line": 51,
+              "column": 6
+            }
+          },
+          "replacement": "Default::default()",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__nft.rs_line_41_col_5.log",
+      "diff_path": "diff/crates__deflect-enforce__src__nft.rs_line_41_col_5.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 7.19576241,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.548283608,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/lib.rs:244:9: replace <impl Enforcer for NftEnforcer<R>>::ban -> Result<(), EnforceError> with Ok(())",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/lib.rs",
+          "function": {
+            "function_name": "<impl Enforcer for NftEnforcer<R>>::ban",
+            "return_type": "-> Result<(), EnforceError>",
+            "span": {
+              "start": {
+                "line": 243,
+                "column": 5
+              },
+              "end": {
+                "line": 251,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 244,
+              "column": 9
+            },
+            "end": {
+              "line": 250,
+              "column": 15
+            }
+          },
+          "replacement": "Ok(())",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__lib.rs_line_244_col_9.log",
+      "diff_path": "diff/crates__deflect-enforce__src__lib.rs_line_244_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 25.046594757,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.153012622,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/nft.rs:62:5: replace ban_script -> alloc::string::String with Default::default()",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/nft.rs",
+          "function": {
+            "function_name": "ban_script",
+            "return_type": "-> alloc::string::String",
+            "span": {
+              "start": {
+                "line": 54,
+                "column": 1
+              },
+              "end": {
+                "line": 72,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 62,
+              "column": 5
+            },
+            "end": {
+              "line": 71,
+              "column": 6
+            }
+          },
+          "replacement": "Default::default()",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__nft.rs_line_62_col_5.log",
+      "diff_path": "diff/crates__deflect-enforce__src__nft.rs_line_62_col_5.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 6.050617582,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.154046116,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-enforce/src/nft.rs:77:5: replace unban_script -> alloc::string::String with Default::default()",
+          "package": "deflect-enforce",
+          "file": "crates/deflect-enforce/src/nft.rs",
+          "function": {
+            "function_name": "unban_script",
+            "return_type": "-> alloc::string::String",
+            "span": {
+              "start": {
+                "line": 74,
+                "column": 1
+              },
+              "end": {
+                "line": 81,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 77,
+              "column": 5
+            },
+            "end": {
+              "line": 80,
+              "column": 64
+            }
+          },
+          "replacement": "Default::default()",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-enforce__src__nft.rs_line_77_col_5.log",
+      "diff_path": "diff/crates__deflect-enforce__src__nft.rs_line_77_col_5.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.6411912969999998,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.102219135,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-enforce@0.1.0"
           ]
         }
       ]
     }
   ],
-  "total_mutants": 70,
+  "total_mutants": 35,
   "missed": 0,
-  "caught": 65,
+  "caught": 24,
   "timeout": 0,
-  "unviable": 5,
+  "unviable": 11,
   "success": 0,
-  "start_time": "2026-10-19T13:45:57.792552677Z",
-  "end_time": "2026-10-19T13:48:01.53945776Z",
+  "start_time": "2026-10-19T13:51:14.303591523Z",
+  "end_time": "2026-10-19T13:52:34.476979486Z",
   "cargo_mutants_version": "27.0.0"
 }

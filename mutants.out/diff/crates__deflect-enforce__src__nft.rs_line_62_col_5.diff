@@ -1,0 +1,30 @@
+--- crates/deflect-enforce/src/nft.rs
++++ replace ban_script -> alloc::string::String with Default::default()
+@@ -54,26 +54,17 @@
+ /// Script to ban one address/prefix, with an optional kernel-enforced timeout.
+ #[must_use]
+ pub fn ban_script(
+     table: &str,
+     addr: IpAddr,
+     prefix_len: u8,
+     ttl: Option<Duration>,
+ ) -> alloc::string::String {
+-    use alloc::format;
+-    let set = set_name(addr);
+-    let elem = element(addr, prefix_len);
+-    match ttl {
+-        Some(d) => {
+-            let secs = d.as_secs().max(1);
+-            format!("add element inet {table} {set} {{ {elem} timeout {secs}s }}\n")
+-        }
+-        None => format!("add element inet {table} {set} {{ {elem} }}\n"),
+-    }
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Script to remove one address/prefix from its ban set.
+ #[must_use]
+ pub fn unban_script(table: &str, addr: IpAddr, prefix_len: u8) -> alloc::string::String {
+     use alloc::format;
+     let set = set_name(addr);
+     let elem = element(addr, prefix_len);

@@ -1,5 +1,11 @@
-crates/deflect-fingerprint/src/lib.rs:75:9: replace Fingerprinter::with_defaults -> Fingerprinter with Default::default()
-crates/deflect-fingerprint/src/lib.rs:129:9: replace Fingerprinter::synthesize -> Option<Fingerprint> with Some(Default::default())
-crates/deflect-fingerprint/src/counter.rs:57:9: replace TopValues<V>::leader -> Option<(V, u64)> with Some((Default::default(), 0))
-crates/deflect-fingerprint/src/counter.rs:57:9: replace TopValues<V>::leader -> Option<(V, u64)> with Some((Default::default(), 1))
-crates/deflect-fingerprint/src/fingerprint.rs:18:9: replace Prefix::from_payload -> Prefix with Default::default()
+crates/deflect-enforce/src/lib.rs:165:9: replace ShellNftRunner::system -> ShellNftRunner with Default::default()
+crates/deflect-enforce/src/lib.rs:214:9: replace NftEnforcer<ShellNftRunner>::system -> Result<NftEnforcer<ShellNftRunner>, EnforceError> with Ok(NftEnforcer::new())
+crates/deflect-enforce/src/lib.rs:214:9: replace NftEnforcer<ShellNftRunner>::system -> Result<NftEnforcer<ShellNftRunner>, EnforceError> with Ok(NftEnforcer::from_iter([Default::default()]))
+crates/deflect-enforce/src/lib.rs:214:9: replace NftEnforcer<ShellNftRunner>::system -> Result<NftEnforcer<ShellNftRunner>, EnforceError> with Ok(NftEnforcer::new(Default::default()))
+crates/deflect-enforce/src/lib.rs:214:9: replace NftEnforcer<ShellNftRunner>::system -> Result<NftEnforcer<ShellNftRunner>, EnforceError> with Ok(NftEnforcer::from(Default::default()))
+crates/deflect-enforce/src/lib.rs:227:9: replace NftEnforcer<R>::with_runner -> Result<NftEnforcer<R>, EnforceError> with Ok(NftEnforcer::new())
+crates/deflect-enforce/src/lib.rs:106:9: replace NullEnforcer::snapshot -> Vec<(IpAddr, u8)> with vec![(Default::default(), 0)]
+crates/deflect-enforce/src/lib.rs:227:9: replace NftEnforcer<R>::with_runner -> Result<NftEnforcer<R>, EnforceError> with Ok(NftEnforcer::from_iter([Default::default()]))
+crates/deflect-enforce/src/lib.rs:227:9: replace NftEnforcer<R>::with_runner -> Result<NftEnforcer<R>, EnforceError> with Ok(NftEnforcer::from(Default::default()))
+crates/deflect-enforce/src/lib.rs:106:9: replace NullEnforcer::snapshot -> Vec<(IpAddr, u8)> with vec![(Default::default(), 1)]
+crates/deflect-enforce/src/lib.rs:227:9: replace NftEnforcer<R>::with_runner -> Result<NftEnforcer<R>, EnforceError> with Ok(NftEnforcer::new(Default::default()))

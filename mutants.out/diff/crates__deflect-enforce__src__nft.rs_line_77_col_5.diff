@@ -1,0 +1,24 @@
+--- crates/deflect-enforce/src/nft.rs
++++ replace unban_script -> alloc::string::String with Default::default()
+@@ -69,20 +69,17 @@
+         }
+         None => format!("add element inet {table} {set} {{ {elem} }}\n"),
+     }
+ }
+ 
+ /// Script to remove one address/prefix from its ban set.
+ #[must_use]
+ pub fn unban_script(table: &str, addr: IpAddr, prefix_len: u8) -> alloc::string::String {
+-    use alloc::format;
+-    let set = set_name(addr);
+-    let elem = element(addr, prefix_len);
+-    format!("delete element inet {table} {set} {{ {elem} }}\n")
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+     use core::net::{Ipv4Addr, Ipv6Addr};
+ 
+     fn v4(a: u8, b: u8, c: u8, d: u8) -> IpAddr {

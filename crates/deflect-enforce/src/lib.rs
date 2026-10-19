@@ -367,4 +367,50 @@ mod tests {
         assert!(r.is_err());
         assert_eq!(e.banned_count(), 0);
     }
+
+    #[test]
+    fn error_messages_are_descriptive() {
+        let spawn = EnforceError::Spawn(std::io::Error::new(
+            std::io::ErrorKind::NotFound,
+            "nft missing",
+        ));
+        assert!(spawn.to_string().contains("nft missing"));
+        let rejected = EnforceError::Rejected {
+            code: Some(1),
+            stderr: "syntax error".into(),
+        };
+        let msg = rejected.to_string();
+        assert!(msg.contains("rejected"), "{msg}");
+        assert!(msg.contains("syntax error"), "{msg}");
+    }
+
+    #[test]
+    fn table_name_is_reported() {
+        let e = NftEnforcer::with_runner("deflect", RecordingRunner::default()).unwrap();
+        assert_eq!(e.table(), "deflect");
+    }
+
+    #[test]
+    fn nft_banned_count_tracks_live_bans() {
+        let e = NftEnforcer::with_runner("deflect", RecordingRunner::default()).unwrap();
+        e.ban(v4(203, 0, 113, 0), 24, None).unwrap();
+        e.ban(v4(198, 51, 100, 7), 32, None).unwrap();
+        assert_eq!(e.banned_count(), 2);
+    }
+
+    #[test]
+    fn shell_runner_maps_exit_status_without_nft() {
+        // `sh -f -` executes the piped script as a shell script: it reads stdin
+        // fully (no broken-pipe race) and its exit status is the script's, so a
+        // real ShellNftRunner can be exercised without nft or root.
+        assert!(ShellNftRunner::new("sh").run("true\n").is_ok());
+        match ShellNftRunner::new("sh").run("false\n") {
+            Err(EnforceError::Rejected { code, .. }) => assert_eq!(code, Some(1)),
+            other => panic!("expected Rejected, got {other:?}"),
+        }
+        match ShellNftRunner::new("/nonexistent/nft-binary").run("x\n") {
+            Err(EnforceError::Spawn(_)) => {}
+            other => panic!("expected Spawn, got {other:?}"),
+        }
+    }
 }

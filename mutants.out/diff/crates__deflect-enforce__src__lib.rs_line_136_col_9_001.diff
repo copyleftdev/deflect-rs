@@ -1,0 +1,21 @@
+--- crates/deflect-enforce/src/lib.rs
++++ replace <impl Enforcer for NullEnforcer>::banned_count -> usize with 1
+@@ -128,17 +128,17 @@
+         self.banned
+             .lock()
+             .expect("mirror poisoned")
+             .remove(&(addr, prefix_len));
+         Ok(())
+     }
+ 
+     fn banned_count(&self) -> usize {
+-        self.banned.lock().expect("mirror poisoned").len()
++        1 /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// Executes an nftables script. The real implementation runs `nft -f -`.
+ pub trait NftRunner {
+     /// Apply one nftables script atomically.
+     ///
+     /// # Errors

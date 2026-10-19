@@ -1,0 +1,29 @@
+--- crates/deflect-enforce/src/lib.rs
++++ replace <impl core::fmt::Display for EnforceError>::fmt -> core::fmt::Result with Ok(Default::default())
+@@ -33,25 +33,17 @@
+     /// The enforcement tool could not be launched.
+     Spawn(std::io::Error),
+     /// The tool ran but rejected the script.
+     Rejected { code: Option<i32>, stderr: String },
+ }
+ 
+ impl core::fmt::Display for EnforceError {
+     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+-        match self {
+-            EnforceError::Spawn(e) => write!(f, "failed to launch enforcement tool: {e}"),
+-            EnforceError::Rejected { code, stderr } => {
+-                write!(
+-                    f,
+-                    "enforcement tool rejected script (code {code:?}): {stderr}"
+-                )
+-            }
+-        }
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl std::error::Error for EnforceError {}
+ 
+ /// Programs and withdraws source bans in the data plane.
+ pub trait Enforcer {
+     /// Ban `addr` masked to `prefix_len` bits, expiring after `ttl` if given.

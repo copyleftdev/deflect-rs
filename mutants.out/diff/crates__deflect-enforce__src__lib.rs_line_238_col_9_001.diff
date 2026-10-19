@@ -1,0 +1,21 @@
+--- crates/deflect-enforce/src/lib.rs
++++ replace NftEnforcer<R>::table -> &str with "xyzzy"
+@@ -230,17 +230,17 @@
+             table,
+             runner,
+             mirror: Mutex::new(HashSet::new()),
+         })
+     }
+ 
+     #[must_use]
+     pub fn table(&self) -> &str {
+-        &self.table
++        "xyzzy" /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl<R: NftRunner> Enforcer for NftEnforcer<R> {
+     fn ban(&self, addr: IpAddr, prefix_len: u8, ttl: Option<Duration>) -> Result<(), EnforceError> {
+         self.runner
+             .run(&nft::ban_script(&self.table, addr, prefix_len, ttl))?;
+         self.mirror

@@ -1,0 +1,27 @@
+--- crates/deflect-enforce/src/lib.rs
++++ replace <impl Enforcer for NftEnforcer<R>>::ban -> Result<(), EnforceError> with Ok(())
+@@ -236,23 +236,17 @@
+     #[must_use]
+     pub fn table(&self) -> &str {
+         &self.table
+     }
+ }
+ 
+ impl<R: NftRunner> Enforcer for NftEnforcer<R> {
+     fn ban(&self, addr: IpAddr, prefix_len: u8, ttl: Option<Duration>) -> Result<(), EnforceError> {
+-        self.runner
+-            .run(&nft::ban_script(&self.table, addr, prefix_len, ttl))?;
+-        self.mirror
+-            .lock()
+-            .expect("mirror poisoned")
+-            .insert((addr, prefix_len));
+-        Ok(())
++        Ok(()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn unban(&self, addr: IpAddr, prefix_len: u8) -> Result<(), EnforceError> {
+         self.runner
+             .run(&nft::unban_script(&self.table, addr, prefix_len))?;
+         self.mirror
+             .lock()
+             .expect("mirror poisoned")

@@ -11,6 +11,9 @@ description = "Enforcement backends for deflect-rs: program bans into nftables (
 [dependencies]
 deflect-core = { workspace = true }
 
+[dev-dependencies]
+proptest = "1.6.0"
+
 [features]
 default = ["std"]
 std = ["deflect-core/std"]

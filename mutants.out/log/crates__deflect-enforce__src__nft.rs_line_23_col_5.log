@@ -1,0 +1,263 @@
+
+*** crates/deflect-enforce/src/nft.rs:23:5: replace element -> alloc::string::String with Default::default()
+
+*** mutation diff:
+--- crates/deflect-enforce/src/nft.rs
++++ replace element -> alloc::string::String with Default::default()
+@@ -15,24 +15,17 @@
+         IpAddr::V4(_) => prefix_len >= 32,
+         IpAddr::V6(_) => prefix_len >= 128,
+     }
+ }
+ 
+ /// Render an address and prefix length as an nftables set element, e.g.
+ /// `203.0.113.0/24` or a bare `198.51.100.7` for a host.
+ pub(crate) fn element(addr: IpAddr, prefix_len: u8) -> alloc::string::String {
+-    use alloc::string::ToString;
+-    if is_host(addr, prefix_len) {
+-        addr.to_string()
+-    } else {
+-        let mut s = addr.to_string();
+-        let _ = write!(s, "/{prefix_len}");
+-        s
+-    }
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Idempotent, atomic setup: (re)create the table, its timeout-capable sets, and
+ /// the chain that drops banned sources before conntrack.
+ ///
+ /// `add table` then `delete table` then `add table` guarantees a clean slate
+ /// whether or not the table already existed, in a single atomic `nft -f` script
+ /// — safe because setup runs at startup when no bans exist yet.
+
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=deflect-enforce@0.1.0
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh getrandom v0.4.3
+       Fresh linux-raw-sys v0.12.1
+       Fresh autocfg v1.5.1
+       Fresh bitflags v2.13.2
+       Fresh rustix v1.1.5
+       Fresh once_cell v1.21.4
+       Fresh fastrand v2.5.0
+       Fresh tempfile v3.27.0
+       Fresh wait-timeout v0.2.1
+       Fresh fnv v1.0.7
+       Fresh bit-vec v0.10.1
+       Fresh cpufeatures v0.3.1
+       Fresh quick-error v1.2.3
+       Fresh rusty-fork v0.3.1
+       Fresh chacha20 v0.10.2
+       Fresh bit-set v0.11.1
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/crates/deflect-core)
+       Fresh unarray v0.1.4
+       Fresh core_detect v1.0.0
+       Fresh regex-syntax v0.8.11
+       Fresh proptest v1.12.0
+       Dirty deflect-enforce v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/crates/deflect-enforce): the file `crates/deflect-enforce/src/nft.rs` has changed (1792417944.187114362s, 4s after last build at 1792417940.280908995s)
+   Compiling deflect-enforce v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/crates/deflect-enforce)
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_enforce --edition=2021 crates/deflect-enforce/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=8df2713e97b4a608 -C extra-filename=-e700cf97a215ebb6 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rmeta`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_enforce --edition=2021 crates/deflect-enforce/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=f810422218b64ae1 -C extra-filename=-ace409ae77a2d29a --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+warning: unused import: `core::fmt::Write as _`
+ --> crates/deflect-enforce/src/nft.rs:1:5
+  |
+1 | use core::fmt::Write as _;
+  |     ^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `addr`
+  --> crates/deflect-enforce/src/nft.rs:22:23
+   |
+22 | pub(crate) fn element(addr: IpAddr, prefix_len: u8) -> alloc::string::String {
+   |                       ^^^^ help: if this is intentional, prefix it with an underscore: `_addr`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `prefix_len`
+  --> crates/deflect-enforce/src/nft.rs:22:37
+   |
+22 | pub(crate) fn element(addr: IpAddr, prefix_len: u8) -> alloc::string::String {
+   |                                     ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_prefix_len`
+
+warning: function `is_host` is never used
+  --> crates/deflect-enforce/src/nft.rs:13:4
+   |
+13 | fn is_host(addr: IpAddr, prefix_len: u8) -> bool {
+   |    ^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `deflect-enforce` (lib) generated 4 warnings (run `cargo fix --lib -p deflect-enforce` to apply 3 suggestions)
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name properties --edition=2021 crates/deflect-enforce/tests/properties.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=577ddc9244b222bc -C extra-filename=-2f269324a0e72390 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern deflect_enforce=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/target/debug/deps/libdeflect_enforce-e700cf97a215ebb6.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+warning: `deflect-enforce` (lib test) generated 4 warnings (4 duplicates)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.59s
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/target/debug/deps/deflect_enforce-ace409ae77a2d29a`
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/target/debug/deps/properties-2f269324a0e72390`
+
+*** result: Success
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=deflect-enforce@0.1.0
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh getrandom v0.4.3
+       Fresh linux-raw-sys v0.12.1
+       Fresh bitflags v2.13.2
+       Fresh autocfg v1.5.1
+       Fresh rustix v1.1.5
+       Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
+       Fresh tempfile v3.27.0
+       Fresh wait-timeout v0.2.1
+       Fresh bit-vec v0.10.1
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+       Fresh cpufeatures v0.3.1
+       Fresh chacha20 v0.10.2
+       Fresh rusty-fork v0.3.1
+       Fresh bit-set v0.11.1
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh regex-syntax v0.8.11
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/crates/deflect-core)
+       Fresh unarray v0.1.4
+       Fresh core_detect v1.0.0
+warning: unused import: `core::fmt::Write as _`
+ --> crates/deflect-enforce/src/nft.rs:1:5
+  |
+1 | use core::fmt::Write as _;
+  |     ^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `addr`
+  --> crates/deflect-enforce/src/nft.rs:22:23
+   |
+22 | pub(crate) fn element(addr: IpAddr, prefix_len: u8) -> alloc::string::String {
+   |                       ^^^^ help: if this is intentional, prefix it with an underscore: `_addr`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `prefix_len`
+  --> crates/deflect-enforce/src/nft.rs:22:37
+   |
+22 | pub(crate) fn element(addr: IpAddr, prefix_len: u8) -> alloc::string::String {
+   |                                     ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_prefix_len`
+
+warning: function `is_host` is never used
+  --> crates/deflect-enforce/src/nft.rs:13:4
+   |
+13 | fn is_host(addr: IpAddr, prefix_len: u8) -> bool {
+   |    ^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `deflect-enforce` (lib) generated 4 warnings (run `cargo fix --lib -p deflect-enforce` to apply 3 suggestions)
+       Fresh proptest v1.12.0
+       Fresh deflect-enforce v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/crates/deflect-enforce)
+warning: `deflect-enforce` (lib test) generated 4 warnings (4 duplicates)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.49s
+     Running `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bxEmoF.tmp/target/debug/deps/deflect_enforce-ace409ae77a2d29a`
+
+running 18 tests
+test nft::tests::ban_script_with_ttl ... FAILED
+test nft::tests::ban_script_without_ttl ... FAILED
+test nft::tests::host_element_is_bare ... FAILED
+test nft::tests::prefix_element_has_cidr ... FAILED
+test nft::tests::setup_is_atomic_reset ... ok
+test nft::tests::ttl_rounds_up_to_at_least_one_second ... ok
+test nft::tests::unban_script_targets_the_element ... FAILED
+test nft::tests::v6_set_and_element ... FAILED
+test tests::error_messages_are_descriptive ... ok
+test tests::failed_ban_does_not_update_the_mirror ... ok
+test tests::nft_banned_count_tracks_live_bans ... ok
+test tests::nft_enforcer_ban_source_uses_key_address ... FAILED
+test tests::nft_enforcer_runs_setup_then_ban ... FAILED
+test tests::null_enforcer_ban_is_idempotent ... ok
+test tests::null_enforcer_tracks_bans ... ok
+test tests::setup_failure_is_propagated ... ok
+test tests::shell_runner_maps_exit_status_without_nft ... ok
+test tests::table_name_is_reported ... ok
+
+failures:
+
+---- nft::tests::ban_script_with_ttl stdout ----
+
+thread 'nft::tests::ban_script_with_ttl' (4024237) panicked at crates/deflect-enforce/src/nft.rs:111:9:
+assertion `left == right` failed
+  left: "add element inet deflect banned4 {  timeout 60s }\n"
+ right: "add element inet deflect banned4 { 203.0.113.0/24 timeout 60s }\n"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- nft::tests::ban_script_without_ttl stdout ----
+
+thread 'nft::tests::ban_script_without_ttl' (4024239) panicked at crates/deflect-enforce/src/nft.rs:120:9:
+assertion `left == right` failed
+  left: "add element inet deflect banned4 {  }\n"
+ right: "add element inet deflect banned4 { 198.51.100.7 }\n"
+
+---- nft::tests::host_element_is_bare stdout ----
+
+thread 'nft::tests::host_element_is_bare' (4024240) panicked at crates/deflect-enforce/src/nft.rs:87:9:
+assertion `left == right` failed
+  left: ""
+ right: "198.51.100.7"
+
+---- nft::tests::prefix_element_has_cidr stdout ----
+
+thread 'nft::tests::prefix_element_has_cidr' (4024241) panicked at crates/deflect-enforce/src/nft.rs:92:9:
+assertion `left == right` failed
+  left: ""
+ right: "203.0.113.0/24"
+
+---- nft::tests::unban_script_targets_the_element stdout ----
+
+thread 'nft::tests::unban_script_targets_the_element' (4024244) panicked at crates/deflect-enforce/src/nft.rs:137:9:
+assertion `left == right` failed
+  left: "delete element inet deflect banned4 {  }\n"
+ right: "delete element inet deflect banned4 { 203.0.113.0/24 }\n"
+
+---- nft::tests::v6_set_and_element stdout ----
+
+thread 'nft::tests::v6_set_and_element' (4024245) panicked at crates/deflect-enforce/src/nft.rs:99:9:
+assertion `left == right` failed
+  left: ""
+ right: "2001:db8::/64"
+
+---- tests::nft_enforcer_ban_source_uses_key_address stdout ----
+
+thread 'tests::nft_enforcer_ban_source_uses_key_address' (4024250) panicked at crates/deflect-enforce/src/lib.rs:344:9:
+assertion failed: scripts.last().unwrap().contains("198.51.100.9")
+
+---- tests::nft_enforcer_runs_setup_then_ban stdout ----
+
+thread 'tests::nft_enforcer_runs_setup_then_ban' (4024251) panicked at crates/deflect-enforce/src/lib.rs:332:9:
+assertion failed: scripts[1].contains("add element inet deflect banned4 { 203.0.113.0/24 timeout 60s }")
+
+
+failures:
+    nft::tests::ban_script_with_ttl
+    nft::tests::ban_script_without_ttl
+    nft::tests::host_element_is_bare
+    nft::tests::prefix_element_has_cidr
+    nft::tests::unban_script_targets_the_element
+    nft::tests::v6_set_and_element
+    tests::nft_enforcer_ban_source_uses_key_address
+    tests::nft_enforcer_runs_setup_then_ban
+
+test result: FAILED. 10 passed; 8 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p deflect-enforce --lib`
+
+*** result: Failure(101)

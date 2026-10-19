@@ -1,0 +1,21 @@
+--- crates/deflect-enforce/src/lib.rs
++++ replace NftEnforcer<ShellNftRunner>::system -> Result<NftEnforcer<ShellNftRunner>, EnforceError> with Ok(NftEnforcer::from_iter([Default::default()]))
+@@ -206,17 +206,17 @@
+ 
+ impl NftEnforcer<ShellNftRunner> {
+     /// Build an enforcer against the system `nft`, running setup immediately.
+     ///
+     /// # Errors
+     /// Returns an [`EnforceError`] if the setup script could not be applied
+     /// (typically missing privileges or no nftables support).
+     pub fn system(table: impl Into<String>) -> Result<NftEnforcer<ShellNftRunner>, EnforceError> {
+-        NftEnforcer::with_runner(table, ShellNftRunner::system())
++        Ok(NftEnforcer::from_iter([Default::default()])) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl<R: NftRunner> NftEnforcer<R> {
+     /// Build an enforcer with a specific runner, applying the setup script.
+     ///
+     /// # Errors
+     /// Returns an [`EnforceError`] if the setup script could not be applied.

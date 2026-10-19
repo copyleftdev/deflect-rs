@@ -1,65 +1,24 @@
-crates/deflect-fingerprint/src/lib.rs:130:25: replace == with != in Fingerprinter::synthesize
-crates/deflect-fingerprint/src/lib.rs:136:22: replace >= with < in Fingerprinter::synthesize
-crates/deflect-fingerprint/src/lib.rs:157:36: replace > with == in Fingerprinter::synthesize
-crates/deflect-fingerprint/src/lib.rs:157:36: replace > with < in Fingerprinter::synthesize
-crates/deflect-fingerprint/src/lib.rs:157:36: replace > with >= in Fingerprinter::synthesize
-crates/deflect-fingerprint/src/lib.rs:162:53: replace && with || in Fingerprinter::synthesize
-crates/deflect-fingerprint/src/lib.rs:162:31: replace && with || in Fingerprinter::synthesize
-crates/deflect-fingerprint/src/lib.rs:173:39: replace != with == in Fingerprinter::synthesize
-crates/deflect-fingerprint/src/lib.rs:109:9: replace Fingerprinter::reset with ()
-crates/deflect-fingerprint/src/lib.rs:190:9: replace Fingerprinter::capacity -> usize with 0
-crates/deflect-fingerprint/src/lib.rs:190:9: replace Fingerprinter::capacity -> usize with 1
-crates/deflect-fingerprint/src/counter.rs:32:9: replace TopValues<V>::observe with ()
-crates/deflect-fingerprint/src/counter.rs:32:20: replace += with -= in TopValues<V>::observe
-crates/deflect-fingerprint/src/counter.rs:32:20: replace += with *= in TopValues<V>::observe
-crates/deflect-fingerprint/src/counter.rs:33:71: replace == with != in TopValues<V>::observe
-crates/deflect-fingerprint/src/counter.rs:34:21: replace += with -= in TopValues<V>::observe
-crates/deflect-fingerprint/src/counter.rs:34:21: replace += with *= in TopValues<V>::observe
-crates/deflect-fingerprint/src/counter.rs:37:31: replace < with == in TopValues<V>::observe
-crates/deflect-fingerprint/src/lib.rs:97:9: replace Fingerprinter::sampled -> u64 with 0
-crates/deflect-fingerprint/src/counter.rs:37:31: replace < with > in TopValues<V>::observe
-crates/deflect-fingerprint/src/lib.rs:129:9: replace Fingerprinter::synthesize -> Option<Fingerprint> with None
-crates/deflect-fingerprint/src/counter.rs:37:31: replace < with <= in TopValues<V>::observe
-crates/deflect-fingerprint/src/counter.rs:44:21: replace -= with += in TopValues<V>::observe
-crates/deflect-fingerprint/src/counter.rs:44:21: replace -= with /= in TopValues<V>::observe
-crates/deflect-fingerprint/src/lib.rs:97:9: replace Fingerprinter::sampled -> u64 with 1
-crates/deflect-fingerprint/src/lib.rs:83:9: replace Fingerprinter::observe with ()
-crates/deflect-fingerprint/src/counter.rs:46:41: replace > with == in TopValues<V>::observe
-crates/deflect-fingerprint/src/counter.rs:46:41: replace > with < in TopValues<V>::observe
-crates/deflect-fingerprint/src/counter.rs:51:9: replace TopValues<V>::total -> u64 with 0
-crates/deflect-fingerprint/src/counter.rs:46:41: replace > with >= in TopValues<V>::observe
-crates/deflect-fingerprint/src/counter.rs:51:9: replace TopValues<V>::total -> u64 with 1
-crates/deflect-fingerprint/src/counter.rs:57:9: replace TopValues<V>::leader -> Option<(V, u64)> with None
-crates/deflect-fingerprint/src/counter.rs:63:9: replace TopValues<V>::leader_share_pct -> u8 with 0
-crates/deflect-fingerprint/src/counter.rs:67:34: replace / with % in TopValues<V>::leader_share_pct
-crates/deflect-fingerprint/src/counter.rs:67:34: replace / with * in TopValues<V>::leader_share_pct
-crates/deflect-fingerprint/src/counter.rs:64:23: replace == with != in TopValues<V>::leader_share_pct
-crates/deflect-fingerprint/src/counter.rs:63:9: replace TopValues<V>::leader_share_pct -> u8 with 1
-crates/deflect-fingerprint/src/counter.rs:67:28: replace * with + in TopValues<V>::leader_share_pct
-crates/deflect-fingerprint/src/fingerprint.rs:30:9: replace Prefix::as_slice -> &[u8] with Vec::leak(Vec::new())
-crates/deflect-fingerprint/src/counter.rs:71:9: replace TopValues<V>::clear with ()
-crates/deflect-fingerprint/src/fingerprint.rs:30:9: replace Prefix::as_slice -> &[u8] with Vec::leak(vec![0])
-crates/deflect-fingerprint/src/counter.rs:67:28: replace * with / in TopValues<V>::leader_share_pct
-crates/deflect-fingerprint/src/fingerprint.rs:30:9: replace Prefix::as_slice -> &[u8] with Vec::leak(vec![1])
-crates/deflect-fingerprint/src/fingerprint.rs:35:9: replace Prefix::matches -> bool with true
-crates/deflect-fingerprint/src/fingerprint.rs:35:9: replace Prefix::matches -> bool with false
-crates/deflect-fingerprint/src/fingerprint.rs:58:9: replace Fingerprint::specificity -> u8 with 0
-crates/deflect-fingerprint/src/fingerprint.rs:62:13: replace + with - in Fingerprint::specificity
-crates/deflect-fingerprint/src/fingerprint.rs:61:13: replace + with - in Fingerprint::specificity
-crates/deflect-fingerprint/src/fingerprint.rs:62:13: replace + with * in Fingerprint::specificity
-crates/deflect-fingerprint/src/fingerprint.rs:58:9: replace Fingerprint::specificity -> u8 with 1
-crates/deflect-fingerprint/src/fingerprint.rs:61:13: replace + with * in Fingerprint::specificity
-crates/deflect-fingerprint/src/fingerprint.rs:60:13: replace + with - in Fingerprint::specificity
-crates/deflect-fingerprint/src/fingerprint.rs:60:13: replace + with * in Fingerprint::specificity
-crates/deflect-fingerprint/src/fingerprint.rs:59:13: replace + with * in Fingerprint::specificity
-crates/deflect-fingerprint/src/fingerprint.rs:67:9: replace Fingerprint::matches -> bool with true
-crates/deflect-fingerprint/src/fingerprint.rs:59:13: replace + with - in Fingerprint::specificity
-crates/deflect-fingerprint/src/fingerprint.rs:67:9: replace Fingerprint::matches -> bool with false
-crates/deflect-fingerprint/src/fingerprint.rs:68:19: replace != with == in Fingerprint::matches
-crates/deflect-fingerprint/src/fingerprint.rs:73:21: replace != with == in Fingerprint::matches
-crates/deflect-fingerprint/src/fingerprint.rs:88:16: delete ! in Fingerprint::matches
-crates/deflect-fingerprint/src/fingerprint.rs:83:22: replace != with == in Fingerprint::matches
-crates/deflect-fingerprint/src/fingerprint.rs:78:20: replace != with == in Fingerprint::matches
-crates/deflect-fingerprint/src/fingerprint.rs:98:9: replace <impl Stage for Fingerprint>::evaluate -> Verdict with Default::default()
-crates/deflect-fingerprint/src/fingerprint.rs:106:9: replace <impl Stage for Fingerprint>::name -> &'static str with ""
-crates/deflect-fingerprint/src/fingerprint.rs:106:9: replace <impl Stage for Fingerprint>::name -> &'static str with "xyzzy"
+crates/deflect-enforce/src/lib.rs:41:9: replace <impl core::fmt::Display for EnforceError>::fmt -> core::fmt::Result with Ok(Default::default())
+crates/deflect-enforce/src/lib.rs:128:9: replace <impl Enforcer for NullEnforcer>::unban -> Result<(), EnforceError> with Ok(())
+crates/deflect-enforce/src/lib.rs:136:9: replace <impl Enforcer for NullEnforcer>::banned_count -> usize with 0
+crates/deflect-enforce/src/lib.rs:136:9: replace <impl Enforcer for NullEnforcer>::banned_count -> usize with 1
+crates/deflect-enforce/src/lib.rs:171:9: replace <impl NftRunner for ShellNftRunner>::run -> Result<(), EnforceError> with Ok(())
+crates/deflect-enforce/src/lib.rs:120:9: replace <impl Enforcer for NullEnforcer>::ban -> Result<(), EnforceError> with Ok(())
+crates/deflect-enforce/src/lib.rs:238:9: replace NftEnforcer<R>::table -> &str with "xyzzy"
+crates/deflect-enforce/src/lib.rs:238:9: replace NftEnforcer<R>::table -> &str with ""
+crates/deflect-enforce/src/lib.rs:254:9: replace <impl Enforcer for NftEnforcer<R>>::unban -> Result<(), EnforceError> with Ok(())
+crates/deflect-enforce/src/lib.rs:264:9: replace <impl Enforcer for NftEnforcer<R>>::banned_count -> usize with 0
+crates/deflect-enforce/src/lib.rs:264:9: replace <impl Enforcer for NftEnforcer<R>>::banned_count -> usize with 1
+crates/deflect-enforce/src/nft.rs:7:5: replace set_name -> &'static str with ""
+crates/deflect-enforce/src/nft.rs:7:5: replace set_name -> &'static str with "xyzzy"
+crates/deflect-enforce/src/nft.rs:14:5: replace is_host -> bool with true
+crates/deflect-enforce/src/nft.rs:14:5: replace is_host -> bool with false
+crates/deflect-enforce/src/nft.rs:15:37: replace >= with < in is_host
+crates/deflect-enforce/src/lib.rs:83:9: replace Enforcer::ban_source -> Result<(), EnforceError> with Ok(())
+crates/deflect-enforce/src/lib.rs:106:9: replace NullEnforcer::snapshot -> Vec<(IpAddr, u8)> with vec![]
+crates/deflect-enforce/src/nft.rs:16:37: replace >= with < in is_host
+crates/deflect-enforce/src/nft.rs:23:5: replace element -> alloc::string::String with Default::default()
+crates/deflect-enforce/src/nft.rs:41:5: replace setup_script -> alloc::string::String with Default::default()
+crates/deflect-enforce/src/lib.rs:244:9: replace <impl Enforcer for NftEnforcer<R>>::ban -> Result<(), EnforceError> with Ok(())
+crates/deflect-enforce/src/nft.rs:62:5: replace ban_script -> alloc::string::String with Default::default()
+crates/deflect-enforce/src/nft.rs:77:5: replace unban_script -> alloc::string::String with Default::default()

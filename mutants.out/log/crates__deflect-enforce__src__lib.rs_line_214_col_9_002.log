@@ -1,0 +1,94 @@
+
+*** crates/deflect-enforce/src/lib.rs:214:9: replace NftEnforcer<ShellNftRunner>::system -> Result<NftEnforcer<ShellNftRunner>, EnforceError> with Ok(NftEnforcer::new(Default::default()))
+
+*** mutation diff:
+--- crates/deflect-enforce/src/lib.rs
++++ replace NftEnforcer<ShellNftRunner>::system -> Result<NftEnforcer<ShellNftRunner>, EnforceError> with Ok(NftEnforcer::new(Default::default()))
+@@ -206,17 +206,17 @@
+ 
+ impl NftEnforcer<ShellNftRunner> {
+     /// Build an enforcer against the system `nft`, running setup immediately.
+     ///
+     /// # Errors
+     /// Returns an [`EnforceError`] if the setup script could not be applied
+     /// (typically missing privileges or no nftables support).
+     pub fn system(table: impl Into<String>) -> Result<NftEnforcer<ShellNftRunner>, EnforceError> {
+-        NftEnforcer::with_runner(table, ShellNftRunner::system())
++        Ok(NftEnforcer::new(Default::default())) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl<R: NftRunner> NftEnforcer<R> {
+     /// Build an enforcer with a specific runner, applying the setup script.
+     ///
+     /// # Errors
+     /// Returns an [`EnforceError`] if the setup script could not be applied.
+
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=deflect-enforce@0.1.0
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh linux-raw-sys v0.12.1
+       Fresh bitflags v2.13.2
+       Fresh getrandom v0.4.3
+       Fresh autocfg v1.5.1
+       Fresh rustix v1.1.5
+       Fresh once_cell v1.21.4
+       Fresh fastrand v2.5.0
+       Fresh wait-timeout v0.2.1
+       Fresh fnv v1.0.7
+       Fresh tempfile v3.27.0
+       Fresh bit-vec v0.10.1
+       Fresh quick-error v1.2.3
+       Fresh cpufeatures v0.3.1
+       Fresh num-traits v0.2.19
+       Fresh bit-set v0.11.1
+       Fresh rusty-fork v0.3.1
+       Fresh chacha20 v0.10.2
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh unarray v0.1.4
+       Fresh regex-syntax v0.8.11
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/crates/deflect-core)
+       Fresh core_detect v1.0.0
+       Fresh proptest v1.12.0
+       Dirty deflect-enforce v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/crates/deflect-enforce): couldn't read metadata for file `target/debug/deps/libdeflect_enforce-e700cf97a215ebb6.rlib`
+   Compiling deflect-enforce v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/crates/deflect-enforce)
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_enforce --edition=2021 crates/deflect-enforce/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=8df2713e97b4a608 -C extra-filename=-e700cf97a215ebb6 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rmeta`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_enforce --edition=2021 crates/deflect-enforce/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=f810422218b64ae1 -C extra-filename=-ace409ae77a2d29a --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+error[E0599]: no associated function or constant named `new` found for struct `NftEnforcer<R>` in the current scope
+   --> crates/deflect-enforce/src/lib.rs:214:25
+    |
+201 | pub struct NftEnforcer<R: NftRunner> {
+    | ------------------------------------ associated function or constant `new` not found for this struct
+...
+214 |         Ok(NftEnforcer::new(Default::default())) /* ~ changed by cargo-mutants ~ */
+    |                         ^^^ associated function or constant not found in `NftEnforcer<_>`
+    |
+note: if you're trying to build a new `NftEnforcer<_>` consider using one of the following associated functions:
+      NftEnforcer::<ShellNftRunner>::system
+      NftEnforcer::<R>::with_runner
+   --> crates/deflect-enforce/src/lib.rs:213:5
+    |
+213 |       pub fn system(table: impl Into<String>) -> Result<NftEnforcer<ShellNftRunner>, EnforceError> {
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+223 | /     pub fn with_runner(
+224 | |         table: impl Into<String>,
+225 | |         runner: R,
+226 | |     ) -> Result<NftEnforcer<R>, EnforceError> {
+    | |_____________________________________________^
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `deflect-enforce` (lib test) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_enforce --edition=2021 crates/deflect-enforce/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=f810422218b64ae1 -C extra-filename=-ace409ae77a2d29a --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib` (exit status: 1)
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `deflect-enforce` (lib) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_enforce --edition=2021 crates/deflect-enforce/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=8df2713e97b4a608 -C extra-filename=-e700cf97a215ebb6 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-iJIULK.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rmeta` (exit status: 1)
+
+*** result: Failure(101)

@@ -1,0 +1,24 @@
+--- crates/deflect-enforce/src/lib.rs
++++ replace NullEnforcer::snapshot -> Vec<(IpAddr, u8)> with vec![(Default::default(), 0)]
+@@ -98,20 +98,17 @@
+     }
+ 
+     /// Snapshot of the currently recorded bans.
+     ///
+     /// # Panics
+     /// Panics only if the local mirror mutex was poisoned by a prior panic.
+     #[must_use]
+     pub fn snapshot(&self) -> Vec<(IpAddr, u8)> {
+-        let g = self.banned.lock().expect("mirror poisoned");
+-        let mut v: Vec<_> = g.iter().copied().collect();
+-        v.sort();
+-        v
++        vec![(Default::default(), 0)] /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl Enforcer for NullEnforcer {
+     fn ban(
+         &self,
+         addr: IpAddr,
+         prefix_len: u8,
