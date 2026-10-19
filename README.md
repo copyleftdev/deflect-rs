@@ -40,7 +40,7 @@ time-dependent primitive is driven deterministically in tests.
 | `deflect-fingerprint` | ✅ | Learning fingerprints of unknown attacks (bounded heavy-hitter counting) |
 | `deflect-enforce` | ✅ | Enforcement behind an `Enforcer` trait: nftables sets (XDP/netlink planned) |
 | `deflect-telemetry` | ◑ | NetFlow v5 / v9 / IPFIX ingestion (sFlow pending) |
-| `deflect-bgp` | ⏳ | Upstream RTBH / ExaBGP announcement |
+| `deflect-bgp` | ✅ | Upstream RTBH blackhole announcement over the ExaBGP text API |
 
 ## Design decisions worth knowing
 
@@ -100,12 +100,21 @@ time-dependent primitive is driven deterministically in tests.
   decoded so far, never a crash. The template-based formats (v9, IPFIX) keep a
   `TemplateRegistry` across datagrams, so data arriving before its template is
   skipped and decoded once the template is learned, exactly as the RFCs require.
+- **Blackholing is authorized and self-limiting by construction.** A
+  destination blackhole asks an upstream to discard *all* traffic to a prefix,
+  so `deflect-bgp` refuses the two mistakes that turn it into an outage or a
+  hijack: a `Scope` requires a destination prefix to fall within declared owned
+  space, and no blackhole may be broader than a per-family floor or the default
+  route. Every announcement carries `NO_EXPORT` (RFC 7999) so the discard cannot
+  leak into the global table, and every blackhole carries a deadline that
+  `sweep` lifts, so a forgotten one does not persist.
 
 ## Status
 
-Early. Nine crates are implemented and tested (117 tests default, 119 with
-`serde`; `clippy -W pedantic` clean; core primitives build `no_std`). The
-remaining crates are scaffolded as roadmap.
+Early. Ten crates are implemented and tested (148 tests default, 150 with
+`serde`; `clippy -W pedantic` clean; core primitives build `no_std`). The data,
+action, ingestion, and upstream-signalling planes are all present; sFlow
+ingestion (which needs a packet-header parser) is the remaining roadmap item.
 
 ## License
 

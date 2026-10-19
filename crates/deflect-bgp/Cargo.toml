@@ -1,0 +1,20 @@
+[package]
+name = "deflect-bgp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+description = "Upstream RTBH (remote-triggered blackhole) announcement for deflect-rs, driven over the ExaBGP text API."
+
+[dependencies]
+deflect-core = { workspace = true }
+
+[features]
+default = ["std"]
+std = ["deflect-core/std"]
+
+[lints.clippy]
+all = "warn"
+pedantic = "warn"
