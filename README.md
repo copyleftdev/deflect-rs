@@ -42,6 +42,32 @@ time-dependent primitive is driven deterministically in tests.
 | `deflect-telemetry` | ✅ | NetFlow v5 / v9 / IPFIX and sFlow v5 ingestion into unified flow records |
 | `deflect-packet` | ✅ | Bounds-checked Ethernet / IPv4 / IPv6 / TCP / UDP header parsing into a 5-tuple |
 | `deflect-bgp` | ✅ | Upstream RTBH blackhole announcement over the ExaBGP text API |
+| `deflect` | ✅ | Umbrella entry point: re-exports every primitive behind a feature flag, with a `prelude` and a composition example |
+
+## Using it
+
+Depend on the `deflect` umbrella and enable only the primitives you need — nothing
+else is compiled:
+
+```toml
+deflect = { version = "0.1", features = ["ratelimit", "detect", "signature"] }
+```
+
+Everything speaks one contract: a `Stage` turns an `Observation` into a `Verdict`,
+and a pipeline keeps the most severe. Composition is just folding verdicts.
+
+```rust
+use deflect::prelude::*;
+
+// `stages` holds any mix of primitives; each judges the observation independently.
+let verdict = stages
+    .iter()
+    .fold(Verdict::Pass, |worst, stage| worst.worst(stage.evaluate(&obs)));
+```
+
+Each primitive is equally usable on its own (`deflect-ratelimit = "0.1"`) if you
+prefer one crate per dependency. A full, runnable composition lives in
+`cargo run -p deflect --example pipeline --features full`.
 
 ## Design decisions worth knowing
 
@@ -133,6 +159,10 @@ Every crate is held to a hard quality bar:
   Where a mutation was genuinely equivalent (e.g. `a | b` where a shift makes it
   identical to `a ^ b`), the code was refactored to remove the ambiguity rather
   than suppress the report.
+- **Every public item is documented**, enforced by `#![deny(missing_docs)]` in each
+  crate, and every crate's documentation opens with a worked example that is run as a
+  **doctest** — so the first thing a reader sees is guaranteed to compile. `cargo doc`
+  is clean under `-D warnings`.
 - `clippy -W pedantic` clean; core primitives build `no_std`.
 
 The hardening pass also found and fixed a real defect: a crafted SYN-cookie ACK
@@ -141,11 +171,14 @@ subtraction (a remotely reachable panic in debug builds); it is now rejected.
 
 ## Status
 
-Early but well-tested. Eleven crates are implemented, with **322 tests** (324
-with `serde`) and zero mutation survivors across all of them. The data,
-detection, action, ingestion, and upstream-signalling planes are all present, and
-flow ingestion now covers NetFlow v5/v9, IPFIX, and sFlow v5 (the last built on a
-standalone, bounds-checked Ethernet/IP/L4 header parser, `deflect-packet`).
+Well-tested and consumable. Eleven mitigation primitives plus the `deflect` umbrella
+that re-exports them, with **336 tests** (unit, integration, and doctests) and zero
+mutation survivors across the primitives. The data, detection, action, ingestion, and
+upstream-signalling planes are all present; flow ingestion covers NetFlow v5/v9, IPFIX,
+and sFlow v5 (the last built on a standalone, bounds-checked Ethernet/IP/L4 header
+parser, `deflect-packet`). Every public item is documented and carries a tested example,
+and the crates are packaged for crates.io (publish in dependency order, `deflect-core`
+first).
 
 ## License
 
