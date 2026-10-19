@@ -11,6 +11,9 @@ description = "Traffic-rate monitoring and attack triggers with hysteresis for d
 [dependencies]
 deflect-core = { workspace = true }
 
+[dev-dependencies]
+proptest = "1.6.0"
+
 [features]
 default = ["std"]
 std = ["deflect-core/std"]

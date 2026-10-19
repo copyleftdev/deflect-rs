@@ -1,0 +1,21 @@
+--- crates/deflect-detect/src/window.rs
++++ replace / with % in SlidingWindow::record
+@@ -54,17 +54,17 @@
+                 self.epochs[idx] = s;
+             }
+         }
+         self.last_slot = abs_slot;
+     }
+ 
+     /// Add `amount` at time `now_nanos`.
+     pub fn record(&mut self, amount: u64, now_nanos: u64) {
+-        let abs_slot = now_nanos / self.slot_nanos;
++        let abs_slot = now_nanos % /* ~ changed by cargo-mutants ~ */ self.slot_nanos;
+         self.expire_to(abs_slot);
+         let idx = self.slot_index(abs_slot);
+         self.buckets[idx] = self.buckets[idx].saturating_add(amount);
+     }
+ 
+     /// Total amount recorded within the trailing window ending at `now_nanos`.
+     pub fn sum(&mut self, now_nanos: u64) -> u64 {
+         let abs_slot = now_nanos / self.slot_nanos;

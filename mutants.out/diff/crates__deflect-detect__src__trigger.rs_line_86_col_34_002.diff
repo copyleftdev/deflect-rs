@@ -1,0 +1,21 @@
+--- crates/deflect-detect/src/trigger.rs
++++ replace < with <= in Trigger::reassess
+@@ -78,17 +78,17 @@
+             Phase::Calm => {
+                 if self.last_pps >= self.marks.pps_high || self.last_bps >= self.marks.bps_high {
+                     Phase::Mitigating
+                 } else {
+                     Phase::Calm
+                 }
+             }
+             Phase::Mitigating => {
+-                if self.last_pps < self.marks.pps_low && self.last_bps < self.marks.bps_low {
++                if self.last_pps <= /* ~ changed by cargo-mutants ~ */ self.marks.pps_low && self.last_bps < self.marks.bps_low {
+                     Phase::Calm
+                 } else {
+                     Phase::Mitigating
+                 }
+             }
+         };
+         self.phase
+     }

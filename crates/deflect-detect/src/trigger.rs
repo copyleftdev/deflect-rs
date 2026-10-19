@@ -160,6 +160,66 @@ mod tests {
     }
 
     #[test]
+    fn from_high_scales_low_marks_by_fraction() {
+        // low_frac 128/256 = one half.
+        let m = Watermarks::from_high(1000, 2_000_000, 128);
+        assert_eq!(m.pps_high, 1000);
+        assert_eq!(m.bps_high, 2_000_000);
+        assert_eq!(m.pps_low, 500);
+        assert_eq!(m.bps_low, 1_000_000);
+    }
+
+    #[test]
+    fn stays_mitigating_when_pps_sits_exactly_on_the_low_mark() {
+        // A 1-second window makes the measured rate equal the in-window count.
+        // Fill one slot that will age out and one that survives, so a single
+        // reassess a window later sees a rate of exactly the low mark with no
+        // intermediate dip below it. bps is parked out of the way.
+        let m = Watermarks {
+            pps_high: 500,
+            pps_low: 200,
+            bps_high: u64::MAX,
+            bps_low: u64::MAX,
+        };
+        let mut t = Trigger::new(1_000_000_000, 10, m);
+        for _ in 0..300 {
+            t.observe(1, 0); // ages out after one window
+        }
+        for _ in 0..200 {
+            t.observe(1, 900_000_000); // survives; total 500 here => engages
+        }
+        assert_eq!(t.phase(), Phase::Mitigating);
+        // One window on, only the 200 survivors remain: pps == pps_low exactly.
+        assert_eq!(t.reassess(1_000_000_000), Phase::Mitigating);
+        assert_eq!(t.last_pps(), 200);
+        assert_eq!(t.last_bps(), 200);
+    }
+
+    #[test]
+    fn stays_mitigating_when_bps_on_low_mark_and_pps_below() {
+        // pps below its low AND bps exactly on its low: with `&&` the phase
+        // holds (only one condition met); `||` or a `<=` on bps would disengage.
+        let m = Watermarks {
+            pps_high: 500,
+            pps_low: 300,
+            bps_high: 10_000,
+            bps_low: 200,
+        };
+        let mut t = Trigger::new(1_000_000_000, 10, m);
+        for _ in 0..200 {
+            t.observe(100, 0); // 20_000 bytes at t=0 => engages via bytes, ages out
+        }
+        for _ in 0..2 {
+            t.observe(100, 900_000_000); // 2 packets / 200 bytes survive
+        }
+        assert_eq!(t.phase(), Phase::Mitigating);
+        // One window on: pps 2 (< 300) and bps 200 (== low) exactly.
+        assert_eq!(t.reassess(1_000_000_000), Phase::Mitigating);
+        assert_eq!(t.last_pps(), 2);
+        assert_eq!(t.last_bps(), 200);
+    }
+
+    #[test]
     fn bandwidth_alone_can_engage() {
         let m = Watermarks {
             pps_high: u64::MAX,

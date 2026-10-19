@@ -1,0 +1,30 @@
+--- crates/deflect-detect/src/window.rs
++++ replace SlidingWindow::expire_to with ()
+@@ -40,26 +40,17 @@
+     fn slot_index(&self, abs_slot: u64) -> usize {
+         let len = self.buckets.len() as u64;
+         usize::try_from(abs_slot % len).expect("modulo bucket count fits usize")
+     }
+ 
+     /// Expire buckets whose absolute slot is more than one window behind
+     /// `abs_slot`, so stale counts do not survive an idle gap.
+     fn expire_to(&mut self, abs_slot: u64) {
+-        let span = self.buckets.len() as u64;
+-        let first_live = abs_slot.saturating_sub(span - 1);
+-        for s in first_live..=abs_slot {
+-            let idx = self.slot_index(s);
+-            if self.epochs[idx] != s {
+-                self.buckets[idx] = 0;
+-                self.epochs[idx] = s;
+-            }
+-        }
+-        self.last_slot = abs_slot;
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Add `amount` at time `now_nanos`.
+     pub fn record(&mut self, amount: u64, now_nanos: u64) {
+         let abs_slot = now_nanos / self.slot_nanos;
+         self.expire_to(abs_slot);
+         let idx = self.slot_index(abs_slot);
+         self.buckets[idx] = self.buckets[idx].saturating_add(amount);

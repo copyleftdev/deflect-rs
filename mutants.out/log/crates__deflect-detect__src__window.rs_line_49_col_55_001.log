@@ -1,0 +1,137 @@
+
+*** crates/deflect-detect/src/window.rs:49:55: replace - with / in SlidingWindow::expire_to
+
+*** mutation diff:
+--- crates/deflect-detect/src/window.rs
++++ replace - with / in SlidingWindow::expire_to
+@@ -41,17 +41,17 @@
+         let len = self.buckets.len() as u64;
+         usize::try_from(abs_slot % len).expect("modulo bucket count fits usize")
+     }
+ 
+     /// Expire buckets whose absolute slot is more than one window behind
+     /// `abs_slot`, so stale counts do not survive an idle gap.
+     fn expire_to(&mut self, abs_slot: u64) {
+         let span = self.buckets.len() as u64;
+-        let first_live = abs_slot.saturating_sub(span - 1);
++        let first_live = abs_slot.saturating_sub(span / /* ~ changed by cargo-mutants ~ */ 1);
+         for s in first_live..=abs_slot {
+             let idx = self.slot_index(s);
+             if self.epochs[idx] != s {
+                 self.buckets[idx] = 0;
+                 self.epochs[idx] = s;
+             }
+         }
+         self.last_slot = abs_slot;
+
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=deflect-detect@0.1.0
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh getrandom v0.4.3
+       Fresh bitflags v2.13.2
+       Fresh linux-raw-sys v0.12.1
+       Fresh autocfg v1.5.1
+       Fresh rustix v1.1.5
+       Fresh once_cell v1.21.4
+       Fresh fastrand v2.5.0
+       Fresh tempfile v3.27.0
+       Fresh wait-timeout v0.2.1
+       Fresh cpufeatures v0.3.1
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+       Fresh bit-vec v0.10.1
+       Fresh bit-set v0.11.1
+       Fresh rusty-fork v0.3.1
+       Fresh chacha20 v0.10.2
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh unarray v0.1.4
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/crates/deflect-core)
+       Fresh regex-syntax v0.8.11
+       Fresh core_detect v1.0.0
+       Fresh proptest v1.12.0
+       Dirty deflect-detect v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/crates/deflect-detect): the file `crates/deflect-detect/src/trigger.rs` has changed (1792415740.407109881s, 29s after last build at 1792415711.074563185s)
+   Compiling deflect-detect v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/crates/deflect-detect)
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_detect --edition=2021 crates/deflect-detect/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=9ee457d97a30f2d7 -C extra-filename=-c44de3515497e87b --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_detect --edition=2021 crates/deflect-detect/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=a31d91a405afa6d1 -C extra-filename=-f3f6f45338b6b446 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rmeta`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name properties --edition=2021 crates/deflect-detect/tests/properties.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=1811eaace3aa059f -C extra-filename=-956649312b5e1bea --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern deflect_detect=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/target/debug/deps/libdeflect_detect-f3f6f45338b6b446.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.41s
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/target/debug/deps/deflect_detect-c44de3515497e87b`
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/target/debug/deps/properties-956649312b5e1bea`
+
+*** result: Success
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=deflect-detect@0.1.0
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh autocfg v1.5.1
+       Fresh linux-raw-sys v0.12.1
+       Fresh bitflags v2.13.2
+       Fresh getrandom v0.4.3
+       Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
+       Fresh rustix v1.1.5
+       Fresh wait-timeout v0.2.1
+       Fresh bit-vec v0.10.1
+       Fresh quick-error v1.2.3
+       Fresh tempfile v3.27.0
+       Fresh cpufeatures v0.3.1
+       Fresh fnv v1.0.7
+       Fresh num-traits v0.2.19
+       Fresh bit-set v0.11.1
+       Fresh rusty-fork v0.3.1
+       Fresh chacha20 v0.10.2
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh regex-syntax v0.8.11
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/crates/deflect-core)
+       Fresh core_detect v1.0.0
+       Fresh unarray v0.1.4
+       Fresh proptest v1.12.0
+       Fresh deflect-detect v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/crates/deflect-detect)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.26s
+     Running `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-q4fRrc.tmp/target/debug/deps/deflect_detect-c44de3515497e87b`
+
+running 11 tests
+test trigger::tests::bandwidth_alone_can_engage ... ok
+test trigger::tests::does_not_flap_at_a_single_threshold ... ok
+test trigger::tests::engages_when_high_crossed ... ok
+test trigger::tests::from_high_scales_low_marks_by_fraction ... ok
+test trigger::tests::hysteresis_holds_between_watermarks ... ok
+test trigger::tests::stays_mitigating_when_bps_on_low_mark_and_pps_below ... ok
+test trigger::tests::stays_mitigating_when_pps_sits_exactly_on_the_low_mark ... ok
+test window::tests::expires_old_counts ... ok
+test window::tests::idle_gap_does_not_leave_stale_counts ... FAILED
+test window::tests::rate_matches_steady_input ... ok
+test window::tests::sums_within_window ... ok
+
+failures:
+
+---- window::tests::idle_gap_does_not_leave_stale_counts stdout ----
+
+thread 'window::tests::idle_gap_does_not_leave_stale_counts' (3727206) panicked at crates/deflect-detect/src/window.rs:123:9:
+assertion `left == right` failed
+  left: 0
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    window::tests::idle_gap_does_not_leave_stale_counts
+
+test result: FAILED. 10 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p deflect-detect --lib`
+
+*** result: Failure(101)

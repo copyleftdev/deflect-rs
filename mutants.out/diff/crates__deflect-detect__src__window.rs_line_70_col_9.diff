@@ -1,0 +1,23 @@
+--- crates/deflect-detect/src/window.rs
++++ replace SlidingWindow::sum -> u64 with 0
+@@ -62,19 +62,17 @@
+         let abs_slot = now_nanos / self.slot_nanos;
+         self.expire_to(abs_slot);
+         let idx = self.slot_index(abs_slot);
+         self.buckets[idx] = self.buckets[idx].saturating_add(amount);
+     }
+ 
+     /// Total amount recorded within the trailing window ending at `now_nanos`.
+     pub fn sum(&mut self, now_nanos: u64) -> u64 {
+-        let abs_slot = now_nanos / self.slot_nanos;
+-        self.expire_to(abs_slot);
+-        self.buckets.iter().sum()
++        0 /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Rate in amount-per-second over the trailing window.
+     pub fn rate_per_sec(&mut self, now_nanos: u64) -> u64 {
+         let total = u128::from(self.sum(now_nanos));
+         u64::try_from(total * NANOS_PER_SEC / self.window_nanos).unwrap_or(u64::MAX)
+     }
+ }

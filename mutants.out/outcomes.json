@@ -8,25 +8,25 @@
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 7.136096646,
+          "duration": 8.137382403,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
+            "--package=deflect-detect@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.303361062,
+          "duration": 0.302004167,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
+            "--package=deflect-detect@0.1.0"
           ]
         }
       ]
@@ -34,355 +34,30 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:31:9: replace Spend::is_allowed -> bool with true",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
+          "name": "crates/deflect-detect/src/trigger.rs:27:9: replace Watermarks::from_high -> Watermarks with Default::default()",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
           "function": {
-            "function_name": "Spend::is_allowed",
-            "return_type": "-> bool",
+            "function_name": "Watermarks::from_high",
+            "return_type": "-> Watermarks",
             "span": {
               "start": {
-                "line": 29,
+                "line": 24,
                 "column": 5
               },
               "end": {
-                "line": 32,
+                "line": 35,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 31,
+              "line": 27,
               "column": 9
             },
             "end": {
-              "line": 31,
-              "column": 39
-            }
-          },
-          "replacement": "true",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_31_col_9.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_31_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.527579406,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.702034983,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:57:51: replace * with + in TokenBucket::refill",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
-          "function": {
-            "function_name": "TokenBucket::refill",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 52,
-                "column": 5
-              },
-              "end": {
-                "line": 60,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 57,
-              "column": 51
-            },
-            "end": {
-              "line": 57,
-              "column": 52
-            }
-          },
-          "replacement": "+",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_57_col_51.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_57_col_51.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.899865438,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.407360113,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:57:51: replace * with / in TokenBucket::refill",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
-          "function": {
-            "function_name": "TokenBucket::refill",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 52,
-                "column": 5
-              },
-              "end": {
-                "line": 60,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 57,
-              "column": 51
-            },
-            "end": {
-              "line": 57,
-              "column": 52
-            }
-          },
-          "replacement": "/",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_57_col_51_001.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_57_col_51_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.390584165,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.649751009,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:58:48: replace + with - in TokenBucket::refill",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
-          "function": {
-            "function_name": "TokenBucket::refill",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 52,
-                "column": 5
-              },
-              "end": {
-                "line": 60,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 58,
-              "column": 48
-            },
-            "end": {
-              "line": 58,
-              "column": 49
-            }
-          },
-          "replacement": "-",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_58_col_48.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_58_col_48.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 6.050643443,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.499394062,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:58:48: replace + with * in TokenBucket::refill",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
-          "function": {
-            "function_name": "TokenBucket::refill",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 52,
-                "column": 5
-              },
-              "end": {
-                "line": 60,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 58,
-              "column": 48
-            },
-            "end": {
-              "line": 58,
-              "column": 49
-            }
-          },
-          "replacement": "*",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_58_col_48_001.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_58_col_48_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.298948131,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.552211714,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:64:9: replace TokenBucket::try_spend -> Spend with Default::default()",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
-          "function": {
-            "function_name": "TokenBucket::try_spend",
-            "return_type": "-> Spend",
-            "span": {
-              "start": {
-                "line": 62,
-                "column": 5
-              },
-              "end": {
-                "line": 81,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 64,
-              "column": 9
-            },
-            "end": {
-              "line": 80,
+              "line": 34,
               "column": 10
             }
           },
@@ -391,12 +66,12 @@
         }
       },
       "summary": "Unviable",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_64_col_9.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_64_col_9.diff",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_27_col_9.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_27_col_9.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 0.989947096,
+          "duration": 0.302230234,
           "process_status": {
             "Failure": 101
           },
@@ -405,7 +80,7 @@
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
+            "--package=deflect-detect@0.1.0"
           ]
         }
       ]
@@ -413,56 +88,110 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:65:43: replace * with + in TokenBucket::try_spend",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
+          "name": "crates/deflect-detect/src/trigger.rs:75:9: replace Trigger::reassess -> Phase with Default::default()",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
           "function": {
-            "function_name": "TokenBucket::try_spend",
-            "return_type": "-> Spend",
+            "function_name": "Trigger::reassess",
+            "return_type": "-> Phase",
             "span": {
               "start": {
-                "line": 62,
+                "line": 72,
                 "column": 5
               },
               "end": {
-                "line": 81,
+                "line": 94,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 65,
-              "column": 43
+              "line": 75,
+              "column": 9
             },
             "end": {
-              "line": 65,
-              "column": 44
+              "line": 93,
+              "column": 19
             }
           },
-          "replacement": "+",
+          "replacement": "Default::default()",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "Unviable",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_75_col_9.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_75_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.571098268,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/trigger.rs:79:57: replace || with && in Trigger::reassess",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
+          "function": {
+            "function_name": "Trigger::reassess",
+            "return_type": "-> Phase",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 94,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 79,
+              "column": 57
+            },
+            "end": {
+              "line": 79,
+              "column": 59
+            }
+          },
+          "replacement": "&&",
           "genre": "BinaryOperator"
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_65_col_43.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_65_col_43.diff",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_79_col_57.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_79_col_57.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 4.550324826,
+          "duration": 4.700770457,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
+            "--package=deflect-detect@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.445969588,
+          "duration": 0.498820793,
           "process_status": {
             "Failure": 101
           },
@@ -470,7 +199,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
+            "--package=deflect-detect@0.1.0"
           ]
         }
       ]
@@ -478,96 +207,31 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:65:43: replace * with / in TokenBucket::try_spend",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
+          "name": "crates/deflect-detect/src/trigger.rs:79:34: replace >= with < in Trigger::reassess",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
           "function": {
-            "function_name": "TokenBucket::try_spend",
-            "return_type": "-> Spend",
+            "function_name": "Trigger::reassess",
+            "return_type": "-> Phase",
             "span": {
               "start": {
-                "line": 62,
+                "line": 72,
                 "column": 5
               },
               "end": {
-                "line": 81,
+                "line": 94,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 65,
-              "column": 43
+              "line": 79,
+              "column": 34
             },
             "end": {
-              "line": 65,
-              "column": 44
-            }
-          },
-          "replacement": "/",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_65_col_43_001.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_65_col_43_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.693884023,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.550421534,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:66:30: replace >= with < in TokenBucket::try_spend",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
-          "function": {
-            "function_name": "TokenBucket::try_spend",
-            "return_type": "-> Spend",
-            "span": {
-              "start": {
-                "line": 62,
-                "column": 5
-              },
-              "end": {
-                "line": 81,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 66,
-              "column": 30
-            },
-            "end": {
-              "line": 66,
-              "column": 32
+              "line": 79,
+              "column": 36
             }
           },
           "replacement": "<",
@@ -575,24 +239,24 @@
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_66_col_30.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_66_col_30.diff",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_79_col_34.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_79_col_34.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 2.451646428,
+          "duration": 4.892883464,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
+            "--package=deflect-detect@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.154567497,
+          "duration": 0.554395838,
           "process_status": {
             "Failure": 101
           },
@@ -600,7 +264,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
+            "--package=deflect-detect@0.1.0"
           ]
         }
       ]
@@ -608,19 +272,149 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:67:31: replace -= with += in TokenBucket::try_spend",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
+          "name": "crates/deflect-detect/src/trigger.rs:79:74: replace >= with < in Trigger::reassess",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
           "function": {
-            "function_name": "TokenBucket::try_spend",
-            "return_type": "-> Spend",
+            "function_name": "Trigger::reassess",
+            "return_type": "-> Phase",
             "span": {
               "start": {
-                "line": 62,
+                "line": 72,
                 "column": 5
               },
               "end": {
-                "line": 81,
+                "line": 94,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 79,
+              "column": 74
+            },
+            "end": {
+              "line": 79,
+              "column": 76
+            }
+          },
+          "replacement": "<",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_79_col_74.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_79_col_74.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 4.646176964,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.549262325,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/trigger.rs:86:55: replace && with || in Trigger::reassess",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
+          "function": {
+            "function_name": "Trigger::reassess",
+            "return_type": "-> Phase",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 94,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 86,
+              "column": 55
+            },
+            "end": {
+              "line": 86,
+              "column": 57
+            }
+          },
+          "replacement": "||",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_86_col_55.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_86_col_55.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 5.147607653,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.847949721,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/trigger.rs:67:9: replace Trigger::observe -> Phase with Default::default()",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
+          "function": {
+            "function_name": "Trigger::observe",
+            "return_type": "-> Phase",
+            "span": {
+              "start": {
+                "line": 64,
+                "column": 5
+              },
+              "end": {
+                "line": 70,
                 "column": 6
               }
             }
@@ -628,986 +422,11 @@
           "span": {
             "start": {
               "line": 67,
-              "column": 31
+              "column": 9
             },
             "end": {
-              "line": 67,
+              "line": 69,
               "column": 33
-            }
-          },
-          "replacement": "+=",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_67_col_31.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_67_col_31.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.239991456,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.354213589,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:67:31: replace -= with /= in TokenBucket::try_spend",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
-          "function": {
-            "function_name": "TokenBucket::try_spend",
-            "return_type": "-> Spend",
-            "span": {
-              "start": {
-                "line": 62,
-                "column": 5
-              },
-              "end": {
-                "line": 81,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 67,
-              "column": 31
-            },
-            "end": {
-              "line": 67,
-              "column": 33
-            }
-          },
-          "replacement": "/=",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_67_col_31_001.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_67_col_31_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 1.8436608909999999,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.699721276,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:31:9: replace Spend::is_allowed -> bool with false",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
-          "function": {
-            "function_name": "Spend::is_allowed",
-            "return_type": "-> bool",
-            "span": {
-              "start": {
-                "line": 29,
-                "column": 5
-              },
-              "end": {
-                "line": 32,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 31,
-              "column": 9
-            },
-            "end": {
-              "line": 31,
-              "column": 39
-            }
-          },
-          "replacement": "false",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_31_col_9_001.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_31_col_9_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 46.017372047,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.305154092,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:70:34: replace - with + in TokenBucket::try_spend",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
-          "function": {
-            "function_name": "TokenBucket::try_spend",
-            "return_type": "-> Spend",
-            "span": {
-              "start": {
-                "line": 62,
-                "column": 5
-              },
-              "end": {
-                "line": 81,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 70,
-              "column": 34
-            },
-            "end": {
-              "line": 70,
-              "column": 35
-            }
-          },
-          "replacement": "+",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_70_col_34.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_70_col_34.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.551944763,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.406599517,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:70:34: replace - with / in TokenBucket::try_spend",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
-          "function": {
-            "function_name": "TokenBucket::try_spend",
-            "return_type": "-> Spend",
-            "span": {
-              "start": {
-                "line": 62,
-                "column": 5
-              },
-              "end": {
-                "line": 81,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 70,
-              "column": 34
-            },
-            "end": {
-              "line": 70,
-              "column": 35
-            }
-          },
-          "replacement": "/",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_70_col_34_001.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_70_col_34_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.39931714,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.305219374,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:71:42: replace == with != in TokenBucket::try_spend",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
-          "function": {
-            "function_name": "TokenBucket::try_spend",
-            "return_type": "-> Spend",
-            "span": {
-              "start": {
-                "line": 62,
-                "column": 5
-              },
-              "end": {
-                "line": 81,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 71,
-              "column": 42
-            },
-            "end": {
-              "line": 71,
-              "column": 44
-            }
-          },
-          "replacement": "!=",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_71_col_42.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_71_col_42.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.246724849,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.254224093,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:85:9: replace TokenBucket::available -> u64 with 0",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
-          "function": {
-            "function_name": "TokenBucket::available",
-            "return_type": "-> u64",
-            "span": {
-              "start": {
-                "line": 83,
-                "column": 5
-              },
-              "end": {
-                "line": 87,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 85,
-              "column": 9
-            },
-            "end": {
-              "line": 86,
-              "column": 77
-            }
-          },
-          "replacement": "0",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_85_col_9.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_85_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.391688756,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.596852283,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:85:9: replace TokenBucket::available -> u64 with 1",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
-          "function": {
-            "function_name": "TokenBucket::available",
-            "return_type": "-> u64",
-            "span": {
-              "start": {
-                "line": 83,
-                "column": 5
-              },
-              "end": {
-                "line": 87,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 85,
-              "column": 9
-            },
-            "end": {
-              "line": 86,
-              "column": 77
-            }
-          },
-          "replacement": "1",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_85_col_9_001.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_85_col_9_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.149145729,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.345393273,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:53:9: replace TokenBucket::refill with ()",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
-          "function": {
-            "function_name": "TokenBucket::refill",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 52,
-                "column": 5
-              },
-              "end": {
-                "line": 60,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 53,
-              "column": 9
-            },
-            "end": {
-              "line": 59,
-              "column": 37
-            }
-          },
-          "replacement": "()",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_53_col_9.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_53_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 54.017331878,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.60721025,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:86:41: replace / with % in TokenBucket::available",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
-          "function": {
-            "function_name": "TokenBucket::available",
-            "return_type": "-> u64",
-            "span": {
-              "start": {
-                "line": 83,
-                "column": 5
-              },
-              "end": {
-                "line": 87,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 86,
-              "column": 41
-            },
-            "end": {
-              "line": 86,
-              "column": 42
-            }
-          },
-          "replacement": "%",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_86_col_41.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_86_col_41.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.346271934,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.405457369,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:86:41: replace / with * in TokenBucket::available",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
-          "function": {
-            "function_name": "TokenBucket::available",
-            "return_type": "-> u64",
-            "span": {
-              "start": {
-                "line": 83,
-                "column": 5
-              },
-              "end": {
-                "line": 87,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 86,
-              "column": 41
-            },
-            "end": {
-              "line": 86,
-              "column": 42
-            }
-          },
-          "replacement": "*",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_86_col_41_001.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_86_col_41_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.996881577,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.546934628,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/governor.rs:67:9: replace SourceGovernor::slot_for -> usize with 0",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/governor.rs",
-          "function": {
-            "function_name": "SourceGovernor::slot_for",
-            "return_type": "-> usize",
-            "span": {
-              "start": {
-                "line": 66,
-                "column": 5
-              },
-              "end": {
-                "line": 68,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 67,
-              "column": 9
-            },
-            "end": {
-              "line": 67,
-              "column": 87
-            }
-          },
-          "replacement": "0",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__governor.rs_line_67_col_9.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__governor.rs_line_67_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.550180125,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.496316388,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/governor.rs:67:9: replace SourceGovernor::slot_for -> usize with 1",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/governor.rs",
-          "function": {
-            "function_name": "SourceGovernor::slot_for",
-            "return_type": "-> usize",
-            "span": {
-              "start": {
-                "line": 66,
-                "column": 5
-              },
-              "end": {
-                "line": 68,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 67,
-              "column": 9
-            },
-            "end": {
-              "line": 67,
-              "column": 87
-            }
-          },
-          "replacement": "1",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__governor.rs_line_67_col_9_001.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__governor.rs_line_67_col_9_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 2.947653955,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.5991512,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/governor.rs:67:36: replace & with | in SourceGovernor::slot_for",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/governor.rs",
-          "function": {
-            "function_name": "SourceGovernor::slot_for",
-            "return_type": "-> usize",
-            "span": {
-              "start": {
-                "line": 66,
-                "column": 5
-              },
-              "end": {
-                "line": 68,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 67,
-              "column": 36
-            },
-            "end": {
-              "line": 67,
-              "column": 37
-            }
-          },
-          "replacement": "|",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__governor.rs_line_67_col_36.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__governor.rs_line_67_col_36.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.496715814,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.650234314,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/governor.rs:67:36: replace & with ^ in SourceGovernor::slot_for",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/governor.rs",
-          "function": {
-            "function_name": "SourceGovernor::slot_for",
-            "return_type": "-> usize",
-            "span": {
-              "start": {
-                "line": 66,
-                "column": 5
-              },
-              "end": {
-                "line": 68,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 67,
-              "column": 36
-            },
-            "end": {
-              "line": 67,
-              "column": 37
-            }
-          },
-          "replacement": "^",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__governor.rs_line_67_col_36_001.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__governor.rs_line_67_col_36_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.348623772,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.609075963,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/governor.rs:83:9: replace SourceGovernor::charge -> Spend with Default::default()",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/governor.rs",
-          "function": {
-            "function_name": "SourceGovernor::charge",
-            "return_type": "-> Spend",
-            "span": {
-              "start": {
-                "line": 77,
-                "column": 5
-              },
-              "end": {
-                "line": 86,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 83,
-              "column": 9
-            },
-            "end": {
-              "line": 85,
-              "column": 42
             }
           },
           "replacement": "Default::default()",
@@ -1615,12 +434,12 @@
         }
       },
       "summary": "Unviable",
-      "log_path": "log/crates__deflect-ratelimit__src__governor.rs_line_83_col_9.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__governor.rs_line_83_col_9.diff",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_67_col_9.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_67_col_9.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 2.649908571,
+          "duration": 25.964585803,
           "process_status": {
             "Failure": 101
           },
@@ -1629,7 +448,7 @@
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
+            "--package=deflect-detect@0.1.0"
           ]
         }
       ]
@@ -1637,186 +456,56 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-ratelimit/src/governor.rs:71:9: replace SourceGovernor::cost_of -> u64 with 0",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/governor.rs",
+          "name": "crates/deflect-detect/src/trigger.rs:86:34: replace < with == in Trigger::reassess",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
           "function": {
-            "function_name": "SourceGovernor::cost_of",
-            "return_type": "-> u64",
+            "function_name": "Trigger::reassess",
+            "return_type": "-> Phase",
             "span": {
               "start": {
-                "line": 70,
+                "line": 72,
                 "column": 5
               },
               "end": {
-                "line": 75,
+                "line": 94,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 71,
-              "column": 9
+              "line": 86,
+              "column": 34
             },
             "end": {
-              "line": 74,
-              "column": 10
+              "line": 86,
+              "column": 35
             }
           },
-          "replacement": "0",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__governor.rs_line_71_col_9.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__governor.rs_line_71_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.5025529429999995,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.546971118,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/governor.rs:71:9: replace SourceGovernor::cost_of -> u64 with 1",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/governor.rs",
-          "function": {
-            "function_name": "SourceGovernor::cost_of",
-            "return_type": "-> u64",
-            "span": {
-              "start": {
-                "line": 70,
-                "column": 5
-              },
-              "end": {
-                "line": 75,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 71,
-              "column": 9
-            },
-            "end": {
-              "line": 74,
-              "column": 10
-            }
-          },
-          "replacement": "1",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__governor.rs_line_71_col_9_001.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__governor.rs_line_71_col_9_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.949443573,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.699644913,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:56:44: replace - with / in TokenBucket::refill",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
-          "function": {
-            "function_name": "TokenBucket::refill",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 52,
-                "column": 5
-              },
-              "end": {
-                "line": 60,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 56,
-              "column": 44
-            },
-            "end": {
-              "line": 56,
-              "column": 45
-            }
-          },
-          "replacement": "/",
+          "replacement": "==",
           "genre": "BinaryOperator"
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_56_col_44_001.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_56_col_44_001.diff",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_86_col_34.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_86_col_34.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 67.260231061,
+          "duration": 3.746736675,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
+            "--package=deflect-detect@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.450117408,
+          "duration": 0.450033775,
           "process_status": {
             "Failure": 101
           },
@@ -1824,7 +513,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
+            "--package=deflect-detect@0.1.0"
           ]
         }
       ]
@@ -1832,31 +521,161 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:53:22: replace <= with > in TokenBucket::refill",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
+          "name": "crates/deflect-detect/src/trigger.rs:86:34: replace < with <= in Trigger::reassess",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
           "function": {
-            "function_name": "TokenBucket::refill",
-            "return_type": "",
+            "function_name": "Trigger::reassess",
+            "return_type": "-> Phase",
             "span": {
               "start": {
-                "line": 52,
+                "line": 72,
                 "column": 5
               },
               "end": {
-                "line": 60,
+                "line": 94,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 53,
-              "column": 22
+              "line": 86,
+              "column": 34
             },
             "end": {
-              "line": 53,
-              "column": 24
+              "line": 86,
+              "column": 35
+            }
+          },
+          "replacement": "<=",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_86_col_34_002.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_86_col_34_002.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 4.843102794,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.701314078,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/trigger.rs:86:72: replace < with == in Trigger::reassess",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
+          "function": {
+            "function_name": "Trigger::reassess",
+            "return_type": "-> Phase",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 94,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 86,
+              "column": 72
+            },
+            "end": {
+              "line": 86,
+              "column": 73
+            }
+          },
+          "replacement": "==",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_86_col_72.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_86_col_72.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 2.7474720379999997,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.154208435,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/trigger.rs:86:72: replace < with > in Trigger::reassess",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
+          "function": {
+            "function_name": "Trigger::reassess",
+            "return_type": "-> Phase",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 94,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 86,
+              "column": 72
+            },
+            "end": {
+              "line": 86,
+              "column": 73
             }
           },
           "replacement": ">",
@@ -1864,24 +683,24 @@
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_53_col_22.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_53_col_22.diff",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_86_col_72_001.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_86_col_72_001.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 67.367072767,
+          "duration": 1.004221755,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
+            "--package=deflect-detect@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.549251535,
+          "duration": 0.102532202,
           "process_status": {
             "Failure": 101
           },
@@ -1889,7 +708,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
+            "--package=deflect-detect@0.1.0"
           ]
         }
       ]
@@ -1897,15 +716,80 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-ratelimit/src/governor.rs:91:9: replace <impl Stage for SourceGovernor>::evaluate -> Verdict with Default::default()",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/governor.rs",
+          "name": "crates/deflect-detect/src/trigger.rs:86:72: replace < with <= in Trigger::reassess",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
           "function": {
-            "function_name": "<impl Stage for SourceGovernor>::evaluate",
-            "return_type": "-> Verdict",
+            "function_name": "Trigger::reassess",
+            "return_type": "-> Phase",
             "span": {
               "start": {
-                "line": 90,
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 94,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 86,
+              "column": 72
+            },
+            "end": {
+              "line": 86,
+              "column": 73
+            }
+          },
+          "replacement": "<=",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_86_col_72_002.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_86_col_72_002.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 1.736555115,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.304698737,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/trigger.rs:98:9: replace Trigger::phase -> Phase with Default::default()",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
+          "function": {
+            "function_name": "Trigger::phase",
+            "return_type": "-> Phase",
+            "span": {
+              "start": {
+                "line": 96,
                 "column": 5
               },
               "end": {
@@ -1916,45 +800,34 @@
           },
           "span": {
             "start": {
-              "line": 91,
+              "line": 98,
               "column": 9
             },
             "end": {
               "line": 98,
-              "column": 10
+              "column": 19
             }
           },
           "replacement": "Default::default()",
           "genre": "FnValue"
         }
       },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__governor.rs_line_91_col_9.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__governor.rs_line_91_col_9.diff",
+      "summary": "Unviable",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_98_col_9.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_98_col_9.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 4.048199793,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.899959657,
+          "duration": 0.606405623,
           "process_status": {
             "Failure": 101
           },
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
+            "--no-run",
             "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
+            "--package=deflect-detect@0.1.0"
           ]
         }
       ]
@@ -1962,291 +835,31 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-ratelimit/src/governor.rs:102:9: replace <impl Stage for SourceGovernor>::name -> &'static str with \"\"",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/governor.rs",
+          "name": "crates/deflect-detect/src/trigger.rs:103:9: replace Trigger::last_pps -> u64 with 0",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
           "function": {
-            "function_name": "<impl Stage for SourceGovernor>::name",
-            "return_type": "-> &'static str",
+            "function_name": "Trigger::last_pps",
+            "return_type": "-> u64",
             "span": {
               "start": {
                 "line": 101,
                 "column": 5
               },
               "end": {
-                "line": 103,
+                "line": 104,
                 "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 102,
+              "line": 103,
               "column": 9
             },
             "end": {
-              "line": 102,
-              "column": 26
-            }
-          },
-          "replacement": "\"\"",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__governor.rs_line_102_col_9.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__governor.rs_line_102_col_9.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.100510379,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.899112178,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/governor.rs:102:9: replace <impl Stage for SourceGovernor>::name -> &'static str with \"xyzzy\"",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/governor.rs",
-          "function": {
-            "function_name": "<impl Stage for SourceGovernor>::name",
-            "return_type": "-> &'static str",
-            "span": {
-              "start": {
-                "line": 101,
-                "column": 5
-              },
-              "end": {
-                "line": 103,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 102,
-              "column": 9
-            },
-            "end": {
-              "line": 102,
-              "column": 26
-            }
-          },
-          "replacement": "\"xyzzy\"",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__governor.rs_line_102_col_9_001.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__governor.rs_line_102_col_9_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 3.348642694,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.800062533,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/bucket.rs:56:44: replace - with + in TokenBucket::refill",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/bucket.rs",
-          "function": {
-            "function_name": "TokenBucket::refill",
-            "return_type": "",
-            "span": {
-              "start": {
-                "line": 52,
-                "column": 5
-              },
-              "end": {
-                "line": 60,
-                "column": 6
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 56,
-              "column": 44
-            },
-            "end": {
-              "line": 56,
-              "column": 45
-            }
-          },
-          "replacement": "+",
-          "genre": "BinaryOperator"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__bucket.rs_line_56_col_44.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__bucket.rs_line_56_col_44.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 71.161152382,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.79875388,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/governor.rs:107:5: replace fnv1a -> u64 with 1",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/governor.rs",
-          "function": {
-            "function_name": "fnv1a",
-            "return_type": "-> u64",
-            "span": {
-              "start": {
-                "line": 106,
-                "column": 1
-              },
-              "end": {
-                "line": 127,
-                "column": 2
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 107,
-              "column": 5
-            },
-            "end": {
-              "line": 126,
-              "column": 6
-            }
-          },
-          "replacement": "1",
-          "genre": "FnValue"
-        }
-      },
-      "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__governor.rs_line_107_col_5_001.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__governor.rs_line_107_col_5_001.diff",
-      "phase_results": [
-        {
-          "phase": "Build",
-          "duration": 4.050618955,
-          "process_status": "Success",
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--no-run",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        },
-        {
-          "phase": "Test",
-          "duration": 0.500112456,
-          "process_status": {
-            "Failure": 101
-          },
-          "argv": [
-            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
-            "test",
-            "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
-          ]
-        }
-      ]
-    },
-    {
-      "scenario": {
-        "Mutant": {
-          "name": "crates/deflect-ratelimit/src/governor.rs:107:5: replace fnv1a -> u64 with 0",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/governor.rs",
-          "function": {
-            "function_name": "fnv1a",
-            "return_type": "-> u64",
-            "span": {
-              "start": {
-                "line": 106,
-                "column": 1
-              },
-              "end": {
-                "line": 127,
-                "column": 2
-              }
-            }
-          },
-          "span": {
-            "start": {
-              "line": 107,
-              "column": 5
-            },
-            "end": {
-              "line": 126,
-              "column": 6
+              "line": 103,
+              "column": 22
             }
           },
           "replacement": "0",
@@ -2254,24 +867,24 @@
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__governor.rs_line_107_col_5.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__governor.rs_line_107_col_5.diff",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_103_col_9.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_103_col_9.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 4.248359412,
+          "duration": 2.449733152,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
+            "--package=deflect-detect@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.505504587,
+          "duration": 0.2052906,
           "process_status": {
             "Failure": 101
           },
@@ -2279,7 +892,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
+            "--package=deflect-detect@0.1.0"
           ]
         }
       ]
@@ -2287,56 +900,56 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-ratelimit/src/governor.rs:112:15: replace ^= with |= in fnv1a",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/governor.rs",
+          "name": "crates/deflect-detect/src/trigger.rs:103:9: replace Trigger::last_pps -> u64 with 1",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
           "function": {
-            "function_name": "fnv1a",
+            "function_name": "Trigger::last_pps",
             "return_type": "-> u64",
             "span": {
               "start": {
-                "line": 106,
-                "column": 1
+                "line": 101,
+                "column": 5
               },
               "end": {
-                "line": 127,
-                "column": 2
+                "line": 104,
+                "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 112,
-              "column": 15
+              "line": 103,
+              "column": 9
             },
             "end": {
-              "line": 112,
-              "column": 17
+              "line": 103,
+              "column": 22
             }
           },
-          "replacement": "|=",
-          "genre": "BinaryOperator"
+          "replacement": "1",
+          "genre": "FnValue"
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__governor.rs_line_112_col_15.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__governor.rs_line_112_col_15.diff",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_103_col_9_001.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_103_col_9_001.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 3.09796963,
+          "duration": 1.139561058,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
+            "--package=deflect-detect@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.210165264,
+          "duration": 0.354182168,
           "process_status": {
             "Failure": 101
           },
@@ -2344,7 +957,7 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
+            "--package=deflect-detect@0.1.0"
           ]
         }
       ]
@@ -2352,56 +965,56 @@
     {
       "scenario": {
         "Mutant": {
-          "name": "crates/deflect-ratelimit/src/governor.rs:112:15: replace ^= with &= in fnv1a",
-          "package": "deflect-ratelimit",
-          "file": "crates/deflect-ratelimit/src/governor.rs",
+          "name": "crates/deflect-detect/src/trigger.rs:108:9: replace Trigger::last_bps -> u64 with 0",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
           "function": {
-            "function_name": "fnv1a",
+            "function_name": "Trigger::last_bps",
             "return_type": "-> u64",
             "span": {
               "start": {
                 "line": 106,
-                "column": 1
+                "column": 5
               },
               "end": {
-                "line": 127,
-                "column": 2
+                "line": 109,
+                "column": 6
               }
             }
           },
           "span": {
             "start": {
-              "line": 112,
-              "column": 15
+              "line": 108,
+              "column": 9
             },
             "end": {
-              "line": 112,
-              "column": 17
+              "line": 108,
+              "column": 22
             }
           },
-          "replacement": "&=",
-          "genre": "BinaryOperator"
+          "replacement": "0",
+          "genre": "FnValue"
         }
       },
       "summary": "CaughtMutant",
-      "log_path": "log/crates__deflect-ratelimit__src__governor.rs_line_112_col_15_001.log",
-      "diff_path": "diff/crates__deflect-ratelimit__src__governor.rs_line_112_col_15_001.diff",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_108_col_9.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_108_col_9.diff",
       "phase_results": [
         {
           "phase": "Build",
-          "duration": 3.048699717,
+          "duration": 2.244394561,
           "process_status": "Success",
           "argv": [
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--no-run",
             "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
+            "--package=deflect-detect@0.1.0"
           ]
         },
         {
           "phase": "Test",
-          "duration": 0.212207882,
+          "duration": 0.408645756,
           "process_status": {
             "Failure": 101
           },
@@ -2409,19 +1022,1774 @@
             "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
             "test",
             "--verbose",
-            "--package=deflect-ratelimit@0.1.0"
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/trigger.rs:86:34: replace < with > in Trigger::reassess",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
+          "function": {
+            "function_name": "Trigger::reassess",
+            "return_type": "-> Phase",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 94,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 86,
+              "column": 34
+            },
+            "end": {
+              "line": 86,
+              "column": 35
+            }
+          },
+          "replacement": ">",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_86_col_34_001.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_86_col_34_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 22.798170187,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.355583355,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/trigger.rs:108:9: replace Trigger::last_bps -> u64 with 1",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
+          "function": {
+            "function_name": "Trigger::last_bps",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 106,
+                "column": 5
+              },
+              "end": {
+                "line": 109,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 108,
+              "column": 9
+            },
+            "end": {
+              "line": 108,
+              "column": 22
+            }
+          },
+          "replacement": "1",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_108_col_9_001.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_108_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 2.735930918,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.307969477,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:41:9: replace SlidingWindow::slot_index -> usize with 0",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::slot_index",
+            "return_type": "-> usize",
+            "span": {
+              "start": {
+                "line": 40,
+                "column": 5
+              },
+              "end": {
+                "line": 43,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 41,
+              "column": 9
+            },
+            "end": {
+              "line": 42,
+              "column": 81
+            }
+          },
+          "replacement": "0",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_41_col_9.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_41_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.192639501,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.506140658,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:41:9: replace SlidingWindow::slot_index -> usize with 1",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::slot_index",
+            "return_type": "-> usize",
+            "span": {
+              "start": {
+                "line": 40,
+                "column": 5
+              },
+              "end": {
+                "line": 43,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 41,
+              "column": 9
+            },
+            "end": {
+              "line": 42,
+              "column": 81
+            }
+          },
+          "replacement": "1",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_41_col_9_001.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_41_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.6905874340000002,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.748568485,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/trigger.rs:28:73: replace / with % in Watermarks::from_high",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
+          "function": {
+            "function_name": "Watermarks::from_high",
+            "return_type": "-> Watermarks",
+            "span": {
+              "start": {
+                "line": 24,
+                "column": 5
+              },
+              "end": {
+                "line": 35,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 28,
+              "column": 73
+            },
+            "end": {
+              "line": 28,
+              "column": 74
+            }
+          },
+          "replacement": "%",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_28_col_73_001.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_28_col_73_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 53.867104525,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.549132251,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:42:34: replace % with / in SlidingWindow::slot_index",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::slot_index",
+            "return_type": "-> usize",
+            "span": {
+              "start": {
+                "line": 40,
+                "column": 5
+              },
+              "end": {
+                "line": 43,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 42,
+              "column": 34
+            },
+            "end": {
+              "line": 42,
+              "column": 35
+            }
+          },
+          "replacement": "/",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_42_col_34.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_42_col_34.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 4.290902159,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.499412472,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/trigger.rs:28:50: replace * with + in Watermarks::from_high",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
+          "function": {
+            "function_name": "Watermarks::from_high",
+            "return_type": "-> Watermarks",
+            "span": {
+              "start": {
+                "line": 24,
+                "column": 5
+              },
+              "end": {
+                "line": 35,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 28,
+              "column": 50
+            },
+            "end": {
+              "line": 28,
+              "column": 51
+            }
+          },
+          "replacement": "+",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_28_col_50.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_28_col_50.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 57.066715126,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.600557357,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:42:34: replace % with + in SlidingWindow::slot_index",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::slot_index",
+            "return_type": "-> usize",
+            "span": {
+              "start": {
+                "line": 40,
+                "column": 5
+              },
+              "end": {
+                "line": 43,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 42,
+              "column": 34
+            },
+            "end": {
+              "line": 42,
+              "column": 35
+            }
+          },
+          "replacement": "+",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_42_col_34_001.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_42_col_34_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.748110661,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.355193362,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:48:9: replace SlidingWindow::expire_to with ()",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::expire_to",
+            "return_type": "",
+            "span": {
+              "start": {
+                "line": 45,
+                "column": 5
+              },
+              "end": {
+                "line": 58,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 48,
+              "column": 9
+            },
+            "end": {
+              "line": 57,
+              "column": 35
+            }
+          },
+          "replacement": "()",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_48_col_9.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_48_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 4.348837184,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.451333918,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/trigger.rs:28:50: replace * with / in Watermarks::from_high",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
+          "function": {
+            "function_name": "Watermarks::from_high",
+            "return_type": "-> Watermarks",
+            "span": {
+              "start": {
+                "line": 24,
+                "column": 5
+              },
+              "end": {
+                "line": 35,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 28,
+              "column": 50
+            },
+            "end": {
+              "line": 28,
+              "column": 51
+            }
+          },
+          "replacement": "/",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_28_col_50_001.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_28_col_50_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 61.713955476,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.849383689,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/trigger.rs:28:73: replace / with * in Watermarks::from_high",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/trigger.rs",
+          "function": {
+            "function_name": "Watermarks::from_high",
+            "return_type": "-> Watermarks",
+            "span": {
+              "start": {
+                "line": 24,
+                "column": 5
+              },
+              "end": {
+                "line": 35,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 28,
+              "column": 73
+            },
+            "end": {
+              "line": 28,
+              "column": 74
+            }
+          },
+          "replacement": "*",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__trigger.rs_line_28_col_73.log",
+      "diff_path": "diff/crates__deflect-detect__src__trigger.rs_line_28_col_73.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 61.767762731,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.853088493,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:52:33: replace != with == in SlidingWindow::expire_to",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::expire_to",
+            "return_type": "",
+            "span": {
+              "start": {
+                "line": 45,
+                "column": 5
+              },
+              "end": {
+                "line": 58,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 52,
+              "column": 33
+            },
+            "end": {
+              "line": 52,
+              "column": 35
+            }
+          },
+          "replacement": "==",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_52_col_33.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_52_col_33.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 5.441699435,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.355395809,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:49:55: replace - with + in SlidingWindow::expire_to",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::expire_to",
+            "return_type": "",
+            "span": {
+              "start": {
+                "line": 45,
+                "column": 5
+              },
+              "end": {
+                "line": 58,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 49,
+              "column": 55
+            },
+            "end": {
+              "line": 49,
+              "column": 56
+            }
+          },
+          "replacement": "+",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_49_col_55.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_49_col_55.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 5.497708355,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.355164841,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:49:55: replace - with / in SlidingWindow::expire_to",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::expire_to",
+            "return_type": "",
+            "span": {
+              "start": {
+                "line": 45,
+                "column": 5
+              },
+              "end": {
+                "line": 58,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 49,
+              "column": 55
+            },
+            "end": {
+              "line": 49,
+              "column": 56
+            }
+          },
+          "replacement": "/",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_49_col_55_001.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_49_col_55_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 5.496320698,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.357601012,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:62:9: replace SlidingWindow::record with ()",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::record",
+            "return_type": "",
+            "span": {
+              "start": {
+                "line": 60,
+                "column": 5
+              },
+              "end": {
+                "line": 66,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 62,
+              "column": 9
+            },
+            "end": {
+              "line": 65,
+              "column": 70
+            }
+          },
+          "replacement": "()",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_62_col_9.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_62_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 4.838657044,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.797967753,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:62:34: replace / with * in SlidingWindow::record",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::record",
+            "return_type": "",
+            "span": {
+              "start": {
+                "line": 60,
+                "column": 5
+              },
+              "end": {
+                "line": 66,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 62,
+              "column": 34
+            },
+            "end": {
+              "line": 62,
+              "column": 35
+            }
+          },
+          "replacement": "*",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_62_col_34_001.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_62_col_34_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 2.536405042,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.549053018,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:62:34: replace / with % in SlidingWindow::record",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::record",
+            "return_type": "",
+            "span": {
+              "start": {
+                "line": 60,
+                "column": 5
+              },
+              "end": {
+                "line": 66,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 62,
+              "column": 34
+            },
+            "end": {
+              "line": 62,
+              "column": 35
+            }
+          },
+          "replacement": "%",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_62_col_34.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_62_col_34.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 2.550009508,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.6083676,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:70:34: replace / with % in SlidingWindow::sum",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::sum",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 68,
+                "column": 5
+              },
+              "end": {
+                "line": 73,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 70,
+              "column": 34
+            },
+            "end": {
+              "line": 70,
+              "column": 35
+            }
+          },
+          "replacement": "%",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_70_col_34.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_70_col_34.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.433941647,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.453144819,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:70:9: replace SlidingWindow::sum -> u64 with 1",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::sum",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 68,
+                "column": 5
+              },
+              "end": {
+                "line": 73,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 70,
+              "column": 9
+            },
+            "end": {
+              "line": 72,
+              "column": 34
+            }
+          },
+          "replacement": "1",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_70_col_9_001.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_70_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.8415390780000003,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.647026987,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:70:9: replace SlidingWindow::sum -> u64 with 0",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::sum",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 68,
+                "column": 5
+              },
+              "end": {
+                "line": 73,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 70,
+              "column": 9
+            },
+            "end": {
+              "line": 72,
+              "column": 34
+            }
+          },
+          "replacement": "0",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_70_col_9.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_70_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.793020589,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.751499034,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:70:34: replace / with * in SlidingWindow::sum",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::sum",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 68,
+                "column": 5
+              },
+              "end": {
+                "line": 73,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 70,
+              "column": 34
+            },
+            "end": {
+              "line": 70,
+              "column": 35
+            }
+          },
+          "replacement": "*",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_70_col_34_001.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_70_col_34_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.099599364,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.750239211,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:77:9: replace SlidingWindow::rate_per_sec -> u64 with 0",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::rate_per_sec",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 75,
+                "column": 5
+              },
+              "end": {
+                "line": 79,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 77,
+              "column": 9
+            },
+            "end": {
+              "line": 78,
+              "column": 85
+            }
+          },
+          "replacement": "0",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_77_col_9.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_77_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.147747551,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.607001993,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:77:9: replace SlidingWindow::rate_per_sec -> u64 with 1",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::rate_per_sec",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 75,
+                "column": 5
+              },
+              "end": {
+                "line": 79,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 77,
+              "column": 9
+            },
+            "end": {
+              "line": 78,
+              "column": 85
+            }
+          },
+          "replacement": "1",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_77_col_9_001.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_77_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.13609889,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.65010078,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:78:45: replace / with % in SlidingWindow::rate_per_sec",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::rate_per_sec",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 75,
+                "column": 5
+              },
+              "end": {
+                "line": 79,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 78,
+              "column": 45
+            },
+            "end": {
+              "line": 78,
+              "column": 46
+            }
+          },
+          "replacement": "%",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_78_col_45.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_78_col_45.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 2.643465185,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.252183454,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:78:45: replace / with * in SlidingWindow::rate_per_sec",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::rate_per_sec",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 75,
+                "column": 5
+              },
+              "end": {
+                "line": 79,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 78,
+              "column": 45
+            },
+            "end": {
+              "line": 78,
+              "column": 46
+            }
+          },
+          "replacement": "*",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_78_col_45_001.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_78_col_45_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 2.847067409,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.155368365,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:78:29: replace * with + in SlidingWindow::rate_per_sec",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::rate_per_sec",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 75,
+                "column": 5
+              },
+              "end": {
+                "line": 79,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 78,
+              "column": 29
+            },
+            "end": {
+              "line": 78,
+              "column": 30
+            }
+          },
+          "replacement": "+",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_78_col_29.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_78_col_29.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 2.796337276,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.20320979,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "crates/deflect-detect/src/window.rs:78:29: replace * with / in SlidingWindow::rate_per_sec",
+          "package": "deflect-detect",
+          "file": "crates/deflect-detect/src/window.rs",
+          "function": {
+            "function_name": "SlidingWindow::rate_per_sec",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 75,
+                "column": 5
+              },
+              "end": {
+                "line": 79,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 78,
+              "column": 29
+            },
+            "end": {
+              "line": 78,
+              "column": 30
+            }
+          },
+          "replacement": "/",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/crates__deflect-detect__src__window.rs_line_78_col_29_001.log",
+      "diff_path": "diff/crates__deflect-detect__src__window.rs_line_78_col_29_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 2.2000888339999998,
+          "process_status": "Success",
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.102219911,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=deflect-detect@0.1.0"
           ]
         }
       ]
     }
   ],
-  "total_mutants": 37,
+  "total_mutants": 43,
   "missed": 0,
-  "caught": 35,
+  "caught": 39,
   "timeout": 0,
-  "unviable": 2,
+  "unviable": 4,
   "success": 0,
-  "start_time": "2026-10-19T13:07:59.085141461Z",
-  "end_time": "2026-10-19T13:09:19.361239937Z",
+  "start_time": "2026-10-19T13:14:34.285170691Z",
+  "end_time": "2026-10-19T13:15:53.912219612Z",
   "cargo_mutants_version": "27.0.0"
 }

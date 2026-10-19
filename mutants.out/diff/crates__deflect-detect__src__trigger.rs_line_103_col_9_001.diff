@@ -1,0 +1,21 @@
+--- crates/deflect-detect/src/trigger.rs
++++ replace Trigger::last_pps -> u64 with 1
+@@ -95,17 +95,17 @@
+ 
+     #[must_use]
+     pub fn phase(&self) -> Phase {
+         self.phase
+     }
+ 
+     #[must_use]
+     pub fn last_pps(&self) -> u64 {
+-        self.last_pps
++        1 /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     #[must_use]
+     pub fn last_bps(&self) -> u64 {
+         self.last_bps
+     }
+ }
+ 

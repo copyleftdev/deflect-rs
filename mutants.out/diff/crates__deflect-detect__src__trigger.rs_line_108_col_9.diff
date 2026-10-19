@@ -1,0 +1,21 @@
+--- crates/deflect-detect/src/trigger.rs
++++ replace Trigger::last_bps -> u64 with 0
+@@ -100,17 +100,17 @@
+ 
+     #[must_use]
+     pub fn last_pps(&self) -> u64 {
+         self.last_pps
+     }
+ 
+     #[must_use]
+     pub fn last_bps(&self) -> u64 {
+-        self.last_bps
++        0 /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+ 
+     fn marks() -> Watermarks {

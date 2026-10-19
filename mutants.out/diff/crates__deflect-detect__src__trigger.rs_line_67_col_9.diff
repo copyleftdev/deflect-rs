@@ -1,0 +1,23 @@
+--- crates/deflect-detect/src/trigger.rs
++++ replace Trigger::observe -> Phase with Default::default()
+@@ -59,19 +59,17 @@
+             last_pps: 0,
+             last_bps: 0,
+         }
+     }
+ 
+     /// Record one packet of `wire_len` bytes at `now_nanos` and return the
+     /// phase after this observation.
+     pub fn observe(&mut self, wire_len: u32, now_nanos: u64) -> Phase {
+-        self.packets.record(1, now_nanos);
+-        self.bytes.record(u64::from(wire_len), now_nanos);
+-        self.reassess(now_nanos)
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Re-evaluate the phase at `now_nanos` without recording traffic; lets a
+     /// caller observe decay to calm during a lull with no packets.
+     pub fn reassess(&mut self, now_nanos: u64) -> Phase {
+         self.last_pps = self.packets.rate_per_sec(now_nanos);
+         self.last_bps = self.bytes.rate_per_sec(now_nanos);
+         self.phase = match self.phase {

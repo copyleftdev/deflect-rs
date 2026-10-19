@@ -1,35 +1,39 @@
-crates/deflect-ratelimit/src/bucket.rs:31:9: replace Spend::is_allowed -> bool with true
-crates/deflect-ratelimit/src/bucket.rs:57:51: replace * with + in TokenBucket::refill
-crates/deflect-ratelimit/src/bucket.rs:57:51: replace * with / in TokenBucket::refill
-crates/deflect-ratelimit/src/bucket.rs:58:48: replace + with - in TokenBucket::refill
-crates/deflect-ratelimit/src/bucket.rs:58:48: replace + with * in TokenBucket::refill
-crates/deflect-ratelimit/src/bucket.rs:65:43: replace * with + in TokenBucket::try_spend
-crates/deflect-ratelimit/src/bucket.rs:65:43: replace * with / in TokenBucket::try_spend
-crates/deflect-ratelimit/src/bucket.rs:66:30: replace >= with < in TokenBucket::try_spend
-crates/deflect-ratelimit/src/bucket.rs:67:31: replace -= with += in TokenBucket::try_spend
-crates/deflect-ratelimit/src/bucket.rs:67:31: replace -= with /= in TokenBucket::try_spend
-crates/deflect-ratelimit/src/bucket.rs:31:9: replace Spend::is_allowed -> bool with false
-crates/deflect-ratelimit/src/bucket.rs:70:34: replace - with + in TokenBucket::try_spend
-crates/deflect-ratelimit/src/bucket.rs:70:34: replace - with / in TokenBucket::try_spend
-crates/deflect-ratelimit/src/bucket.rs:71:42: replace == with != in TokenBucket::try_spend
-crates/deflect-ratelimit/src/bucket.rs:85:9: replace TokenBucket::available -> u64 with 0
-crates/deflect-ratelimit/src/bucket.rs:85:9: replace TokenBucket::available -> u64 with 1
-crates/deflect-ratelimit/src/bucket.rs:53:9: replace TokenBucket::refill with ()
-crates/deflect-ratelimit/src/bucket.rs:86:41: replace / with % in TokenBucket::available
-crates/deflect-ratelimit/src/bucket.rs:86:41: replace / with * in TokenBucket::available
-crates/deflect-ratelimit/src/governor.rs:67:9: replace SourceGovernor::slot_for -> usize with 0
-crates/deflect-ratelimit/src/governor.rs:67:9: replace SourceGovernor::slot_for -> usize with 1
-crates/deflect-ratelimit/src/governor.rs:67:36: replace & with | in SourceGovernor::slot_for
-crates/deflect-ratelimit/src/governor.rs:67:36: replace & with ^ in SourceGovernor::slot_for
-crates/deflect-ratelimit/src/governor.rs:71:9: replace SourceGovernor::cost_of -> u64 with 0
-crates/deflect-ratelimit/src/governor.rs:71:9: replace SourceGovernor::cost_of -> u64 with 1
-crates/deflect-ratelimit/src/bucket.rs:56:44: replace - with / in TokenBucket::refill
-crates/deflect-ratelimit/src/bucket.rs:53:22: replace <= with > in TokenBucket::refill
-crates/deflect-ratelimit/src/governor.rs:91:9: replace <impl Stage for SourceGovernor>::evaluate -> Verdict with Default::default()
-crates/deflect-ratelimit/src/governor.rs:102:9: replace <impl Stage for SourceGovernor>::name -> &'static str with ""
-crates/deflect-ratelimit/src/governor.rs:102:9: replace <impl Stage for SourceGovernor>::name -> &'static str with "xyzzy"
-crates/deflect-ratelimit/src/bucket.rs:56:44: replace - with + in TokenBucket::refill
-crates/deflect-ratelimit/src/governor.rs:107:5: replace fnv1a -> u64 with 1
-crates/deflect-ratelimit/src/governor.rs:107:5: replace fnv1a -> u64 with 0
-crates/deflect-ratelimit/src/governor.rs:112:15: replace ^= with |= in fnv1a
-crates/deflect-ratelimit/src/governor.rs:112:15: replace ^= with &= in fnv1a
+crates/deflect-detect/src/trigger.rs:79:57: replace || with && in Trigger::reassess
+crates/deflect-detect/src/trigger.rs:79:34: replace >= with < in Trigger::reassess
+crates/deflect-detect/src/trigger.rs:79:74: replace >= with < in Trigger::reassess
+crates/deflect-detect/src/trigger.rs:86:55: replace && with || in Trigger::reassess
+crates/deflect-detect/src/trigger.rs:86:34: replace < with == in Trigger::reassess
+crates/deflect-detect/src/trigger.rs:86:34: replace < with <= in Trigger::reassess
+crates/deflect-detect/src/trigger.rs:86:72: replace < with == in Trigger::reassess
+crates/deflect-detect/src/trigger.rs:86:72: replace < with > in Trigger::reassess
+crates/deflect-detect/src/trigger.rs:86:72: replace < with <= in Trigger::reassess
+crates/deflect-detect/src/trigger.rs:103:9: replace Trigger::last_pps -> u64 with 0
+crates/deflect-detect/src/trigger.rs:103:9: replace Trigger::last_pps -> u64 with 1
+crates/deflect-detect/src/trigger.rs:108:9: replace Trigger::last_bps -> u64 with 0
+crates/deflect-detect/src/trigger.rs:86:34: replace < with > in Trigger::reassess
+crates/deflect-detect/src/trigger.rs:108:9: replace Trigger::last_bps -> u64 with 1
+crates/deflect-detect/src/window.rs:41:9: replace SlidingWindow::slot_index -> usize with 0
+crates/deflect-detect/src/window.rs:41:9: replace SlidingWindow::slot_index -> usize with 1
+crates/deflect-detect/src/trigger.rs:28:73: replace / with % in Watermarks::from_high
+crates/deflect-detect/src/window.rs:42:34: replace % with / in SlidingWindow::slot_index
+crates/deflect-detect/src/trigger.rs:28:50: replace * with + in Watermarks::from_high
+crates/deflect-detect/src/window.rs:42:34: replace % with + in SlidingWindow::slot_index
+crates/deflect-detect/src/window.rs:48:9: replace SlidingWindow::expire_to with ()
+crates/deflect-detect/src/trigger.rs:28:50: replace * with / in Watermarks::from_high
+crates/deflect-detect/src/trigger.rs:28:73: replace / with * in Watermarks::from_high
+crates/deflect-detect/src/window.rs:52:33: replace != with == in SlidingWindow::expire_to
+crates/deflect-detect/src/window.rs:49:55: replace - with + in SlidingWindow::expire_to
+crates/deflect-detect/src/window.rs:49:55: replace - with / in SlidingWindow::expire_to
+crates/deflect-detect/src/window.rs:62:9: replace SlidingWindow::record with ()
+crates/deflect-detect/src/window.rs:62:34: replace / with * in SlidingWindow::record
+crates/deflect-detect/src/window.rs:62:34: replace / with % in SlidingWindow::record
+crates/deflect-detect/src/window.rs:70:34: replace / with % in SlidingWindow::sum
+crates/deflect-detect/src/window.rs:70:9: replace SlidingWindow::sum -> u64 with 1
+crates/deflect-detect/src/window.rs:70:9: replace SlidingWindow::sum -> u64 with 0
+crates/deflect-detect/src/window.rs:70:34: replace / with * in SlidingWindow::sum
+crates/deflect-detect/src/window.rs:77:9: replace SlidingWindow::rate_per_sec -> u64 with 0
+crates/deflect-detect/src/window.rs:77:9: replace SlidingWindow::rate_per_sec -> u64 with 1
+crates/deflect-detect/src/window.rs:78:45: replace / with % in SlidingWindow::rate_per_sec
+crates/deflect-detect/src/window.rs:78:45: replace / with * in SlidingWindow::rate_per_sec
+crates/deflect-detect/src/window.rs:78:29: replace * with + in SlidingWindow::rate_per_sec
+crates/deflect-detect/src/window.rs:78:29: replace * with / in SlidingWindow::rate_per_sec

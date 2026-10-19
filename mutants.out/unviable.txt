@@ -1,2 +1,4 @@
-crates/deflect-ratelimit/src/bucket.rs:64:9: replace TokenBucket::try_spend -> Spend with Default::default()
-crates/deflect-ratelimit/src/governor.rs:83:9: replace SourceGovernor::charge -> Spend with Default::default()
+crates/deflect-detect/src/trigger.rs:27:9: replace Watermarks::from_high -> Watermarks with Default::default()
+crates/deflect-detect/src/trigger.rs:75:9: replace Trigger::reassess -> Phase with Default::default()
+crates/deflect-detect/src/trigger.rs:67:9: replace Trigger::observe -> Phase with Default::default()
+crates/deflect-detect/src/trigger.rs:98:9: replace Trigger::phase -> Phase with Default::default()

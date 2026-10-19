@@ -1,970 +1,554 @@
 [
   {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace Spend::is_allowed -> bool with true\n@@ -23,17 +23,17 @@\n     /// is the earliest time from `now` at which the same cost would succeed if\n     /// no other spend intervenes.\n     Throttled { retry_after_nanos: u64 },\n }\n \n impl Spend {\n     #[must_use]\n     pub const fn is_allowed(&self) -> bool {\n-        matches!(self, Spend::Allowed)\n+        true /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n impl TokenBucket {\n     /// Create a bucket that refills at `rate_per_sec` tokens per second and\n     /// holds at most `burst` tokens, starting full at time `now_nanos`.\n     ///\n     /// A `rate_per_sec` of zero makes a fixed quota of `burst` that never\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace Watermarks::from_high -> Watermarks with Default::default()\n@@ -19,24 +19,17 @@\n     pub bps_high: u64,\n     pub bps_low: u64,\n }\n \n impl Watermarks {\n     /// Watermarks with the low marks set to `low_frac`/256 of the high marks.\n     #[must_use]\n     pub fn from_high(pps_high: u64, bps_high: u64, low_frac: u8) -> Watermarks {\n-        let scale =\n-            |v: u64| u64::try_from(u128::from(v) * u128::from(low_frac) / 256).unwrap_or(u64::MAX);\n-        Watermarks {\n-            pps_high,\n-            pps_low: scale(pps_high),\n-            bps_high,\n-            bps_low: scale(bps_high),\n-        }\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n /// Monitors packet and byte rates over a sliding window and reports a stable\n /// [`Phase`] with hysteresis. Either rate crossing its high watermark engages\n /// mitigation; both must fall below their low watermarks to disengage.\n #[derive(Debug, Clone)]\n pub struct Trigger {\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
     "function": {
-      "function_name": "Spend::is_allowed",
-      "return_type": "-> bool",
+      "function_name": "Watermarks::from_high",
+      "return_type": "-> Watermarks",
       "span": {
         "end": {
           "column": 6,
-          "line": 32
+          "line": 35
         },
         "start": {
           "column": 5,
-          "line": 29
+          "line": 24
         }
       }
     },
     "genre": "FnValue",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:31:9: replace Spend::is_allowed -> bool with true",
-    "package": "deflect-ratelimit",
-    "replacement": "true",
-    "span": {
-      "end": {
-        "column": 39,
-        "line": 31
-      },
-      "start": {
-        "column": 9,
-        "line": 31
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace Spend::is_allowed -> bool with false\n@@ -23,17 +23,17 @@\n     /// is the earliest time from `now` at which the same cost would succeed if\n     /// no other spend intervenes.\n     Throttled { retry_after_nanos: u64 },\n }\n \n impl Spend {\n     #[must_use]\n     pub const fn is_allowed(&self) -> bool {\n-        matches!(self, Spend::Allowed)\n+        false /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n impl TokenBucket {\n     /// Create a bucket that refills at `rate_per_sec` tokens per second and\n     /// holds at most `burst` tokens, starting full at time `now_nanos`.\n     ///\n     /// A `rate_per_sec` of zero makes a fixed quota of `burst` that never\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "Spend::is_allowed",
-      "return_type": "-> bool",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 32
-        },
-        "start": {
-          "column": 5,
-          "line": 29
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:31:9: replace Spend::is_allowed -> bool with false",
-    "package": "deflect-ratelimit",
-    "replacement": "false",
-    "span": {
-      "end": {
-        "column": 39,
-        "line": 31
-      },
-      "start": {
-        "column": 9,
-        "line": 31
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace TokenBucket::refill with ()\n@@ -45,23 +45,17 @@\n             rate_per_sec,\n             capacity_units,\n             tokens_units: capacity_units,\n             last_nanos: now_nanos,\n         }\n     }\n \n     fn refill(&mut self, now_nanos: u64) {\n-        if now_nanos <= self.last_nanos {\n-            return;\n-        }\n-        let elapsed = u128::from(now_nanos - self.last_nanos);\n-        let added = u128::from(self.rate_per_sec) * elapsed;\n-        self.tokens_units = (self.tokens_units + added).min(self.capacity_units);\n-        self.last_nanos = now_nanos;\n+        () /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Advance to `now_nanos` and try to spend `cost` tokens.\n     pub fn try_spend(&mut self, cost: u64, now_nanos: u64) -> Spend {\n         self.refill(now_nanos);\n         let cost_units = u128::from(cost) * NANOS_PER_SEC;\n         if self.tokens_units >= cost_units {\n             self.tokens_units -= cost_units;\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "TokenBucket::refill",
-      "return_type": "",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 60
-        },
-        "start": {
-          "column": 5,
-          "line": 52
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:53:9: replace TokenBucket::refill with ()",
-    "package": "deflect-ratelimit",
-    "replacement": "()",
-    "span": {
-      "end": {
-        "column": 37,
-        "line": 59
-      },
-      "start": {
-        "column": 9,
-        "line": 53
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace <= with > in TokenBucket::refill\n@@ -45,17 +45,17 @@\n             rate_per_sec,\n             capacity_units,\n             tokens_units: capacity_units,\n             last_nanos: now_nanos,\n         }\n     }\n \n     fn refill(&mut self, now_nanos: u64) {\n-        if now_nanos <= self.last_nanos {\n+        if now_nanos > /* ~ changed by cargo-mutants ~ */ self.last_nanos {\n             return;\n         }\n         let elapsed = u128::from(now_nanos - self.last_nanos);\n         let added = u128::from(self.rate_per_sec) * elapsed;\n         self.tokens_units = (self.tokens_units + added).min(self.capacity_units);\n         self.last_nanos = now_nanos;\n     }\n \n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "TokenBucket::refill",
-      "return_type": "",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 60
-        },
-        "start": {
-          "column": 5,
-          "line": 52
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:53:22: replace <= with > in TokenBucket::refill",
-    "package": "deflect-ratelimit",
-    "replacement": ">",
-    "span": {
-      "end": {
-        "column": 24,
-        "line": 53
-      },
-      "start": {
-        "column": 22,
-        "line": 53
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace - with + in TokenBucket::refill\n@@ -48,17 +48,17 @@\n             last_nanos: now_nanos,\n         }\n     }\n \n     fn refill(&mut self, now_nanos: u64) {\n         if now_nanos <= self.last_nanos {\n             return;\n         }\n-        let elapsed = u128::from(now_nanos - self.last_nanos);\n+        let elapsed = u128::from(now_nanos + /* ~ changed by cargo-mutants ~ */ self.last_nanos);\n         let added = u128::from(self.rate_per_sec) * elapsed;\n         self.tokens_units = (self.tokens_units + added).min(self.capacity_units);\n         self.last_nanos = now_nanos;\n     }\n \n     /// Advance to `now_nanos` and try to spend `cost` tokens.\n     pub fn try_spend(&mut self, cost: u64, now_nanos: u64) -> Spend {\n         self.refill(now_nanos);\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "TokenBucket::refill",
-      "return_type": "",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 60
-        },
-        "start": {
-          "column": 5,
-          "line": 52
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:56:44: replace - with + in TokenBucket::refill",
-    "package": "deflect-ratelimit",
-    "replacement": "+",
-    "span": {
-      "end": {
-        "column": 45,
-        "line": 56
-      },
-      "start": {
-        "column": 44,
-        "line": 56
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace - with / in TokenBucket::refill\n@@ -48,17 +48,17 @@\n             last_nanos: now_nanos,\n         }\n     }\n \n     fn refill(&mut self, now_nanos: u64) {\n         if now_nanos <= self.last_nanos {\n             return;\n         }\n-        let elapsed = u128::from(now_nanos - self.last_nanos);\n+        let elapsed = u128::from(now_nanos / /* ~ changed by cargo-mutants ~ */ self.last_nanos);\n         let added = u128::from(self.rate_per_sec) * elapsed;\n         self.tokens_units = (self.tokens_units + added).min(self.capacity_units);\n         self.last_nanos = now_nanos;\n     }\n \n     /// Advance to `now_nanos` and try to spend `cost` tokens.\n     pub fn try_spend(&mut self, cost: u64, now_nanos: u64) -> Spend {\n         self.refill(now_nanos);\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "TokenBucket::refill",
-      "return_type": "",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 60
-        },
-        "start": {
-          "column": 5,
-          "line": 52
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:56:44: replace - with / in TokenBucket::refill",
-    "package": "deflect-ratelimit",
-    "replacement": "/",
-    "span": {
-      "end": {
-        "column": 45,
-        "line": 56
-      },
-      "start": {
-        "column": 44,
-        "line": 56
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace * with + in TokenBucket::refill\n@@ -49,17 +49,17 @@\n         }\n     }\n \n     fn refill(&mut self, now_nanos: u64) {\n         if now_nanos <= self.last_nanos {\n             return;\n         }\n         let elapsed = u128::from(now_nanos - self.last_nanos);\n-        let added = u128::from(self.rate_per_sec) * elapsed;\n+        let added = u128::from(self.rate_per_sec) + /* ~ changed by cargo-mutants ~ */ elapsed;\n         self.tokens_units = (self.tokens_units + added).min(self.capacity_units);\n         self.last_nanos = now_nanos;\n     }\n \n     /// Advance to `now_nanos` and try to spend `cost` tokens.\n     pub fn try_spend(&mut self, cost: u64, now_nanos: u64) -> Spend {\n         self.refill(now_nanos);\n         let cost_units = u128::from(cost) * NANOS_PER_SEC;\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "TokenBucket::refill",
-      "return_type": "",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 60
-        },
-        "start": {
-          "column": 5,
-          "line": 52
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:57:51: replace * with + in TokenBucket::refill",
-    "package": "deflect-ratelimit",
-    "replacement": "+",
-    "span": {
-      "end": {
-        "column": 52,
-        "line": 57
-      },
-      "start": {
-        "column": 51,
-        "line": 57
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace * with / in TokenBucket::refill\n@@ -49,17 +49,17 @@\n         }\n     }\n \n     fn refill(&mut self, now_nanos: u64) {\n         if now_nanos <= self.last_nanos {\n             return;\n         }\n         let elapsed = u128::from(now_nanos - self.last_nanos);\n-        let added = u128::from(self.rate_per_sec) * elapsed;\n+        let added = u128::from(self.rate_per_sec) / /* ~ changed by cargo-mutants ~ */ elapsed;\n         self.tokens_units = (self.tokens_units + added).min(self.capacity_units);\n         self.last_nanos = now_nanos;\n     }\n \n     /// Advance to `now_nanos` and try to spend `cost` tokens.\n     pub fn try_spend(&mut self, cost: u64, now_nanos: u64) -> Spend {\n         self.refill(now_nanos);\n         let cost_units = u128::from(cost) * NANOS_PER_SEC;\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "TokenBucket::refill",
-      "return_type": "",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 60
-        },
-        "start": {
-          "column": 5,
-          "line": 52
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:57:51: replace * with / in TokenBucket::refill",
-    "package": "deflect-ratelimit",
-    "replacement": "/",
-    "span": {
-      "end": {
-        "column": 52,
-        "line": 57
-      },
-      "start": {
-        "column": 51,
-        "line": 57
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace + with - in TokenBucket::refill\n@@ -50,17 +50,17 @@\n     }\n \n     fn refill(&mut self, now_nanos: u64) {\n         if now_nanos <= self.last_nanos {\n             return;\n         }\n         let elapsed = u128::from(now_nanos - self.last_nanos);\n         let added = u128::from(self.rate_per_sec) * elapsed;\n-        self.tokens_units = (self.tokens_units + added).min(self.capacity_units);\n+        self.tokens_units = (self.tokens_units - /* ~ changed by cargo-mutants ~ */ added).min(self.capacity_units);\n         self.last_nanos = now_nanos;\n     }\n \n     /// Advance to `now_nanos` and try to spend `cost` tokens.\n     pub fn try_spend(&mut self, cost: u64, now_nanos: u64) -> Spend {\n         self.refill(now_nanos);\n         let cost_units = u128::from(cost) * NANOS_PER_SEC;\n         if self.tokens_units >= cost_units {\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "TokenBucket::refill",
-      "return_type": "",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 60
-        },
-        "start": {
-          "column": 5,
-          "line": 52
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:58:48: replace + with - in TokenBucket::refill",
-    "package": "deflect-ratelimit",
-    "replacement": "-",
-    "span": {
-      "end": {
-        "column": 49,
-        "line": 58
-      },
-      "start": {
-        "column": 48,
-        "line": 58
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace + with * in TokenBucket::refill\n@@ -50,17 +50,17 @@\n     }\n \n     fn refill(&mut self, now_nanos: u64) {\n         if now_nanos <= self.last_nanos {\n             return;\n         }\n         let elapsed = u128::from(now_nanos - self.last_nanos);\n         let added = u128::from(self.rate_per_sec) * elapsed;\n-        self.tokens_units = (self.tokens_units + added).min(self.capacity_units);\n+        self.tokens_units = (self.tokens_units * /* ~ changed by cargo-mutants ~ */ added).min(self.capacity_units);\n         self.last_nanos = now_nanos;\n     }\n \n     /// Advance to `now_nanos` and try to spend `cost` tokens.\n     pub fn try_spend(&mut self, cost: u64, now_nanos: u64) -> Spend {\n         self.refill(now_nanos);\n         let cost_units = u128::from(cost) * NANOS_PER_SEC;\n         if self.tokens_units >= cost_units {\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "TokenBucket::refill",
-      "return_type": "",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 60
-        },
-        "start": {
-          "column": 5,
-          "line": 52
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:58:48: replace + with * in TokenBucket::refill",
-    "package": "deflect-ratelimit",
-    "replacement": "*",
-    "span": {
-      "end": {
-        "column": 49,
-        "line": 58
-      },
-      "start": {
-        "column": 48,
-        "line": 58
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace TokenBucket::try_spend -> Spend with Default::default()\n@@ -56,33 +56,17 @@\n         let elapsed = u128::from(now_nanos - self.last_nanos);\n         let added = u128::from(self.rate_per_sec) * elapsed;\n         self.tokens_units = (self.tokens_units + added).min(self.capacity_units);\n         self.last_nanos = now_nanos;\n     }\n \n     /// Advance to `now_nanos` and try to spend `cost` tokens.\n     pub fn try_spend(&mut self, cost: u64, now_nanos: u64) -> Spend {\n-        self.refill(now_nanos);\n-        let cost_units = u128::from(cost) * NANOS_PER_SEC;\n-        if self.tokens_units >= cost_units {\n-            self.tokens_units -= cost_units;\n-            return Spend::Allowed;\n-        }\n-        let deficit = cost_units - self.tokens_units;\n-        let retry = if self.rate_per_sec == 0 {\n-            u64::MAX\n-        } else {\n-            // deficit is in units, rate is units/nanosecond; round up.\n-            let nanos = deficit.div_ceil(u128::from(self.rate_per_sec));\n-            u64::try_from(nanos).unwrap_or(u64::MAX)\n-        };\n-        Spend::Throttled {\n-            retry_after_nanos: retry,\n-        }\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Whole tokens currently available, after refilling to `now_nanos`.\n     pub fn available(&mut self, now_nanos: u64) -> u64 {\n         self.refill(now_nanos);\n         u64::try_from(self.tokens_units / NANOS_PER_SEC).unwrap_or(u64::MAX)\n     }\n }\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "TokenBucket::try_spend",
-      "return_type": "-> Spend",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 81
-        },
-        "start": {
-          "column": 5,
-          "line": 62
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:64:9: replace TokenBucket::try_spend -> Spend with Default::default()",
-    "package": "deflect-ratelimit",
+    "name": "crates/deflect-detect/src/trigger.rs:27:9: replace Watermarks::from_high -> Watermarks with Default::default()",
+    "package": "deflect-detect",
     "replacement": "Default::default()",
     "span": {
       "end": {
         "column": 10,
-        "line": 80
+        "line": 34
       },
       "start": {
         "column": 9,
-        "line": 64
+        "line": 27
       }
     }
   },
   {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace * with + in TokenBucket::try_spend\n@@ -57,17 +57,17 @@\n         let added = u128::from(self.rate_per_sec) * elapsed;\n         self.tokens_units = (self.tokens_units + added).min(self.capacity_units);\n         self.last_nanos = now_nanos;\n     }\n \n     /// Advance to `now_nanos` and try to spend `cost` tokens.\n     pub fn try_spend(&mut self, cost: u64, now_nanos: u64) -> Spend {\n         self.refill(now_nanos);\n-        let cost_units = u128::from(cost) * NANOS_PER_SEC;\n+        let cost_units = u128::from(cost) + /* ~ changed by cargo-mutants ~ */ NANOS_PER_SEC;\n         if self.tokens_units >= cost_units {\n             self.tokens_units -= cost_units;\n             return Spend::Allowed;\n         }\n         let deficit = cost_units - self.tokens_units;\n         let retry = if self.rate_per_sec == 0 {\n             u64::MAX\n         } else {\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace / with % in Watermarks::from_high\n@@ -20,17 +20,17 @@\n     pub bps_low: u64,\n }\n \n impl Watermarks {\n     /// Watermarks with the low marks set to `low_frac`/256 of the high marks.\n     #[must_use]\n     pub fn from_high(pps_high: u64, bps_high: u64, low_frac: u8) -> Watermarks {\n         let scale =\n-            |v: u64| u64::try_from(u128::from(v) * u128::from(low_frac) / 256).unwrap_or(u64::MAX);\n+            |v: u64| u64::try_from(u128::from(v) * u128::from(low_frac) % /* ~ changed by cargo-mutants ~ */ 256).unwrap_or(u64::MAX);\n         Watermarks {\n             pps_high,\n             pps_low: scale(pps_high),\n             bps_high,\n             bps_low: scale(bps_high),\n         }\n     }\n }\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
     "function": {
-      "function_name": "TokenBucket::try_spend",
-      "return_type": "-> Spend",
+      "function_name": "Watermarks::from_high",
+      "return_type": "-> Watermarks",
       "span": {
         "end": {
           "column": 6,
-          "line": 81
+          "line": 35
         },
         "start": {
           "column": 5,
-          "line": 62
+          "line": 24
         }
       }
     },
     "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:65:43: replace * with + in TokenBucket::try_spend",
-    "package": "deflect-ratelimit",
-    "replacement": "+",
-    "span": {
-      "end": {
-        "column": 44,
-        "line": 65
-      },
-      "start": {
-        "column": 43,
-        "line": 65
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace * with / in TokenBucket::try_spend\n@@ -57,17 +57,17 @@\n         let added = u128::from(self.rate_per_sec) * elapsed;\n         self.tokens_units = (self.tokens_units + added).min(self.capacity_units);\n         self.last_nanos = now_nanos;\n     }\n \n     /// Advance to `now_nanos` and try to spend `cost` tokens.\n     pub fn try_spend(&mut self, cost: u64, now_nanos: u64) -> Spend {\n         self.refill(now_nanos);\n-        let cost_units = u128::from(cost) * NANOS_PER_SEC;\n+        let cost_units = u128::from(cost) / /* ~ changed by cargo-mutants ~ */ NANOS_PER_SEC;\n         if self.tokens_units >= cost_units {\n             self.tokens_units -= cost_units;\n             return Spend::Allowed;\n         }\n         let deficit = cost_units - self.tokens_units;\n         let retry = if self.rate_per_sec == 0 {\n             u64::MAX\n         } else {\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "TokenBucket::try_spend",
-      "return_type": "-> Spend",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 81
-        },
-        "start": {
-          "column": 5,
-          "line": 62
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:65:43: replace * with / in TokenBucket::try_spend",
-    "package": "deflect-ratelimit",
-    "replacement": "/",
-    "span": {
-      "end": {
-        "column": 44,
-        "line": 65
-      },
-      "start": {
-        "column": 43,
-        "line": 65
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace >= with < in TokenBucket::try_spend\n@@ -58,17 +58,17 @@\n         self.tokens_units = (self.tokens_units + added).min(self.capacity_units);\n         self.last_nanos = now_nanos;\n     }\n \n     /// Advance to `now_nanos` and try to spend `cost` tokens.\n     pub fn try_spend(&mut self, cost: u64, now_nanos: u64) -> Spend {\n         self.refill(now_nanos);\n         let cost_units = u128::from(cost) * NANOS_PER_SEC;\n-        if self.tokens_units >= cost_units {\n+        if self.tokens_units < /* ~ changed by cargo-mutants ~ */ cost_units {\n             self.tokens_units -= cost_units;\n             return Spend::Allowed;\n         }\n         let deficit = cost_units - self.tokens_units;\n         let retry = if self.rate_per_sec == 0 {\n             u64::MAX\n         } else {\n             // deficit is in units, rate is units/nanosecond; round up.\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "TokenBucket::try_spend",
-      "return_type": "-> Spend",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 81
-        },
-        "start": {
-          "column": 5,
-          "line": 62
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:66:30: replace >= with < in TokenBucket::try_spend",
-    "package": "deflect-ratelimit",
-    "replacement": "<",
-    "span": {
-      "end": {
-        "column": 32,
-        "line": 66
-      },
-      "start": {
-        "column": 30,
-        "line": 66
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace -= with += in TokenBucket::try_spend\n@@ -59,17 +59,17 @@\n         self.last_nanos = now_nanos;\n     }\n \n     /// Advance to `now_nanos` and try to spend `cost` tokens.\n     pub fn try_spend(&mut self, cost: u64, now_nanos: u64) -> Spend {\n         self.refill(now_nanos);\n         let cost_units = u128::from(cost) * NANOS_PER_SEC;\n         if self.tokens_units >= cost_units {\n-            self.tokens_units -= cost_units;\n+            self.tokens_units += /* ~ changed by cargo-mutants ~ */ cost_units;\n             return Spend::Allowed;\n         }\n         let deficit = cost_units - self.tokens_units;\n         let retry = if self.rate_per_sec == 0 {\n             u64::MAX\n         } else {\n             // deficit is in units, rate is units/nanosecond; round up.\n             let nanos = deficit.div_ceil(u128::from(self.rate_per_sec));\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "TokenBucket::try_spend",
-      "return_type": "-> Spend",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 81
-        },
-        "start": {
-          "column": 5,
-          "line": 62
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:67:31: replace -= with += in TokenBucket::try_spend",
-    "package": "deflect-ratelimit",
-    "replacement": "+=",
-    "span": {
-      "end": {
-        "column": 33,
-        "line": 67
-      },
-      "start": {
-        "column": 31,
-        "line": 67
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace -= with /= in TokenBucket::try_spend\n@@ -59,17 +59,17 @@\n         self.last_nanos = now_nanos;\n     }\n \n     /// Advance to `now_nanos` and try to spend `cost` tokens.\n     pub fn try_spend(&mut self, cost: u64, now_nanos: u64) -> Spend {\n         self.refill(now_nanos);\n         let cost_units = u128::from(cost) * NANOS_PER_SEC;\n         if self.tokens_units >= cost_units {\n-            self.tokens_units -= cost_units;\n+            self.tokens_units /= /* ~ changed by cargo-mutants ~ */ cost_units;\n             return Spend::Allowed;\n         }\n         let deficit = cost_units - self.tokens_units;\n         let retry = if self.rate_per_sec == 0 {\n             u64::MAX\n         } else {\n             // deficit is in units, rate is units/nanosecond; round up.\n             let nanos = deficit.div_ceil(u128::from(self.rate_per_sec));\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "TokenBucket::try_spend",
-      "return_type": "-> Spend",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 81
-        },
-        "start": {
-          "column": 5,
-          "line": 62
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:67:31: replace -= with /= in TokenBucket::try_spend",
-    "package": "deflect-ratelimit",
-    "replacement": "/=",
-    "span": {
-      "end": {
-        "column": 33,
-        "line": 67
-      },
-      "start": {
-        "column": 31,
-        "line": 67
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace - with + in TokenBucket::try_spend\n@@ -62,17 +62,17 @@\n     /// Advance to `now_nanos` and try to spend `cost` tokens.\n     pub fn try_spend(&mut self, cost: u64, now_nanos: u64) -> Spend {\n         self.refill(now_nanos);\n         let cost_units = u128::from(cost) * NANOS_PER_SEC;\n         if self.tokens_units >= cost_units {\n             self.tokens_units -= cost_units;\n             return Spend::Allowed;\n         }\n-        let deficit = cost_units - self.tokens_units;\n+        let deficit = cost_units + /* ~ changed by cargo-mutants ~ */ self.tokens_units;\n         let retry = if self.rate_per_sec == 0 {\n             u64::MAX\n         } else {\n             // deficit is in units, rate is units/nanosecond; round up.\n             let nanos = deficit.div_ceil(u128::from(self.rate_per_sec));\n             u64::try_from(nanos).unwrap_or(u64::MAX)\n         };\n         Spend::Throttled {\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "TokenBucket::try_spend",
-      "return_type": "-> Spend",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 81
-        },
-        "start": {
-          "column": 5,
-          "line": 62
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:70:34: replace - with + in TokenBucket::try_spend",
-    "package": "deflect-ratelimit",
-    "replacement": "+",
-    "span": {
-      "end": {
-        "column": 35,
-        "line": 70
-      },
-      "start": {
-        "column": 34,
-        "line": 70
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace - with / in TokenBucket::try_spend\n@@ -62,17 +62,17 @@\n     /// Advance to `now_nanos` and try to spend `cost` tokens.\n     pub fn try_spend(&mut self, cost: u64, now_nanos: u64) -> Spend {\n         self.refill(now_nanos);\n         let cost_units = u128::from(cost) * NANOS_PER_SEC;\n         if self.tokens_units >= cost_units {\n             self.tokens_units -= cost_units;\n             return Spend::Allowed;\n         }\n-        let deficit = cost_units - self.tokens_units;\n+        let deficit = cost_units / /* ~ changed by cargo-mutants ~ */ self.tokens_units;\n         let retry = if self.rate_per_sec == 0 {\n             u64::MAX\n         } else {\n             // deficit is in units, rate is units/nanosecond; round up.\n             let nanos = deficit.div_ceil(u128::from(self.rate_per_sec));\n             u64::try_from(nanos).unwrap_or(u64::MAX)\n         };\n         Spend::Throttled {\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "TokenBucket::try_spend",
-      "return_type": "-> Spend",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 81
-        },
-        "start": {
-          "column": 5,
-          "line": 62
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:70:34: replace - with / in TokenBucket::try_spend",
-    "package": "deflect-ratelimit",
-    "replacement": "/",
-    "span": {
-      "end": {
-        "column": 35,
-        "line": 70
-      },
-      "start": {
-        "column": 34,
-        "line": 70
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace == with != in TokenBucket::try_spend\n@@ -63,17 +63,17 @@\n     pub fn try_spend(&mut self, cost: u64, now_nanos: u64) -> Spend {\n         self.refill(now_nanos);\n         let cost_units = u128::from(cost) * NANOS_PER_SEC;\n         if self.tokens_units >= cost_units {\n             self.tokens_units -= cost_units;\n             return Spend::Allowed;\n         }\n         let deficit = cost_units - self.tokens_units;\n-        let retry = if self.rate_per_sec == 0 {\n+        let retry = if self.rate_per_sec != /* ~ changed by cargo-mutants ~ */ 0 {\n             u64::MAX\n         } else {\n             // deficit is in units, rate is units/nanosecond; round up.\n             let nanos = deficit.div_ceil(u128::from(self.rate_per_sec));\n             u64::try_from(nanos).unwrap_or(u64::MAX)\n         };\n         Spend::Throttled {\n             retry_after_nanos: retry,\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "TokenBucket::try_spend",
-      "return_type": "-> Spend",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 81
-        },
-        "start": {
-          "column": 5,
-          "line": 62
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:71:42: replace == with != in TokenBucket::try_spend",
-    "package": "deflect-ratelimit",
-    "replacement": "!=",
-    "span": {
-      "end": {
-        "column": 44,
-        "line": 71
-      },
-      "start": {
-        "column": 42,
-        "line": 71
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace TokenBucket::available -> u64 with 0\n@@ -77,18 +77,17 @@\n         };\n         Spend::Throttled {\n             retry_after_nanos: retry,\n         }\n     }\n \n     /// Whole tokens currently available, after refilling to `now_nanos`.\n     pub fn available(&mut self, now_nanos: u64) -> u64 {\n-        self.refill(now_nanos);\n-        u64::try_from(self.tokens_units / NANOS_PER_SEC).unwrap_or(u64::MAX)\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     #[test]\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "TokenBucket::available",
-      "return_type": "-> u64",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 87
-        },
-        "start": {
-          "column": 5,
-          "line": 83
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:85:9: replace TokenBucket::available -> u64 with 0",
-    "package": "deflect-ratelimit",
-    "replacement": "0",
-    "span": {
-      "end": {
-        "column": 77,
-        "line": 86
-      },
-      "start": {
-        "column": 9,
-        "line": 85
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace TokenBucket::available -> u64 with 1\n@@ -77,18 +77,17 @@\n         };\n         Spend::Throttled {\n             retry_after_nanos: retry,\n         }\n     }\n \n     /// Whole tokens currently available, after refilling to `now_nanos`.\n     pub fn available(&mut self, now_nanos: u64) -> u64 {\n-        self.refill(now_nanos);\n-        u64::try_from(self.tokens_units / NANOS_PER_SEC).unwrap_or(u64::MAX)\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     #[test]\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "TokenBucket::available",
-      "return_type": "-> u64",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 87
-        },
-        "start": {
-          "column": 5,
-          "line": 83
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:85:9: replace TokenBucket::available -> u64 with 1",
-    "package": "deflect-ratelimit",
-    "replacement": "1",
-    "span": {
-      "end": {
-        "column": 77,
-        "line": 86
-      },
-      "start": {
-        "column": 9,
-        "line": 85
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace / with % in TokenBucket::available\n@@ -78,17 +78,17 @@\n         Spend::Throttled {\n             retry_after_nanos: retry,\n         }\n     }\n \n     /// Whole tokens currently available, after refilling to `now_nanos`.\n     pub fn available(&mut self, now_nanos: u64) -> u64 {\n         self.refill(now_nanos);\n-        u64::try_from(self.tokens_units / NANOS_PER_SEC).unwrap_or(u64::MAX)\n+        u64::try_from(self.tokens_units % /* ~ changed by cargo-mutants ~ */ NANOS_PER_SEC).unwrap_or(u64::MAX)\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     #[test]\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
-    "function": {
-      "function_name": "TokenBucket::available",
-      "return_type": "-> u64",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 87
-        },
-        "start": {
-          "column": 5,
-          "line": 83
-        }
-      }
-    },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:86:41: replace / with % in TokenBucket::available",
-    "package": "deflect-ratelimit",
+    "name": "crates/deflect-detect/src/trigger.rs:28:73: replace / with % in Watermarks::from_high",
+    "package": "deflect-detect",
     "replacement": "%",
     "span": {
       "end": {
-        "column": 42,
-        "line": 86
+        "column": 74,
+        "line": 28
       },
       "start": {
-        "column": 41,
-        "line": 86
+        "column": 73,
+        "line": 28
       }
     }
   },
   {
-    "diff": "--- crates/deflect-ratelimit/src/bucket.rs\n+++ replace / with * in TokenBucket::available\n@@ -78,17 +78,17 @@\n         Spend::Throttled {\n             retry_after_nanos: retry,\n         }\n     }\n \n     /// Whole tokens currently available, after refilling to `now_nanos`.\n     pub fn available(&mut self, now_nanos: u64) -> u64 {\n         self.refill(now_nanos);\n-        u64::try_from(self.tokens_units / NANOS_PER_SEC).unwrap_or(u64::MAX)\n+        u64::try_from(self.tokens_units * /* ~ changed by cargo-mutants ~ */ NANOS_PER_SEC).unwrap_or(u64::MAX)\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     #[test]\n",
-    "file": "crates/deflect-ratelimit/src/bucket.rs",
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace / with * in Watermarks::from_high\n@@ -20,17 +20,17 @@\n     pub bps_low: u64,\n }\n \n impl Watermarks {\n     /// Watermarks with the low marks set to `low_frac`/256 of the high marks.\n     #[must_use]\n     pub fn from_high(pps_high: u64, bps_high: u64, low_frac: u8) -> Watermarks {\n         let scale =\n-            |v: u64| u64::try_from(u128::from(v) * u128::from(low_frac) / 256).unwrap_or(u64::MAX);\n+            |v: u64| u64::try_from(u128::from(v) * u128::from(low_frac) * /* ~ changed by cargo-mutants ~ */ 256).unwrap_or(u64::MAX);\n         Watermarks {\n             pps_high,\n             pps_low: scale(pps_high),\n             bps_high,\n             bps_low: scale(bps_high),\n         }\n     }\n }\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
     "function": {
-      "function_name": "TokenBucket::available",
-      "return_type": "-> u64",
+      "function_name": "Watermarks::from_high",
+      "return_type": "-> Watermarks",
       "span": {
         "end": {
           "column": 6,
-          "line": 87
+          "line": 35
         },
         "start": {
           "column": 5,
-          "line": 83
+          "line": 24
         }
       }
     },
     "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/bucket.rs:86:41: replace / with * in TokenBucket::available",
-    "package": "deflect-ratelimit",
+    "name": "crates/deflect-detect/src/trigger.rs:28:73: replace / with * in Watermarks::from_high",
+    "package": "deflect-detect",
     "replacement": "*",
     "span": {
       "end": {
-        "column": 42,
-        "line": 86
+        "column": 74,
+        "line": 28
       },
       "start": {
-        "column": 41,
-        "line": 86
+        "column": 73,
+        "line": 28
       }
     }
   },
   {
-    "diff": "--- crates/deflect-ratelimit/src/governor.rs\n+++ replace SourceGovernor::slot_for -> usize with 0\n@@ -59,17 +59,17 @@\n         SourceGovernor {\n             config,\n             mask: (n - 1) as u64,\n             slots: slots.into_boxed_slice(),\n         }\n     }\n \n     fn slot_for(&self, key: SourceKey) -> usize {\n-        usize::try_from(fnv1a(key) & self.mask).expect(\"masked slot index fits usize\")\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n \n     fn cost_of(&self, wire_len: u32) -> u64 {\n         match self.config.cost {\n             CostMode::Packet => 1,\n             CostMode::Byte => u64::from(wire_len).max(1),\n         }\n     }\n",
-    "file": "crates/deflect-ratelimit/src/governor.rs",
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace * with + in Watermarks::from_high\n@@ -20,17 +20,17 @@\n     pub bps_low: u64,\n }\n \n impl Watermarks {\n     /// Watermarks with the low marks set to `low_frac`/256 of the high marks.\n     #[must_use]\n     pub fn from_high(pps_high: u64, bps_high: u64, low_frac: u8) -> Watermarks {\n         let scale =\n-            |v: u64| u64::try_from(u128::from(v) * u128::from(low_frac) / 256).unwrap_or(u64::MAX);\n+            |v: u64| u64::try_from(u128::from(v) + /* ~ changed by cargo-mutants ~ */ u128::from(low_frac) / 256).unwrap_or(u64::MAX);\n         Watermarks {\n             pps_high,\n             pps_low: scale(pps_high),\n             bps_high,\n             bps_low: scale(bps_high),\n         }\n     }\n }\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
     "function": {
-      "function_name": "SourceGovernor::slot_for",
-      "return_type": "-> usize",
+      "function_name": "Watermarks::from_high",
+      "return_type": "-> Watermarks",
       "span": {
         "end": {
           "column": 6,
-          "line": 68
+          "line": 35
         },
         "start": {
           "column": 5,
-          "line": 66
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-ratelimit/src/governor.rs:67:9: replace SourceGovernor::slot_for -> usize with 0",
-    "package": "deflect-ratelimit",
-    "replacement": "0",
-    "span": {
-      "end": {
-        "column": 87,
-        "line": 67
-      },
-      "start": {
-        "column": 9,
-        "line": 67
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/governor.rs\n+++ replace SourceGovernor::slot_for -> usize with 1\n@@ -59,17 +59,17 @@\n         SourceGovernor {\n             config,\n             mask: (n - 1) as u64,\n             slots: slots.into_boxed_slice(),\n         }\n     }\n \n     fn slot_for(&self, key: SourceKey) -> usize {\n-        usize::try_from(fnv1a(key) & self.mask).expect(\"masked slot index fits usize\")\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n \n     fn cost_of(&self, wire_len: u32) -> u64 {\n         match self.config.cost {\n             CostMode::Packet => 1,\n             CostMode::Byte => u64::from(wire_len).max(1),\n         }\n     }\n",
-    "file": "crates/deflect-ratelimit/src/governor.rs",
-    "function": {
-      "function_name": "SourceGovernor::slot_for",
-      "return_type": "-> usize",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 68
-        },
-        "start": {
-          "column": 5,
-          "line": 66
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-ratelimit/src/governor.rs:67:9: replace SourceGovernor::slot_for -> usize with 1",
-    "package": "deflect-ratelimit",
-    "replacement": "1",
-    "span": {
-      "end": {
-        "column": 87,
-        "line": 67
-      },
-      "start": {
-        "column": 9,
-        "line": 67
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/governor.rs\n+++ replace & with | in SourceGovernor::slot_for\n@@ -59,17 +59,17 @@\n         SourceGovernor {\n             config,\n             mask: (n - 1) as u64,\n             slots: slots.into_boxed_slice(),\n         }\n     }\n \n     fn slot_for(&self, key: SourceKey) -> usize {\n-        usize::try_from(fnv1a(key) & self.mask).expect(\"masked slot index fits usize\")\n+        usize::try_from(fnv1a(key) | /* ~ changed by cargo-mutants ~ */ self.mask).expect(\"masked slot index fits usize\")\n     }\n \n     fn cost_of(&self, wire_len: u32) -> u64 {\n         match self.config.cost {\n             CostMode::Packet => 1,\n             CostMode::Byte => u64::from(wire_len).max(1),\n         }\n     }\n",
-    "file": "crates/deflect-ratelimit/src/governor.rs",
-    "function": {
-      "function_name": "SourceGovernor::slot_for",
-      "return_type": "-> usize",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 68
-        },
-        "start": {
-          "column": 5,
-          "line": 66
+          "line": 24
         }
       }
     },
     "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/governor.rs:67:36: replace & with | in SourceGovernor::slot_for",
-    "package": "deflect-ratelimit",
-    "replacement": "|",
+    "name": "crates/deflect-detect/src/trigger.rs:28:50: replace * with + in Watermarks::from_high",
+    "package": "deflect-detect",
+    "replacement": "+",
     "span": {
       "end": {
-        "column": 37,
-        "line": 67
+        "column": 51,
+        "line": 28
       },
       "start": {
-        "column": 36,
-        "line": 67
+        "column": 50,
+        "line": 28
       }
     }
   },
   {
-    "diff": "--- crates/deflect-ratelimit/src/governor.rs\n+++ replace & with ^ in SourceGovernor::slot_for\n@@ -59,17 +59,17 @@\n         SourceGovernor {\n             config,\n             mask: (n - 1) as u64,\n             slots: slots.into_boxed_slice(),\n         }\n     }\n \n     fn slot_for(&self, key: SourceKey) -> usize {\n-        usize::try_from(fnv1a(key) & self.mask).expect(\"masked slot index fits usize\")\n+        usize::try_from(fnv1a(key) ^ /* ~ changed by cargo-mutants ~ */ self.mask).expect(\"masked slot index fits usize\")\n     }\n \n     fn cost_of(&self, wire_len: u32) -> u64 {\n         match self.config.cost {\n             CostMode::Packet => 1,\n             CostMode::Byte => u64::from(wire_len).max(1),\n         }\n     }\n",
-    "file": "crates/deflect-ratelimit/src/governor.rs",
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace * with / in Watermarks::from_high\n@@ -20,17 +20,17 @@\n     pub bps_low: u64,\n }\n \n impl Watermarks {\n     /// Watermarks with the low marks set to `low_frac`/256 of the high marks.\n     #[must_use]\n     pub fn from_high(pps_high: u64, bps_high: u64, low_frac: u8) -> Watermarks {\n         let scale =\n-            |v: u64| u64::try_from(u128::from(v) * u128::from(low_frac) / 256).unwrap_or(u64::MAX);\n+            |v: u64| u64::try_from(u128::from(v) / /* ~ changed by cargo-mutants ~ */ u128::from(low_frac) / 256).unwrap_or(u64::MAX);\n         Watermarks {\n             pps_high,\n             pps_low: scale(pps_high),\n             bps_high,\n             bps_low: scale(bps_high),\n         }\n     }\n }\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
     "function": {
-      "function_name": "SourceGovernor::slot_for",
-      "return_type": "-> usize",
+      "function_name": "Watermarks::from_high",
+      "return_type": "-> Watermarks",
       "span": {
         "end": {
           "column": 6,
-          "line": 68
+          "line": 35
         },
         "start": {
           "column": 5,
-          "line": 66
+          "line": 24
         }
       }
     },
     "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/governor.rs:67:36: replace & with ^ in SourceGovernor::slot_for",
-    "package": "deflect-ratelimit",
-    "replacement": "^",
+    "name": "crates/deflect-detect/src/trigger.rs:28:50: replace * with / in Watermarks::from_high",
+    "package": "deflect-detect",
+    "replacement": "/",
     "span": {
       "end": {
-        "column": 37,
-        "line": 67
+        "column": 51,
+        "line": 28
       },
       "start": {
-        "column": 36,
-        "line": 67
+        "column": 50,
+        "line": 28
       }
     }
   },
   {
-    "diff": "--- crates/deflect-ratelimit/src/governor.rs\n+++ replace SourceGovernor::cost_of -> u64 with 0\n@@ -63,20 +63,17 @@\n         }\n     }\n \n     fn slot_for(&self, key: SourceKey) -> usize {\n         usize::try_from(fnv1a(key) & self.mask).expect(\"masked slot index fits usize\")\n     }\n \n     fn cost_of(&self, wire_len: u32) -> u64 {\n-        match self.config.cost {\n-            CostMode::Packet => 1,\n-            CostMode::Byte => u64::from(wire_len).max(1),\n-        }\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Charge `cost` to `key` at `now_nanos`, returning the bucket outcome.\n     ///\n     /// # Panics\n     /// Panics only if a slot mutex was poisoned by a previous panic while held.\n     #[must_use]\n     pub fn charge(&self, key: SourceKey, cost: u64, now_nanos: u64) -> Spend {\n",
-    "file": "crates/deflect-ratelimit/src/governor.rs",
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace Trigger::observe -> Phase with Default::default()\n@@ -59,19 +59,17 @@\n             last_pps: 0,\n             last_bps: 0,\n         }\n     }\n \n     /// Record one packet of `wire_len` bytes at `now_nanos` and return the\n     /// phase after this observation.\n     pub fn observe(&mut self, wire_len: u32, now_nanos: u64) -> Phase {\n-        self.packets.record(1, now_nanos);\n-        self.bytes.record(u64::from(wire_len), now_nanos);\n-        self.reassess(now_nanos)\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Re-evaluate the phase at `now_nanos` without recording traffic; lets a\n     /// caller observe decay to calm during a lull with no packets.\n     pub fn reassess(&mut self, now_nanos: u64) -> Phase {\n         self.last_pps = self.packets.rate_per_sec(now_nanos);\n         self.last_bps = self.bytes.rate_per_sec(now_nanos);\n         self.phase = match self.phase {\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
     "function": {
-      "function_name": "SourceGovernor::cost_of",
-      "return_type": "-> u64",
+      "function_name": "Trigger::observe",
+      "return_type": "-> Phase",
       "span": {
         "end": {
           "column": 6,
-          "line": 75
-        },
-        "start": {
-          "column": 5,
           "line": 70
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-ratelimit/src/governor.rs:71:9: replace SourceGovernor::cost_of -> u64 with 0",
-    "package": "deflect-ratelimit",
-    "replacement": "0",
-    "span": {
-      "end": {
-        "column": 10,
-        "line": 74
-      },
-      "start": {
-        "column": 9,
-        "line": 71
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/governor.rs\n+++ replace SourceGovernor::cost_of -> u64 with 1\n@@ -63,20 +63,17 @@\n         }\n     }\n \n     fn slot_for(&self, key: SourceKey) -> usize {\n         usize::try_from(fnv1a(key) & self.mask).expect(\"masked slot index fits usize\")\n     }\n \n     fn cost_of(&self, wire_len: u32) -> u64 {\n-        match self.config.cost {\n-            CostMode::Packet => 1,\n-            CostMode::Byte => u64::from(wire_len).max(1),\n-        }\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Charge `cost` to `key` at `now_nanos`, returning the bucket outcome.\n     ///\n     /// # Panics\n     /// Panics only if a slot mutex was poisoned by a previous panic while held.\n     #[must_use]\n     pub fn charge(&self, key: SourceKey, cost: u64, now_nanos: u64) -> Spend {\n",
-    "file": "crates/deflect-ratelimit/src/governor.rs",
-    "function": {
-      "function_name": "SourceGovernor::cost_of",
-      "return_type": "-> u64",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 75
         },
         "start": {
           "column": 5,
-          "line": 70
+          "line": 64
         }
       }
     },
     "genre": "FnValue",
-    "name": "crates/deflect-ratelimit/src/governor.rs:71:9: replace SourceGovernor::cost_of -> u64 with 1",
-    "package": "deflect-ratelimit",
-    "replacement": "1",
-    "span": {
-      "end": {
-        "column": 10,
-        "line": 74
-      },
-      "start": {
-        "column": 9,
-        "line": 71
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/governor.rs\n+++ replace SourceGovernor::charge -> Spend with Default::default()\n@@ -75,19 +75,17 @@\n     }\n \n     /// Charge `cost` to `key` at `now_nanos`, returning the bucket outcome.\n     ///\n     /// # Panics\n     /// Panics only if a slot mutex was poisoned by a previous panic while held.\n     #[must_use]\n     pub fn charge(&self, key: SourceKey, cost: u64, now_nanos: u64) -> Spend {\n-        let slot = self.slot_for(key);\n-        let mut bucket = self.slots[slot].lock().expect(\"bucket mutex poisoned\");\n-        bucket.try_spend(cost, now_nanos)\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n impl Stage for SourceGovernor {\n     fn evaluate(&self, obs: &Observation<'_>) -> Verdict {\n         let key = obs.source_key(self.config.aggregation);\n         let cost = self.cost_of(obs.packet.wire_len);\n         match self.charge(key, cost, obs.ts_nanos) {\n",
-    "file": "crates/deflect-ratelimit/src/governor.rs",
-    "function": {
-      "function_name": "SourceGovernor::charge",
-      "return_type": "-> Spend",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 86
-        },
-        "start": {
-          "column": 5,
-          "line": 77
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-ratelimit/src/governor.rs:83:9: replace SourceGovernor::charge -> Spend with Default::default()",
-    "package": "deflect-ratelimit",
+    "name": "crates/deflect-detect/src/trigger.rs:67:9: replace Trigger::observe -> Phase with Default::default()",
+    "package": "deflect-detect",
     "replacement": "Default::default()",
     "span": {
       "end": {
-        "column": 42,
-        "line": 85
+        "column": 33,
+        "line": 69
       },
       "start": {
         "column": 9,
-        "line": 83
+        "line": 67
       }
     }
   },
   {
-    "diff": "--- crates/deflect-ratelimit/src/governor.rs\n+++ replace <impl Stage for SourceGovernor>::evaluate -> Verdict with Default::default()\n@@ -83,24 +83,17 @@\n         let slot = self.slot_for(key);\n         let mut bucket = self.slots[slot].lock().expect(\"bucket mutex poisoned\");\n         bucket.try_spend(cost, now_nanos)\n     }\n }\n \n impl Stage for SourceGovernor {\n     fn evaluate(&self, obs: &Observation<'_>) -> Verdict {\n-        let key = obs.source_key(self.config.aggregation);\n-        let cost = self.cost_of(obs.packet.wire_len);\n-        match self.charge(key, cost, obs.ts_nanos) {\n-            Spend::Allowed => Verdict::Pass,\n-            Spend::Throttled { retry_after_nanos } => Verdict::RateLimit {\n-                retry_after: core::time::Duration::from_nanos(retry_after_nanos),\n-            },\n-        }\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     fn name(&self) -> &'static str {\n         \"source_governor\"\n     }\n }\n \n fn fnv1a(key: SourceKey) -> u64 {\n",
-    "file": "crates/deflect-ratelimit/src/governor.rs",
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace Trigger::reassess -> Phase with Default::default()\n@@ -67,35 +67,17 @@\n         self.packets.record(1, now_nanos);\n         self.bytes.record(u64::from(wire_len), now_nanos);\n         self.reassess(now_nanos)\n     }\n \n     /// Re-evaluate the phase at `now_nanos` without recording traffic; lets a\n     /// caller observe decay to calm during a lull with no packets.\n     pub fn reassess(&mut self, now_nanos: u64) -> Phase {\n-        self.last_pps = self.packets.rate_per_sec(now_nanos);\n-        self.last_bps = self.bytes.rate_per_sec(now_nanos);\n-        self.phase = match self.phase {\n-            Phase::Calm => {\n-                if self.last_pps >= self.marks.pps_high || self.last_bps >= self.marks.bps_high {\n-                    Phase::Mitigating\n-                } else {\n-                    Phase::Calm\n-                }\n-            }\n-            Phase::Mitigating => {\n-                if self.last_pps < self.marks.pps_low && self.last_bps < self.marks.bps_low {\n-                    Phase::Calm\n-                } else {\n-                    Phase::Mitigating\n-                }\n-            }\n-        };\n-        self.phase\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn phase(&self) -> Phase {\n         self.phase\n     }\n \n     #[must_use]\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
     "function": {
-      "function_name": "<impl Stage for SourceGovernor>::evaluate",
-      "return_type": "-> Verdict",
+      "function_name": "Trigger::reassess",
+      "return_type": "-> Phase",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 94
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-detect/src/trigger.rs:75:9: replace Trigger::reassess -> Phase with Default::default()",
+    "package": "deflect-detect",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 19,
+        "line": 93
+      },
+      "start": {
+        "column": 9,
+        "line": 75
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace || with && in Trigger::reassess\n@@ -71,17 +71,17 @@\n \n     /// Re-evaluate the phase at `now_nanos` without recording traffic; lets a\n     /// caller observe decay to calm during a lull with no packets.\n     pub fn reassess(&mut self, now_nanos: u64) -> Phase {\n         self.last_pps = self.packets.rate_per_sec(now_nanos);\n         self.last_bps = self.bytes.rate_per_sec(now_nanos);\n         self.phase = match self.phase {\n             Phase::Calm => {\n-                if self.last_pps >= self.marks.pps_high || self.last_bps >= self.marks.bps_high {\n+                if self.last_pps >= self.marks.pps_high && /* ~ changed by cargo-mutants ~ */ self.last_bps >= self.marks.bps_high {\n                     Phase::Mitigating\n                 } else {\n                     Phase::Calm\n                 }\n             }\n             Phase::Mitigating => {\n                 if self.last_pps < self.marks.pps_low && self.last_bps < self.marks.bps_low {\n                     Phase::Calm\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
+    "function": {
+      "function_name": "Trigger::reassess",
+      "return_type": "-> Phase",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 94
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/trigger.rs:79:57: replace || with && in Trigger::reassess",
+    "package": "deflect-detect",
+    "replacement": "&&",
+    "span": {
+      "end": {
+        "column": 59,
+        "line": 79
+      },
+      "start": {
+        "column": 57,
+        "line": 79
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace >= with < in Trigger::reassess\n@@ -71,17 +71,17 @@\n \n     /// Re-evaluate the phase at `now_nanos` without recording traffic; lets a\n     /// caller observe decay to calm during a lull with no packets.\n     pub fn reassess(&mut self, now_nanos: u64) -> Phase {\n         self.last_pps = self.packets.rate_per_sec(now_nanos);\n         self.last_bps = self.bytes.rate_per_sec(now_nanos);\n         self.phase = match self.phase {\n             Phase::Calm => {\n-                if self.last_pps >= self.marks.pps_high || self.last_bps >= self.marks.bps_high {\n+                if self.last_pps < /* ~ changed by cargo-mutants ~ */ self.marks.pps_high || self.last_bps >= self.marks.bps_high {\n                     Phase::Mitigating\n                 } else {\n                     Phase::Calm\n                 }\n             }\n             Phase::Mitigating => {\n                 if self.last_pps < self.marks.pps_low && self.last_bps < self.marks.bps_low {\n                     Phase::Calm\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
+    "function": {
+      "function_name": "Trigger::reassess",
+      "return_type": "-> Phase",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 94
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/trigger.rs:79:34: replace >= with < in Trigger::reassess",
+    "package": "deflect-detect",
+    "replacement": "<",
+    "span": {
+      "end": {
+        "column": 36,
+        "line": 79
+      },
+      "start": {
+        "column": 34,
+        "line": 79
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace >= with < in Trigger::reassess\n@@ -71,17 +71,17 @@\n \n     /// Re-evaluate the phase at `now_nanos` without recording traffic; lets a\n     /// caller observe decay to calm during a lull with no packets.\n     pub fn reassess(&mut self, now_nanos: u64) -> Phase {\n         self.last_pps = self.packets.rate_per_sec(now_nanos);\n         self.last_bps = self.bytes.rate_per_sec(now_nanos);\n         self.phase = match self.phase {\n             Phase::Calm => {\n-                if self.last_pps >= self.marks.pps_high || self.last_bps >= self.marks.bps_high {\n+                if self.last_pps >= self.marks.pps_high || self.last_bps < /* ~ changed by cargo-mutants ~ */ self.marks.bps_high {\n                     Phase::Mitigating\n                 } else {\n                     Phase::Calm\n                 }\n             }\n             Phase::Mitigating => {\n                 if self.last_pps < self.marks.pps_low && self.last_bps < self.marks.bps_low {\n                     Phase::Calm\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
+    "function": {
+      "function_name": "Trigger::reassess",
+      "return_type": "-> Phase",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 94
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/trigger.rs:79:74: replace >= with < in Trigger::reassess",
+    "package": "deflect-detect",
+    "replacement": "<",
+    "span": {
+      "end": {
+        "column": 76,
+        "line": 79
+      },
+      "start": {
+        "column": 74,
+        "line": 79
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace && with || in Trigger::reassess\n@@ -78,17 +78,17 @@\n             Phase::Calm => {\n                 if self.last_pps >= self.marks.pps_high || self.last_bps >= self.marks.bps_high {\n                     Phase::Mitigating\n                 } else {\n                     Phase::Calm\n                 }\n             }\n             Phase::Mitigating => {\n-                if self.last_pps < self.marks.pps_low && self.last_bps < self.marks.bps_low {\n+                if self.last_pps < self.marks.pps_low || /* ~ changed by cargo-mutants ~ */ self.last_bps < self.marks.bps_low {\n                     Phase::Calm\n                 } else {\n                     Phase::Mitigating\n                 }\n             }\n         };\n         self.phase\n     }\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
+    "function": {
+      "function_name": "Trigger::reassess",
+      "return_type": "-> Phase",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 94
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/trigger.rs:86:55: replace && with || in Trigger::reassess",
+    "package": "deflect-detect",
+    "replacement": "||",
+    "span": {
+      "end": {
+        "column": 57,
+        "line": 86
+      },
+      "start": {
+        "column": 55,
+        "line": 86
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace < with == in Trigger::reassess\n@@ -78,17 +78,17 @@\n             Phase::Calm => {\n                 if self.last_pps >= self.marks.pps_high || self.last_bps >= self.marks.bps_high {\n                     Phase::Mitigating\n                 } else {\n                     Phase::Calm\n                 }\n             }\n             Phase::Mitigating => {\n-                if self.last_pps < self.marks.pps_low && self.last_bps < self.marks.bps_low {\n+                if self.last_pps == /* ~ changed by cargo-mutants ~ */ self.marks.pps_low && self.last_bps < self.marks.bps_low {\n                     Phase::Calm\n                 } else {\n                     Phase::Mitigating\n                 }\n             }\n         };\n         self.phase\n     }\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
+    "function": {
+      "function_name": "Trigger::reassess",
+      "return_type": "-> Phase",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 94
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/trigger.rs:86:34: replace < with == in Trigger::reassess",
+    "package": "deflect-detect",
+    "replacement": "==",
+    "span": {
+      "end": {
+        "column": 35,
+        "line": 86
+      },
+      "start": {
+        "column": 34,
+        "line": 86
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace < with > in Trigger::reassess\n@@ -78,17 +78,17 @@\n             Phase::Calm => {\n                 if self.last_pps >= self.marks.pps_high || self.last_bps >= self.marks.bps_high {\n                     Phase::Mitigating\n                 } else {\n                     Phase::Calm\n                 }\n             }\n             Phase::Mitigating => {\n-                if self.last_pps < self.marks.pps_low && self.last_bps < self.marks.bps_low {\n+                if self.last_pps > /* ~ changed by cargo-mutants ~ */ self.marks.pps_low && self.last_bps < self.marks.bps_low {\n                     Phase::Calm\n                 } else {\n                     Phase::Mitigating\n                 }\n             }\n         };\n         self.phase\n     }\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
+    "function": {
+      "function_name": "Trigger::reassess",
+      "return_type": "-> Phase",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 94
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/trigger.rs:86:34: replace < with > in Trigger::reassess",
+    "package": "deflect-detect",
+    "replacement": ">",
+    "span": {
+      "end": {
+        "column": 35,
+        "line": 86
+      },
+      "start": {
+        "column": 34,
+        "line": 86
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace < with <= in Trigger::reassess\n@@ -78,17 +78,17 @@\n             Phase::Calm => {\n                 if self.last_pps >= self.marks.pps_high || self.last_bps >= self.marks.bps_high {\n                     Phase::Mitigating\n                 } else {\n                     Phase::Calm\n                 }\n             }\n             Phase::Mitigating => {\n-                if self.last_pps < self.marks.pps_low && self.last_bps < self.marks.bps_low {\n+                if self.last_pps <= /* ~ changed by cargo-mutants ~ */ self.marks.pps_low && self.last_bps < self.marks.bps_low {\n                     Phase::Calm\n                 } else {\n                     Phase::Mitigating\n                 }\n             }\n         };\n         self.phase\n     }\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
+    "function": {
+      "function_name": "Trigger::reassess",
+      "return_type": "-> Phase",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 94
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/trigger.rs:86:34: replace < with <= in Trigger::reassess",
+    "package": "deflect-detect",
+    "replacement": "<=",
+    "span": {
+      "end": {
+        "column": 35,
+        "line": 86
+      },
+      "start": {
+        "column": 34,
+        "line": 86
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace < with == in Trigger::reassess\n@@ -78,17 +78,17 @@\n             Phase::Calm => {\n                 if self.last_pps >= self.marks.pps_high || self.last_bps >= self.marks.bps_high {\n                     Phase::Mitigating\n                 } else {\n                     Phase::Calm\n                 }\n             }\n             Phase::Mitigating => {\n-                if self.last_pps < self.marks.pps_low && self.last_bps < self.marks.bps_low {\n+                if self.last_pps < self.marks.pps_low && self.last_bps == /* ~ changed by cargo-mutants ~ */ self.marks.bps_low {\n                     Phase::Calm\n                 } else {\n                     Phase::Mitigating\n                 }\n             }\n         };\n         self.phase\n     }\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
+    "function": {
+      "function_name": "Trigger::reassess",
+      "return_type": "-> Phase",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 94
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/trigger.rs:86:72: replace < with == in Trigger::reassess",
+    "package": "deflect-detect",
+    "replacement": "==",
+    "span": {
+      "end": {
+        "column": 73,
+        "line": 86
+      },
+      "start": {
+        "column": 72,
+        "line": 86
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace < with > in Trigger::reassess\n@@ -78,17 +78,17 @@\n             Phase::Calm => {\n                 if self.last_pps >= self.marks.pps_high || self.last_bps >= self.marks.bps_high {\n                     Phase::Mitigating\n                 } else {\n                     Phase::Calm\n                 }\n             }\n             Phase::Mitigating => {\n-                if self.last_pps < self.marks.pps_low && self.last_bps < self.marks.bps_low {\n+                if self.last_pps < self.marks.pps_low && self.last_bps > /* ~ changed by cargo-mutants ~ */ self.marks.bps_low {\n                     Phase::Calm\n                 } else {\n                     Phase::Mitigating\n                 }\n             }\n         };\n         self.phase\n     }\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
+    "function": {
+      "function_name": "Trigger::reassess",
+      "return_type": "-> Phase",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 94
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/trigger.rs:86:72: replace < with > in Trigger::reassess",
+    "package": "deflect-detect",
+    "replacement": ">",
+    "span": {
+      "end": {
+        "column": 73,
+        "line": 86
+      },
+      "start": {
+        "column": 72,
+        "line": 86
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace < with <= in Trigger::reassess\n@@ -78,17 +78,17 @@\n             Phase::Calm => {\n                 if self.last_pps >= self.marks.pps_high || self.last_bps >= self.marks.bps_high {\n                     Phase::Mitigating\n                 } else {\n                     Phase::Calm\n                 }\n             }\n             Phase::Mitigating => {\n-                if self.last_pps < self.marks.pps_low && self.last_bps < self.marks.bps_low {\n+                if self.last_pps < self.marks.pps_low && self.last_bps <= /* ~ changed by cargo-mutants ~ */ self.marks.bps_low {\n                     Phase::Calm\n                 } else {\n                     Phase::Mitigating\n                 }\n             }\n         };\n         self.phase\n     }\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
+    "function": {
+      "function_name": "Trigger::reassess",
+      "return_type": "-> Phase",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 94
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/trigger.rs:86:72: replace < with <= in Trigger::reassess",
+    "package": "deflect-detect",
+    "replacement": "<=",
+    "span": {
+      "end": {
+        "column": 73,
+        "line": 86
+      },
+      "start": {
+        "column": 72,
+        "line": 86
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace Trigger::phase -> Phase with Default::default()\n@@ -90,17 +90,17 @@\n                 }\n             }\n         };\n         self.phase\n     }\n \n     #[must_use]\n     pub fn phase(&self) -> Phase {\n-        self.phase\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn last_pps(&self) -> u64 {\n         self.last_pps\n     }\n \n     #[must_use]\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
+    "function": {
+      "function_name": "Trigger::phase",
+      "return_type": "-> Phase",
       "span": {
         "end": {
           "column": 6,
@@ -972,214 +556,822 @@
         },
         "start": {
           "column": 5,
-          "line": 90
+          "line": 96
         }
       }
     },
     "genre": "FnValue",
-    "name": "crates/deflect-ratelimit/src/governor.rs:91:9: replace <impl Stage for SourceGovernor>::evaluate -> Verdict with Default::default()",
-    "package": "deflect-ratelimit",
+    "name": "crates/deflect-detect/src/trigger.rs:98:9: replace Trigger::phase -> Phase with Default::default()",
+    "package": "deflect-detect",
     "replacement": "Default::default()",
     "span": {
       "end": {
-        "column": 10,
+        "column": 19,
         "line": 98
       },
       "start": {
         "column": 9,
-        "line": 91
+        "line": 98
       }
     }
   },
   {
-    "diff": "--- crates/deflect-ratelimit/src/governor.rs\n+++ replace <impl Stage for SourceGovernor>::name -> &'static str with \"\"\n@@ -94,17 +94,17 @@\n             Spend::Allowed => Verdict::Pass,\n             Spend::Throttled { retry_after_nanos } => Verdict::RateLimit {\n                 retry_after: core::time::Duration::from_nanos(retry_after_nanos),\n             },\n         }\n     }\n \n     fn name(&self) -> &'static str {\n-        \"source_governor\"\n+        \"\" /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n fn fnv1a(key: SourceKey) -> u64 {\n     const OFFSET: u64 = 0xcbf2_9ce4_8422_2325;\n     const PRIME: u64 = 0x1000_0000_01b3;\n     let mut h = OFFSET;\n     let mut mix = |bytes: &[u8]| {\n",
-    "file": "crates/deflect-ratelimit/src/governor.rs",
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace Trigger::last_pps -> u64 with 0\n@@ -95,17 +95,17 @@\n \n     #[must_use]\n     pub fn phase(&self) -> Phase {\n         self.phase\n     }\n \n     #[must_use]\n     pub fn last_pps(&self) -> u64 {\n-        self.last_pps\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn last_bps(&self) -> u64 {\n         self.last_bps\n     }\n }\n \n",
+    "file": "crates/deflect-detect/src/trigger.rs",
     "function": {
-      "function_name": "<impl Stage for SourceGovernor>::name",
-      "return_type": "-> &'static str",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 103
-        },
-        "start": {
-          "column": 5,
-          "line": 101
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-ratelimit/src/governor.rs:102:9: replace <impl Stage for SourceGovernor>::name -> &'static str with \"\"",
-    "package": "deflect-ratelimit",
-    "replacement": "\"\"",
-    "span": {
-      "end": {
-        "column": 26,
-        "line": 102
-      },
-      "start": {
-        "column": 9,
-        "line": 102
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/governor.rs\n+++ replace <impl Stage for SourceGovernor>::name -> &'static str with \"xyzzy\"\n@@ -94,17 +94,17 @@\n             Spend::Allowed => Verdict::Pass,\n             Spend::Throttled { retry_after_nanos } => Verdict::RateLimit {\n                 retry_after: core::time::Duration::from_nanos(retry_after_nanos),\n             },\n         }\n     }\n \n     fn name(&self) -> &'static str {\n-        \"source_governor\"\n+        \"xyzzy\" /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n fn fnv1a(key: SourceKey) -> u64 {\n     const OFFSET: u64 = 0xcbf2_9ce4_8422_2325;\n     const PRIME: u64 = 0x1000_0000_01b3;\n     let mut h = OFFSET;\n     let mut mix = |bytes: &[u8]| {\n",
-    "file": "crates/deflect-ratelimit/src/governor.rs",
-    "function": {
-      "function_name": "<impl Stage for SourceGovernor>::name",
-      "return_type": "-> &'static str",
-      "span": {
-        "end": {
-          "column": 6,
-          "line": 103
-        },
-        "start": {
-          "column": 5,
-          "line": 101
-        }
-      }
-    },
-    "genre": "FnValue",
-    "name": "crates/deflect-ratelimit/src/governor.rs:102:9: replace <impl Stage for SourceGovernor>::name -> &'static str with \"xyzzy\"",
-    "package": "deflect-ratelimit",
-    "replacement": "\"xyzzy\"",
-    "span": {
-      "end": {
-        "column": 26,
-        "line": 102
-      },
-      "start": {
-        "column": 9,
-        "line": 102
-      }
-    }
-  },
-  {
-    "diff": "--- crates/deflect-ratelimit/src/governor.rs\n+++ replace fnv1a -> u64 with 0\n@@ -99,36 +99,17 @@\n     }\n \n     fn name(&self) -> &'static str {\n         \"source_governor\"\n     }\n }\n \n fn fnv1a(key: SourceKey) -> u64 {\n-    const OFFSET: u64 = 0xcbf2_9ce4_8422_2325;\n-    const PRIME: u64 = 0x1000_0000_01b3;\n-    let mut h = OFFSET;\n-    let mut mix = |bytes: &[u8]| {\n-        for &b in bytes {\n-            h ^= u64::from(b);\n-            h = h.wrapping_mul(PRIME);\n-        }\n-    };\n-    match key {\n-        SourceKey::V4(o) => {\n-            mix(&[4]);\n-            mix(&o);\n-        }\n-        SourceKey::V6(o) => {\n-            mix(&[6]);\n-            mix(&o);\n-        }\n-    }\n-    h\n+    0 /* ~ changed by cargo-mutants ~ */\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n     use core::net::IpAddr;\n     use deflect_core::{Packet, L4};\n \n",
-    "file": "crates/deflect-ratelimit/src/governor.rs",
-    "function": {
-      "function_name": "fnv1a",
+      "function_name": "Trigger::last_pps",
       "return_type": "-> u64",
       "span": {
         "end": {
-          "column": 2,
-          "line": 127
+          "column": 6,
+          "line": 104
         },
         "start": {
-          "column": 1,
-          "line": 106
+          "column": 5,
+          "line": 101
         }
       }
     },
     "genre": "FnValue",
-    "name": "crates/deflect-ratelimit/src/governor.rs:107:5: replace fnv1a -> u64 with 0",
-    "package": "deflect-ratelimit",
+    "name": "crates/deflect-detect/src/trigger.rs:103:9: replace Trigger::last_pps -> u64 with 0",
+    "package": "deflect-detect",
     "replacement": "0",
     "span": {
       "end": {
-        "column": 6,
-        "line": 126
+        "column": 22,
+        "line": 103
       },
       "start": {
-        "column": 5,
-        "line": 107
+        "column": 9,
+        "line": 103
       }
     }
   },
   {
-    "diff": "--- crates/deflect-ratelimit/src/governor.rs\n+++ replace fnv1a -> u64 with 1\n@@ -99,36 +99,17 @@\n     }\n \n     fn name(&self) -> &'static str {\n         \"source_governor\"\n     }\n }\n \n fn fnv1a(key: SourceKey) -> u64 {\n-    const OFFSET: u64 = 0xcbf2_9ce4_8422_2325;\n-    const PRIME: u64 = 0x1000_0000_01b3;\n-    let mut h = OFFSET;\n-    let mut mix = |bytes: &[u8]| {\n-        for &b in bytes {\n-            h ^= u64::from(b);\n-            h = h.wrapping_mul(PRIME);\n-        }\n-    };\n-    match key {\n-        SourceKey::V4(o) => {\n-            mix(&[4]);\n-            mix(&o);\n-        }\n-        SourceKey::V6(o) => {\n-            mix(&[6]);\n-            mix(&o);\n-        }\n-    }\n-    h\n+    1 /* ~ changed by cargo-mutants ~ */\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n     use core::net::IpAddr;\n     use deflect_core::{Packet, L4};\n \n",
-    "file": "crates/deflect-ratelimit/src/governor.rs",
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace Trigger::last_pps -> u64 with 1\n@@ -95,17 +95,17 @@\n \n     #[must_use]\n     pub fn phase(&self) -> Phase {\n         self.phase\n     }\n \n     #[must_use]\n     pub fn last_pps(&self) -> u64 {\n-        self.last_pps\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn last_bps(&self) -> u64 {\n         self.last_bps\n     }\n }\n \n",
+    "file": "crates/deflect-detect/src/trigger.rs",
     "function": {
-      "function_name": "fnv1a",
+      "function_name": "Trigger::last_pps",
       "return_type": "-> u64",
       "span": {
         "end": {
-          "column": 2,
-          "line": 127
+          "column": 6,
+          "line": 104
         },
         "start": {
-          "column": 1,
+          "column": 5,
+          "line": 101
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-detect/src/trigger.rs:103:9: replace Trigger::last_pps -> u64 with 1",
+    "package": "deflect-detect",
+    "replacement": "1",
+    "span": {
+      "end": {
+        "column": 22,
+        "line": 103
+      },
+      "start": {
+        "column": 9,
+        "line": 103
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace Trigger::last_bps -> u64 with 0\n@@ -100,17 +100,17 @@\n \n     #[must_use]\n     pub fn last_pps(&self) -> u64 {\n         self.last_pps\n     }\n \n     #[must_use]\n     pub fn last_bps(&self) -> u64 {\n-        self.last_bps\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     fn marks() -> Watermarks {\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
+    "function": {
+      "function_name": "Trigger::last_bps",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 109
+        },
+        "start": {
+          "column": 5,
           "line": 106
         }
       }
     },
     "genre": "FnValue",
-    "name": "crates/deflect-ratelimit/src/governor.rs:107:5: replace fnv1a -> u64 with 1",
-    "package": "deflect-ratelimit",
+    "name": "crates/deflect-detect/src/trigger.rs:108:9: replace Trigger::last_bps -> u64 with 0",
+    "package": "deflect-detect",
+    "replacement": "0",
+    "span": {
+      "end": {
+        "column": 22,
+        "line": 108
+      },
+      "start": {
+        "column": 9,
+        "line": 108
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/trigger.rs\n+++ replace Trigger::last_bps -> u64 with 1\n@@ -100,17 +100,17 @@\n \n     #[must_use]\n     pub fn last_pps(&self) -> u64 {\n         self.last_pps\n     }\n \n     #[must_use]\n     pub fn last_bps(&self) -> u64 {\n-        self.last_bps\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     fn marks() -> Watermarks {\n",
+    "file": "crates/deflect-detect/src/trigger.rs",
+    "function": {
+      "function_name": "Trigger::last_bps",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 109
+        },
+        "start": {
+          "column": 5,
+          "line": 106
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-detect/src/trigger.rs:108:9: replace Trigger::last_bps -> u64 with 1",
+    "package": "deflect-detect",
     "replacement": "1",
     "span": {
       "end": {
-        "column": 6,
-        "line": 126
+        "column": 22,
+        "line": 108
       },
       "start": {
-        "column": 5,
-        "line": 107
+        "column": 9,
+        "line": 108
       }
     }
   },
   {
-    "diff": "--- crates/deflect-ratelimit/src/governor.rs\n+++ replace ^= with |= in fnv1a\n@@ -104,17 +104,17 @@\n }\n \n fn fnv1a(key: SourceKey) -> u64 {\n     const OFFSET: u64 = 0xcbf2_9ce4_8422_2325;\n     const PRIME: u64 = 0x1000_0000_01b3;\n     let mut h = OFFSET;\n     let mut mix = |bytes: &[u8]| {\n         for &b in bytes {\n-            h ^= u64::from(b);\n+            h |= /* ~ changed by cargo-mutants ~ */ u64::from(b);\n             h = h.wrapping_mul(PRIME);\n         }\n     };\n     match key {\n         SourceKey::V4(o) => {\n             mix(&[4]);\n             mix(&o);\n         }\n",
-    "file": "crates/deflect-ratelimit/src/governor.rs",
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace SlidingWindow::slot_index -> usize with 0\n@@ -33,18 +33,17 @@\n             window_nanos: u128::from(window_nanos),\n             buckets: vec![0u64; slots].into_boxed_slice(),\n             epochs: vec![0u64; slots].into_boxed_slice(),\n             last_slot: 0,\n         }\n     }\n \n     fn slot_index(&self, abs_slot: u64) -> usize {\n-        let len = self.buckets.len() as u64;\n-        usize::try_from(abs_slot % len).expect(\"modulo bucket count fits usize\")\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Expire buckets whose absolute slot is more than one window behind\n     /// `abs_slot`, so stale counts do not survive an idle gap.\n     fn expire_to(&mut self, abs_slot: u64) {\n         let span = self.buckets.len() as u64;\n         let first_live = abs_slot.saturating_sub(span - 1);\n         for s in first_live..=abs_slot {\n",
+    "file": "crates/deflect-detect/src/window.rs",
     "function": {
-      "function_name": "fnv1a",
-      "return_type": "-> u64",
+      "function_name": "SlidingWindow::slot_index",
+      "return_type": "-> usize",
       "span": {
         "end": {
-          "column": 2,
-          "line": 127
+          "column": 6,
+          "line": 43
         },
         "start": {
-          "column": 1,
-          "line": 106
+          "column": 5,
+          "line": 40
         }
       }
     },
-    "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/governor.rs:112:15: replace ^= with |= in fnv1a",
-    "package": "deflect-ratelimit",
-    "replacement": "|=",
+    "genre": "FnValue",
+    "name": "crates/deflect-detect/src/window.rs:41:9: replace SlidingWindow::slot_index -> usize with 0",
+    "package": "deflect-detect",
+    "replacement": "0",
     "span": {
       "end": {
-        "column": 17,
-        "line": 112
+        "column": 81,
+        "line": 42
       },
       "start": {
-        "column": 15,
-        "line": 112
+        "column": 9,
+        "line": 41
       }
     }
   },
   {
-    "diff": "--- crates/deflect-ratelimit/src/governor.rs\n+++ replace ^= with &= in fnv1a\n@@ -104,17 +104,17 @@\n }\n \n fn fnv1a(key: SourceKey) -> u64 {\n     const OFFSET: u64 = 0xcbf2_9ce4_8422_2325;\n     const PRIME: u64 = 0x1000_0000_01b3;\n     let mut h = OFFSET;\n     let mut mix = |bytes: &[u8]| {\n         for &b in bytes {\n-            h ^= u64::from(b);\n+            h &= /* ~ changed by cargo-mutants ~ */ u64::from(b);\n             h = h.wrapping_mul(PRIME);\n         }\n     };\n     match key {\n         SourceKey::V4(o) => {\n             mix(&[4]);\n             mix(&o);\n         }\n",
-    "file": "crates/deflect-ratelimit/src/governor.rs",
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace SlidingWindow::slot_index -> usize with 1\n@@ -33,18 +33,17 @@\n             window_nanos: u128::from(window_nanos),\n             buckets: vec![0u64; slots].into_boxed_slice(),\n             epochs: vec![0u64; slots].into_boxed_slice(),\n             last_slot: 0,\n         }\n     }\n \n     fn slot_index(&self, abs_slot: u64) -> usize {\n-        let len = self.buckets.len() as u64;\n-        usize::try_from(abs_slot % len).expect(\"modulo bucket count fits usize\")\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Expire buckets whose absolute slot is more than one window behind\n     /// `abs_slot`, so stale counts do not survive an idle gap.\n     fn expire_to(&mut self, abs_slot: u64) {\n         let span = self.buckets.len() as u64;\n         let first_live = abs_slot.saturating_sub(span - 1);\n         for s in first_live..=abs_slot {\n",
+    "file": "crates/deflect-detect/src/window.rs",
     "function": {
-      "function_name": "fnv1a",
-      "return_type": "-> u64",
+      "function_name": "SlidingWindow::slot_index",
+      "return_type": "-> usize",
       "span": {
         "end": {
-          "column": 2,
-          "line": 127
+          "column": 6,
+          "line": 43
         },
         "start": {
-          "column": 1,
-          "line": 106
+          "column": 5,
+          "line": 40
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-detect/src/window.rs:41:9: replace SlidingWindow::slot_index -> usize with 1",
+    "package": "deflect-detect",
+    "replacement": "1",
+    "span": {
+      "end": {
+        "column": 81,
+        "line": 42
+      },
+      "start": {
+        "column": 9,
+        "line": 41
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace % with / in SlidingWindow::slot_index\n@@ -34,17 +34,17 @@\n             buckets: vec![0u64; slots].into_boxed_slice(),\n             epochs: vec![0u64; slots].into_boxed_slice(),\n             last_slot: 0,\n         }\n     }\n \n     fn slot_index(&self, abs_slot: u64) -> usize {\n         let len = self.buckets.len() as u64;\n-        usize::try_from(abs_slot % len).expect(\"modulo bucket count fits usize\")\n+        usize::try_from(abs_slot / /* ~ changed by cargo-mutants ~ */ len).expect(\"modulo bucket count fits usize\")\n     }\n \n     /// Expire buckets whose absolute slot is more than one window behind\n     /// `abs_slot`, so stale counts do not survive an idle gap.\n     fn expire_to(&mut self, abs_slot: u64) {\n         let span = self.buckets.len() as u64;\n         let first_live = abs_slot.saturating_sub(span - 1);\n         for s in first_live..=abs_slot {\n",
+    "file": "crates/deflect-detect/src/window.rs",
+    "function": {
+      "function_name": "SlidingWindow::slot_index",
+      "return_type": "-> usize",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 43
+        },
+        "start": {
+          "column": 5,
+          "line": 40
         }
       }
     },
     "genre": "BinaryOperator",
-    "name": "crates/deflect-ratelimit/src/governor.rs:112:15: replace ^= with &= in fnv1a",
-    "package": "deflect-ratelimit",
-    "replacement": "&=",
+    "name": "crates/deflect-detect/src/window.rs:42:34: replace % with / in SlidingWindow::slot_index",
+    "package": "deflect-detect",
+    "replacement": "/",
     "span": {
       "end": {
-        "column": 17,
-        "line": 112
+        "column": 35,
+        "line": 42
       },
       "start": {
-        "column": 15,
-        "line": 112
+        "column": 34,
+        "line": 42
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace % with + in SlidingWindow::slot_index\n@@ -34,17 +34,17 @@\n             buckets: vec![0u64; slots].into_boxed_slice(),\n             epochs: vec![0u64; slots].into_boxed_slice(),\n             last_slot: 0,\n         }\n     }\n \n     fn slot_index(&self, abs_slot: u64) -> usize {\n         let len = self.buckets.len() as u64;\n-        usize::try_from(abs_slot % len).expect(\"modulo bucket count fits usize\")\n+        usize::try_from(abs_slot + /* ~ changed by cargo-mutants ~ */ len).expect(\"modulo bucket count fits usize\")\n     }\n \n     /// Expire buckets whose absolute slot is more than one window behind\n     /// `abs_slot`, so stale counts do not survive an idle gap.\n     fn expire_to(&mut self, abs_slot: u64) {\n         let span = self.buckets.len() as u64;\n         let first_live = abs_slot.saturating_sub(span - 1);\n         for s in first_live..=abs_slot {\n",
+    "file": "crates/deflect-detect/src/window.rs",
+    "function": {
+      "function_name": "SlidingWindow::slot_index",
+      "return_type": "-> usize",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 43
+        },
+        "start": {
+          "column": 5,
+          "line": 40
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/window.rs:42:34: replace % with + in SlidingWindow::slot_index",
+    "package": "deflect-detect",
+    "replacement": "+",
+    "span": {
+      "end": {
+        "column": 35,
+        "line": 42
+      },
+      "start": {
+        "column": 34,
+        "line": 42
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace SlidingWindow::expire_to with ()\n@@ -40,26 +40,17 @@\n     fn slot_index(&self, abs_slot: u64) -> usize {\n         let len = self.buckets.len() as u64;\n         usize::try_from(abs_slot % len).expect(\"modulo bucket count fits usize\")\n     }\n \n     /// Expire buckets whose absolute slot is more than one window behind\n     /// `abs_slot`, so stale counts do not survive an idle gap.\n     fn expire_to(&mut self, abs_slot: u64) {\n-        let span = self.buckets.len() as u64;\n-        let first_live = abs_slot.saturating_sub(span - 1);\n-        for s in first_live..=abs_slot {\n-            let idx = self.slot_index(s);\n-            if self.epochs[idx] != s {\n-                self.buckets[idx] = 0;\n-                self.epochs[idx] = s;\n-            }\n-        }\n-        self.last_slot = abs_slot;\n+        () /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Add `amount` at time `now_nanos`.\n     pub fn record(&mut self, amount: u64, now_nanos: u64) {\n         let abs_slot = now_nanos / self.slot_nanos;\n         self.expire_to(abs_slot);\n         let idx = self.slot_index(abs_slot);\n         self.buckets[idx] = self.buckets[idx].saturating_add(amount);\n",
+    "file": "crates/deflect-detect/src/window.rs",
+    "function": {
+      "function_name": "SlidingWindow::expire_to",
+      "return_type": "",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 58
+        },
+        "start": {
+          "column": 5,
+          "line": 45
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-detect/src/window.rs:48:9: replace SlidingWindow::expire_to with ()",
+    "package": "deflect-detect",
+    "replacement": "()",
+    "span": {
+      "end": {
+        "column": 35,
+        "line": 57
+      },
+      "start": {
+        "column": 9,
+        "line": 48
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace - with + in SlidingWindow::expire_to\n@@ -41,17 +41,17 @@\n         let len = self.buckets.len() as u64;\n         usize::try_from(abs_slot % len).expect(\"modulo bucket count fits usize\")\n     }\n \n     /// Expire buckets whose absolute slot is more than one window behind\n     /// `abs_slot`, so stale counts do not survive an idle gap.\n     fn expire_to(&mut self, abs_slot: u64) {\n         let span = self.buckets.len() as u64;\n-        let first_live = abs_slot.saturating_sub(span - 1);\n+        let first_live = abs_slot.saturating_sub(span + /* ~ changed by cargo-mutants ~ */ 1);\n         for s in first_live..=abs_slot {\n             let idx = self.slot_index(s);\n             if self.epochs[idx] != s {\n                 self.buckets[idx] = 0;\n                 self.epochs[idx] = s;\n             }\n         }\n         self.last_slot = abs_slot;\n",
+    "file": "crates/deflect-detect/src/window.rs",
+    "function": {
+      "function_name": "SlidingWindow::expire_to",
+      "return_type": "",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 58
+        },
+        "start": {
+          "column": 5,
+          "line": 45
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/window.rs:49:55: replace - with + in SlidingWindow::expire_to",
+    "package": "deflect-detect",
+    "replacement": "+",
+    "span": {
+      "end": {
+        "column": 56,
+        "line": 49
+      },
+      "start": {
+        "column": 55,
+        "line": 49
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace - with / in SlidingWindow::expire_to\n@@ -41,17 +41,17 @@\n         let len = self.buckets.len() as u64;\n         usize::try_from(abs_slot % len).expect(\"modulo bucket count fits usize\")\n     }\n \n     /// Expire buckets whose absolute slot is more than one window behind\n     /// `abs_slot`, so stale counts do not survive an idle gap.\n     fn expire_to(&mut self, abs_slot: u64) {\n         let span = self.buckets.len() as u64;\n-        let first_live = abs_slot.saturating_sub(span - 1);\n+        let first_live = abs_slot.saturating_sub(span / /* ~ changed by cargo-mutants ~ */ 1);\n         for s in first_live..=abs_slot {\n             let idx = self.slot_index(s);\n             if self.epochs[idx] != s {\n                 self.buckets[idx] = 0;\n                 self.epochs[idx] = s;\n             }\n         }\n         self.last_slot = abs_slot;\n",
+    "file": "crates/deflect-detect/src/window.rs",
+    "function": {
+      "function_name": "SlidingWindow::expire_to",
+      "return_type": "",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 58
+        },
+        "start": {
+          "column": 5,
+          "line": 45
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/window.rs:49:55: replace - with / in SlidingWindow::expire_to",
+    "package": "deflect-detect",
+    "replacement": "/",
+    "span": {
+      "end": {
+        "column": 56,
+        "line": 49
+      },
+      "start": {
+        "column": 55,
+        "line": 49
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace != with == in SlidingWindow::expire_to\n@@ -44,17 +44,17 @@\n \n     /// Expire buckets whose absolute slot is more than one window behind\n     /// `abs_slot`, so stale counts do not survive an idle gap.\n     fn expire_to(&mut self, abs_slot: u64) {\n         let span = self.buckets.len() as u64;\n         let first_live = abs_slot.saturating_sub(span - 1);\n         for s in first_live..=abs_slot {\n             let idx = self.slot_index(s);\n-            if self.epochs[idx] != s {\n+            if self.epochs[idx] == /* ~ changed by cargo-mutants ~ */ s {\n                 self.buckets[idx] = 0;\n                 self.epochs[idx] = s;\n             }\n         }\n         self.last_slot = abs_slot;\n     }\n \n     /// Add `amount` at time `now_nanos`.\n",
+    "file": "crates/deflect-detect/src/window.rs",
+    "function": {
+      "function_name": "SlidingWindow::expire_to",
+      "return_type": "",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 58
+        },
+        "start": {
+          "column": 5,
+          "line": 45
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/window.rs:52:33: replace != with == in SlidingWindow::expire_to",
+    "package": "deflect-detect",
+    "replacement": "==",
+    "span": {
+      "end": {
+        "column": 35,
+        "line": 52
+      },
+      "start": {
+        "column": 33,
+        "line": 52
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace SlidingWindow::record with ()\n@@ -54,20 +54,17 @@\n                 self.epochs[idx] = s;\n             }\n         }\n         self.last_slot = abs_slot;\n     }\n \n     /// Add `amount` at time `now_nanos`.\n     pub fn record(&mut self, amount: u64, now_nanos: u64) {\n-        let abs_slot = now_nanos / self.slot_nanos;\n-        self.expire_to(abs_slot);\n-        let idx = self.slot_index(abs_slot);\n-        self.buckets[idx] = self.buckets[idx].saturating_add(amount);\n+        () /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Total amount recorded within the trailing window ending at `now_nanos`.\n     pub fn sum(&mut self, now_nanos: u64) -> u64 {\n         let abs_slot = now_nanos / self.slot_nanos;\n         self.expire_to(abs_slot);\n         self.buckets.iter().sum()\n     }\n",
+    "file": "crates/deflect-detect/src/window.rs",
+    "function": {
+      "function_name": "SlidingWindow::record",
+      "return_type": "",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 66
+        },
+        "start": {
+          "column": 5,
+          "line": 60
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-detect/src/window.rs:62:9: replace SlidingWindow::record with ()",
+    "package": "deflect-detect",
+    "replacement": "()",
+    "span": {
+      "end": {
+        "column": 70,
+        "line": 65
+      },
+      "start": {
+        "column": 9,
+        "line": 62
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace / with % in SlidingWindow::record\n@@ -54,17 +54,17 @@\n                 self.epochs[idx] = s;\n             }\n         }\n         self.last_slot = abs_slot;\n     }\n \n     /// Add `amount` at time `now_nanos`.\n     pub fn record(&mut self, amount: u64, now_nanos: u64) {\n-        let abs_slot = now_nanos / self.slot_nanos;\n+        let abs_slot = now_nanos % /* ~ changed by cargo-mutants ~ */ self.slot_nanos;\n         self.expire_to(abs_slot);\n         let idx = self.slot_index(abs_slot);\n         self.buckets[idx] = self.buckets[idx].saturating_add(amount);\n     }\n \n     /// Total amount recorded within the trailing window ending at `now_nanos`.\n     pub fn sum(&mut self, now_nanos: u64) -> u64 {\n         let abs_slot = now_nanos / self.slot_nanos;\n",
+    "file": "crates/deflect-detect/src/window.rs",
+    "function": {
+      "function_name": "SlidingWindow::record",
+      "return_type": "",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 66
+        },
+        "start": {
+          "column": 5,
+          "line": 60
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/window.rs:62:34: replace / with % in SlidingWindow::record",
+    "package": "deflect-detect",
+    "replacement": "%",
+    "span": {
+      "end": {
+        "column": 35,
+        "line": 62
+      },
+      "start": {
+        "column": 34,
+        "line": 62
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace / with * in SlidingWindow::record\n@@ -54,17 +54,17 @@\n                 self.epochs[idx] = s;\n             }\n         }\n         self.last_slot = abs_slot;\n     }\n \n     /// Add `amount` at time `now_nanos`.\n     pub fn record(&mut self, amount: u64, now_nanos: u64) {\n-        let abs_slot = now_nanos / self.slot_nanos;\n+        let abs_slot = now_nanos * /* ~ changed by cargo-mutants ~ */ self.slot_nanos;\n         self.expire_to(abs_slot);\n         let idx = self.slot_index(abs_slot);\n         self.buckets[idx] = self.buckets[idx].saturating_add(amount);\n     }\n \n     /// Total amount recorded within the trailing window ending at `now_nanos`.\n     pub fn sum(&mut self, now_nanos: u64) -> u64 {\n         let abs_slot = now_nanos / self.slot_nanos;\n",
+    "file": "crates/deflect-detect/src/window.rs",
+    "function": {
+      "function_name": "SlidingWindow::record",
+      "return_type": "",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 66
+        },
+        "start": {
+          "column": 5,
+          "line": 60
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/window.rs:62:34: replace / with * in SlidingWindow::record",
+    "package": "deflect-detect",
+    "replacement": "*",
+    "span": {
+      "end": {
+        "column": 35,
+        "line": 62
+      },
+      "start": {
+        "column": 34,
+        "line": 62
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace SlidingWindow::sum -> u64 with 0\n@@ -62,19 +62,17 @@\n         let abs_slot = now_nanos / self.slot_nanos;\n         self.expire_to(abs_slot);\n         let idx = self.slot_index(abs_slot);\n         self.buckets[idx] = self.buckets[idx].saturating_add(amount);\n     }\n \n     /// Total amount recorded within the trailing window ending at `now_nanos`.\n     pub fn sum(&mut self, now_nanos: u64) -> u64 {\n-        let abs_slot = now_nanos / self.slot_nanos;\n-        self.expire_to(abs_slot);\n-        self.buckets.iter().sum()\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Rate in amount-per-second over the trailing window.\n     pub fn rate_per_sec(&mut self, now_nanos: u64) -> u64 {\n         let total = u128::from(self.sum(now_nanos));\n         u64::try_from(total * NANOS_PER_SEC / self.window_nanos).unwrap_or(u64::MAX)\n     }\n }\n",
+    "file": "crates/deflect-detect/src/window.rs",
+    "function": {
+      "function_name": "SlidingWindow::sum",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 73
+        },
+        "start": {
+          "column": 5,
+          "line": 68
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-detect/src/window.rs:70:9: replace SlidingWindow::sum -> u64 with 0",
+    "package": "deflect-detect",
+    "replacement": "0",
+    "span": {
+      "end": {
+        "column": 34,
+        "line": 72
+      },
+      "start": {
+        "column": 9,
+        "line": 70
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace SlidingWindow::sum -> u64 with 1\n@@ -62,19 +62,17 @@\n         let abs_slot = now_nanos / self.slot_nanos;\n         self.expire_to(abs_slot);\n         let idx = self.slot_index(abs_slot);\n         self.buckets[idx] = self.buckets[idx].saturating_add(amount);\n     }\n \n     /// Total amount recorded within the trailing window ending at `now_nanos`.\n     pub fn sum(&mut self, now_nanos: u64) -> u64 {\n-        let abs_slot = now_nanos / self.slot_nanos;\n-        self.expire_to(abs_slot);\n-        self.buckets.iter().sum()\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Rate in amount-per-second over the trailing window.\n     pub fn rate_per_sec(&mut self, now_nanos: u64) -> u64 {\n         let total = u128::from(self.sum(now_nanos));\n         u64::try_from(total * NANOS_PER_SEC / self.window_nanos).unwrap_or(u64::MAX)\n     }\n }\n",
+    "file": "crates/deflect-detect/src/window.rs",
+    "function": {
+      "function_name": "SlidingWindow::sum",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 73
+        },
+        "start": {
+          "column": 5,
+          "line": 68
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-detect/src/window.rs:70:9: replace SlidingWindow::sum -> u64 with 1",
+    "package": "deflect-detect",
+    "replacement": "1",
+    "span": {
+      "end": {
+        "column": 34,
+        "line": 72
+      },
+      "start": {
+        "column": 9,
+        "line": 70
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace / with % in SlidingWindow::sum\n@@ -62,17 +62,17 @@\n         let abs_slot = now_nanos / self.slot_nanos;\n         self.expire_to(abs_slot);\n         let idx = self.slot_index(abs_slot);\n         self.buckets[idx] = self.buckets[idx].saturating_add(amount);\n     }\n \n     /// Total amount recorded within the trailing window ending at `now_nanos`.\n     pub fn sum(&mut self, now_nanos: u64) -> u64 {\n-        let abs_slot = now_nanos / self.slot_nanos;\n+        let abs_slot = now_nanos % /* ~ changed by cargo-mutants ~ */ self.slot_nanos;\n         self.expire_to(abs_slot);\n         self.buckets.iter().sum()\n     }\n \n     /// Rate in amount-per-second over the trailing window.\n     pub fn rate_per_sec(&mut self, now_nanos: u64) -> u64 {\n         let total = u128::from(self.sum(now_nanos));\n         u64::try_from(total * NANOS_PER_SEC / self.window_nanos).unwrap_or(u64::MAX)\n",
+    "file": "crates/deflect-detect/src/window.rs",
+    "function": {
+      "function_name": "SlidingWindow::sum",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 73
+        },
+        "start": {
+          "column": 5,
+          "line": 68
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/window.rs:70:34: replace / with % in SlidingWindow::sum",
+    "package": "deflect-detect",
+    "replacement": "%",
+    "span": {
+      "end": {
+        "column": 35,
+        "line": 70
+      },
+      "start": {
+        "column": 34,
+        "line": 70
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace / with * in SlidingWindow::sum\n@@ -62,17 +62,17 @@\n         let abs_slot = now_nanos / self.slot_nanos;\n         self.expire_to(abs_slot);\n         let idx = self.slot_index(abs_slot);\n         self.buckets[idx] = self.buckets[idx].saturating_add(amount);\n     }\n \n     /// Total amount recorded within the trailing window ending at `now_nanos`.\n     pub fn sum(&mut self, now_nanos: u64) -> u64 {\n-        let abs_slot = now_nanos / self.slot_nanos;\n+        let abs_slot = now_nanos * /* ~ changed by cargo-mutants ~ */ self.slot_nanos;\n         self.expire_to(abs_slot);\n         self.buckets.iter().sum()\n     }\n \n     /// Rate in amount-per-second over the trailing window.\n     pub fn rate_per_sec(&mut self, now_nanos: u64) -> u64 {\n         let total = u128::from(self.sum(now_nanos));\n         u64::try_from(total * NANOS_PER_SEC / self.window_nanos).unwrap_or(u64::MAX)\n",
+    "file": "crates/deflect-detect/src/window.rs",
+    "function": {
+      "function_name": "SlidingWindow::sum",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 73
+        },
+        "start": {
+          "column": 5,
+          "line": 68
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/window.rs:70:34: replace / with * in SlidingWindow::sum",
+    "package": "deflect-detect",
+    "replacement": "*",
+    "span": {
+      "end": {
+        "column": 35,
+        "line": 70
+      },
+      "start": {
+        "column": 34,
+        "line": 70
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace SlidingWindow::rate_per_sec -> u64 with 0\n@@ -69,18 +69,17 @@\n     pub fn sum(&mut self, now_nanos: u64) -> u64 {\n         let abs_slot = now_nanos / self.slot_nanos;\n         self.expire_to(abs_slot);\n         self.buckets.iter().sum()\n     }\n \n     /// Rate in amount-per-second over the trailing window.\n     pub fn rate_per_sec(&mut self, now_nanos: u64) -> u64 {\n-        let total = u128::from(self.sum(now_nanos));\n-        u64::try_from(total * NANOS_PER_SEC / self.window_nanos).unwrap_or(u64::MAX)\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     #[test]\n",
+    "file": "crates/deflect-detect/src/window.rs",
+    "function": {
+      "function_name": "SlidingWindow::rate_per_sec",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 79
+        },
+        "start": {
+          "column": 5,
+          "line": 75
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-detect/src/window.rs:77:9: replace SlidingWindow::rate_per_sec -> u64 with 0",
+    "package": "deflect-detect",
+    "replacement": "0",
+    "span": {
+      "end": {
+        "column": 85,
+        "line": 78
+      },
+      "start": {
+        "column": 9,
+        "line": 77
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace SlidingWindow::rate_per_sec -> u64 with 1\n@@ -69,18 +69,17 @@\n     pub fn sum(&mut self, now_nanos: u64) -> u64 {\n         let abs_slot = now_nanos / self.slot_nanos;\n         self.expire_to(abs_slot);\n         self.buckets.iter().sum()\n     }\n \n     /// Rate in amount-per-second over the trailing window.\n     pub fn rate_per_sec(&mut self, now_nanos: u64) -> u64 {\n-        let total = u128::from(self.sum(now_nanos));\n-        u64::try_from(total * NANOS_PER_SEC / self.window_nanos).unwrap_or(u64::MAX)\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     #[test]\n",
+    "file": "crates/deflect-detect/src/window.rs",
+    "function": {
+      "function_name": "SlidingWindow::rate_per_sec",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 79
+        },
+        "start": {
+          "column": 5,
+          "line": 75
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-detect/src/window.rs:77:9: replace SlidingWindow::rate_per_sec -> u64 with 1",
+    "package": "deflect-detect",
+    "replacement": "1",
+    "span": {
+      "end": {
+        "column": 85,
+        "line": 78
+      },
+      "start": {
+        "column": 9,
+        "line": 77
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace / with % in SlidingWindow::rate_per_sec\n@@ -70,17 +70,17 @@\n         let abs_slot = now_nanos / self.slot_nanos;\n         self.expire_to(abs_slot);\n         self.buckets.iter().sum()\n     }\n \n     /// Rate in amount-per-second over the trailing window.\n     pub fn rate_per_sec(&mut self, now_nanos: u64) -> u64 {\n         let total = u128::from(self.sum(now_nanos));\n-        u64::try_from(total * NANOS_PER_SEC / self.window_nanos).unwrap_or(u64::MAX)\n+        u64::try_from(total * NANOS_PER_SEC % /* ~ changed by cargo-mutants ~ */ self.window_nanos).unwrap_or(u64::MAX)\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     #[test]\n",
+    "file": "crates/deflect-detect/src/window.rs",
+    "function": {
+      "function_name": "SlidingWindow::rate_per_sec",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 79
+        },
+        "start": {
+          "column": 5,
+          "line": 75
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/window.rs:78:45: replace / with % in SlidingWindow::rate_per_sec",
+    "package": "deflect-detect",
+    "replacement": "%",
+    "span": {
+      "end": {
+        "column": 46,
+        "line": 78
+      },
+      "start": {
+        "column": 45,
+        "line": 78
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace / with * in SlidingWindow::rate_per_sec\n@@ -70,17 +70,17 @@\n         let abs_slot = now_nanos / self.slot_nanos;\n         self.expire_to(abs_slot);\n         self.buckets.iter().sum()\n     }\n \n     /// Rate in amount-per-second over the trailing window.\n     pub fn rate_per_sec(&mut self, now_nanos: u64) -> u64 {\n         let total = u128::from(self.sum(now_nanos));\n-        u64::try_from(total * NANOS_PER_SEC / self.window_nanos).unwrap_or(u64::MAX)\n+        u64::try_from(total * NANOS_PER_SEC * /* ~ changed by cargo-mutants ~ */ self.window_nanos).unwrap_or(u64::MAX)\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     #[test]\n",
+    "file": "crates/deflect-detect/src/window.rs",
+    "function": {
+      "function_name": "SlidingWindow::rate_per_sec",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 79
+        },
+        "start": {
+          "column": 5,
+          "line": 75
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/window.rs:78:45: replace / with * in SlidingWindow::rate_per_sec",
+    "package": "deflect-detect",
+    "replacement": "*",
+    "span": {
+      "end": {
+        "column": 46,
+        "line": 78
+      },
+      "start": {
+        "column": 45,
+        "line": 78
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace * with + in SlidingWindow::rate_per_sec\n@@ -70,17 +70,17 @@\n         let abs_slot = now_nanos / self.slot_nanos;\n         self.expire_to(abs_slot);\n         self.buckets.iter().sum()\n     }\n \n     /// Rate in amount-per-second over the trailing window.\n     pub fn rate_per_sec(&mut self, now_nanos: u64) -> u64 {\n         let total = u128::from(self.sum(now_nanos));\n-        u64::try_from(total * NANOS_PER_SEC / self.window_nanos).unwrap_or(u64::MAX)\n+        u64::try_from(total + /* ~ changed by cargo-mutants ~ */ NANOS_PER_SEC / self.window_nanos).unwrap_or(u64::MAX)\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     #[test]\n",
+    "file": "crates/deflect-detect/src/window.rs",
+    "function": {
+      "function_name": "SlidingWindow::rate_per_sec",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 79
+        },
+        "start": {
+          "column": 5,
+          "line": 75
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/window.rs:78:29: replace * with + in SlidingWindow::rate_per_sec",
+    "package": "deflect-detect",
+    "replacement": "+",
+    "span": {
+      "end": {
+        "column": 30,
+        "line": 78
+      },
+      "start": {
+        "column": 29,
+        "line": 78
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-detect/src/window.rs\n+++ replace * with / in SlidingWindow::rate_per_sec\n@@ -70,17 +70,17 @@\n         let abs_slot = now_nanos / self.slot_nanos;\n         self.expire_to(abs_slot);\n         self.buckets.iter().sum()\n     }\n \n     /// Rate in amount-per-second over the trailing window.\n     pub fn rate_per_sec(&mut self, now_nanos: u64) -> u64 {\n         let total = u128::from(self.sum(now_nanos));\n-        u64::try_from(total * NANOS_PER_SEC / self.window_nanos).unwrap_or(u64::MAX)\n+        u64::try_from(total / /* ~ changed by cargo-mutants ~ */ NANOS_PER_SEC / self.window_nanos).unwrap_or(u64::MAX)\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     #[test]\n",
+    "file": "crates/deflect-detect/src/window.rs",
+    "function": {
+      "function_name": "SlidingWindow::rate_per_sec",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 79
+        },
+        "start": {
+          "column": 5,
+          "line": 75
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-detect/src/window.rs:78:29: replace * with / in SlidingWindow::rate_per_sec",
+    "package": "deflect-detect",
+    "replacement": "/",
+    "span": {
+      "end": {
+        "column": 30,
+        "line": 78
+      },
+      "start": {
+        "column": 29,
+        "line": 78
       }
     }
   }
