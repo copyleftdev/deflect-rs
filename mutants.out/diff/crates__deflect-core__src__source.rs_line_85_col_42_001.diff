@@ -1,0 +1,21 @@
+--- crates/deflect-core/src/source.rs
++++ replace + with * in mask_octets
+@@ -77,17 +77,17 @@
+ fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {
+     let bits = (bits as usize).min(N * 8);
+     let full = bits / 8;
+     let rem = bits % 8;
+     if rem != 0 {
+         // Keep the high `rem` bits of the boundary octet, clear the rest.
+         octets[full] &= 0xFFu8 << (8 - rem);
+     }
+-    for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {
++    for b in octets.iter_mut().skip(full * /* ~ changed by cargo-mutants ~ */ usize::from(rem != 0)) {
+         *b = 0;
+     }
+     octets
+ }
+ 
+ fn mask_v4(octets: [u8; 4], bits: u8) -> [u8; 4] {
+     mask_octets(octets, bits)
+ }

@@ -1,0 +1,94 @@
+
+*** crates/deflect-core/src/observation.rs:57:9: replace TcpFlags::empty -> TcpFlags with Default::default()
+
+*** mutation diff:
+--- crates/deflect-core/src/observation.rs
++++ replace TcpFlags::empty -> TcpFlags with Default::default()
+@@ -49,17 +49,17 @@
+     pub const PSH: TcpFlags = TcpFlags(0x08);
+     pub const ACK: TcpFlags = TcpFlags(0x10);
+     pub const URG: TcpFlags = TcpFlags(0x20);
+     pub const ECE: TcpFlags = TcpFlags(0x40);
+     pub const CWR: TcpFlags = TcpFlags(0x80);
+ 
+     #[must_use]
+     pub const fn empty() -> TcpFlags {
+-        TcpFlags(0)
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     #[must_use]
+     pub const fn bits(self) -> u8 {
+         self.0
+     }
+ 
+     /// True if every bit set in `mask` is also set in `self`.
+
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=deflect-core@0.1.0
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh linux-raw-sys v0.12.1
+       Fresh autocfg v1.5.1
+       Fresh bitflags v2.13.2
+       Fresh once_cell v1.21.4
+       Fresh fastrand v2.5.0
+       Fresh wait-timeout v0.2.1
+       Fresh fnv v1.0.7
+       Fresh cpufeatures v0.3.1
+       Fresh bit-vec v0.10.1
+       Fresh quick-error v1.2.3
+       Fresh rand_xorshift v0.5.0
+       Fresh core_detect v1.0.0
+       Fresh getrandom v0.4.3
+       Fresh rustix v1.1.5
+       Fresh chacha20 v0.10.2
+       Fresh bit-set v0.11.1
+       Fresh unarray v0.1.4
+       Fresh regex-syntax v0.8.11
+       Dirty deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bDUTQF.tmp/crates/deflect-core): the file `crates/deflect-core/src/observation.rs` has changed (1792414446.124925907s, 1s after last build at 1792414445.487273541s)
+   Compiling deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bDUTQF.tmp/crates/deflect-core)
+       Fresh tempfile v3.27.0
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rusty-fork v0.3.1
+       Fresh proptest v1.12.0
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_core --edition=2021 crates/deflect-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "serde", "std"))' -C metadata=31e441099e50ab36 -C extra-filename=-c20ab55aa2afaf71 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bDUTQF.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bDUTQF.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bDUTQF.tmp/target/debug/deps`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_core --edition=2021 crates/deflect-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "serde", "std"))' -C metadata=5709365a141f2efe -C extra-filename=-fe48be381571e222 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bDUTQF.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bDUTQF.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bDUTQF.tmp/target/debug/deps --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bDUTQF.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+error[E0277]: the trait bound `TcpFlags: Default` is not satisfied
+  --> crates/deflect-core/src/observation.rs:57:9
+   |
+57 |         Default::default() /* ~ changed by cargo-mutants ~ */
+   |         ^^^^^^^^^^^^^^^^^^ the trait `Default` is not implemented for `TcpFlags`
+   |
+help: consider annotating `TcpFlags` with `#[derive(Default)]`
+   |
+43 + #[derive(Default)]
+44 | pub struct TcpFlags(pub u8);
+   |
+
+For more information about this error, try `rustc --explain E0277`.
+error[E0277]: the trait bound `observation::TcpFlags: Default` is not satisfied
+  --> crates/deflect-core/src/observation.rs:57:9
+   |
+57 |         Default::default() /* ~ changed by cargo-mutants ~ */
+   |         ^^^^^^^^^^^^^^^^^^ the trait `Default` is not implemented for `observation::TcpFlags`
+   |
+help: consider annotating `observation::TcpFlags` with `#[derive(Default)]`
+   |
+43 + #[derive(Default)]
+44 | pub struct TcpFlags(pub u8);
+   |
+
+error: could not compile `deflect-core` (lib) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_core --edition=2021 crates/deflect-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "serde", "std"))' -C metadata=31e441099e50ab36 -C extra-filename=-c20ab55aa2afaf71 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bDUTQF.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bDUTQF.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bDUTQF.tmp/target/debug/deps` (exit status: 1)
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `deflect-core` (lib test) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_core --edition=2021 crates/deflect-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "serde", "std"))' -C metadata=5709365a141f2efe -C extra-filename=-fe48be381571e222 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bDUTQF.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bDUTQF.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bDUTQF.tmp/target/debug/deps --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-bDUTQF.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib` (exit status: 1)
+
+*** result: Failure(101)

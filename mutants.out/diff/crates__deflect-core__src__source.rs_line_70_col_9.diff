@@ -1,0 +1,24 @@
+--- crates/deflect-core/src/source.rs
++++ replace SourceKey::addr -> IpAddr with Default::default()
+@@ -62,20 +62,17 @@
+ 
+     #[must_use]
+     pub fn is_v4(&self) -> bool {
+         matches!(self, SourceKey::V4(_))
+     }
+ 
+     #[must_use]
+     pub fn addr(&self) -> IpAddr {
+-        match self {
+-            SourceKey::V4(o) => IpAddr::V4(Ipv4Addr::from(*o)),
+-            SourceKey::V6(o) => IpAddr::V6(Ipv6Addr::from(*o)),
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {
+     let bits = (bits as usize).min(N * 8);
+     let full = bits / 8;
+     let rem = bits % 8;
+     if rem != 0 {

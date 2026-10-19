@@ -108,4 +108,33 @@ mod tests {
         let b = Verdict::Drop(DropReason::Banned);
         assert_eq!(a.worst(b), a);
     }
+
+    #[test]
+    fn is_pass_only_for_pass() {
+        assert!(Verdict::Pass.is_pass());
+        assert!(!Verdict::Challenge(ChallengeKind::SynCookie).is_pass());
+        assert!(!Verdict::Drop(DropReason::Banned).is_pass());
+    }
+
+    #[test]
+    fn blocks_for_ratelimit_and_drop_only() {
+        assert!(Verdict::Drop(DropReason::Signature).blocks());
+        assert!(Verdict::RateLimit {
+            retry_after: Duration::ZERO
+        }
+        .blocks());
+        assert!(!Verdict::Pass.blocks());
+        assert!(!Verdict::Challenge(ChallengeKind::SynCookie).blocks());
+    }
+
+    #[test]
+    fn worst_is_symmetric_in_severity() {
+        // Whichever order, the kept verdict has the higher severity.
+        let hi = Verdict::RateLimit {
+            retry_after: Duration::ZERO,
+        };
+        let lo = Verdict::Challenge(ChallengeKind::SynCookie);
+        assert_eq!(lo.worst(hi), hi);
+        assert_eq!(hi.worst(lo), hi);
+    }
 }

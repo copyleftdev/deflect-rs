@@ -1,0 +1,22 @@
+--- crates/deflect-core/src/clock.rs
++++ replace ManualClock::advance_nanos with ()
+@@ -32,18 +32,17 @@
+     #[must_use]
+     pub fn new(start_nanos: u64) -> ManualClock {
+         ManualClock {
+             nanos: core::sync::atomic::AtomicU64::new(start_nanos),
+         }
+     }
+ 
+     pub fn advance_nanos(&self, delta: u64) {
+-        self.nanos
+-            .fetch_add(delta, core::sync::atomic::Ordering::Relaxed);
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     pub fn advance_millis(&self, delta: u64) {
+         self.advance_nanos(delta.saturating_mul(1_000_000));
+     }
+ 
+     pub fn advance_secs(&self, delta: u64) {
+         self.advance_nanos(delta.saturating_mul(1_000_000_000));

@@ -1,0 +1,21 @@
+--- crates/deflect-core/src/source.rs
++++ replace SourceKey::is_v4 -> bool with true
+@@ -57,17 +57,17 @@
+ 
+     #[must_use]
+     pub fn host(addr: IpAddr) -> SourceKey {
+         SourceKey::new(addr, Aggregation::HOST)
+     }
+ 
+     #[must_use]
+     pub fn is_v4(&self) -> bool {
+-        matches!(self, SourceKey::V4(_))
++        true /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     #[must_use]
+     pub fn addr(&self) -> IpAddr {
+         match self {
+             SourceKey::V4(o) => IpAddr::V4(Ipv4Addr::from(*o)),
+             SourceKey::V6(o) => IpAddr::V6(Ipv6Addr::from(*o)),
+         }

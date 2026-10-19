@@ -142,3 +142,57 @@ impl<'a> Packet<'a> {
         self
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn ip_proto_roundtrips_known_protocols() {
+        for proto in [1u8, 6, 17, 58, 0, 47, 132, 255] {
+            assert_eq!(L4::from_ip_proto(proto).ip_proto(), proto);
+        }
+        assert_eq!(L4::Tcp.ip_proto(), 6);
+        assert_eq!(L4::Udp.ip_proto(), 17);
+        assert_eq!(L4::Icmp.ip_proto(), 1);
+        assert_eq!(L4::IcmpV6.ip_proto(), 58);
+    }
+
+    #[test]
+    fn bits_returns_the_raw_byte() {
+        assert_eq!(TcpFlags(0x12).bits(), 0x12);
+        assert_eq!(TcpFlags::SYN.bits(), 0x02);
+    }
+
+    #[test]
+    fn contains_requires_every_masked_bit() {
+        let synack = TcpFlags::SYN | TcpFlags::ACK;
+        assert!(synack.contains(TcpFlags::SYN));
+        assert!(synack.contains(TcpFlags::ACK));
+        assert!(synack.contains(synack));
+        assert!(!TcpFlags::SYN.contains(TcpFlags::ACK));
+        assert!(!TcpFlags::SYN.contains(synack));
+    }
+
+    #[test]
+    fn intersects_requires_any_masked_bit() {
+        let synack = TcpFlags::SYN | TcpFlags::ACK;
+        assert!(TcpFlags::SYN.intersects(TcpFlags::SYN));
+        assert!(synack.intersects(TcpFlags::ACK));
+        assert!(!TcpFlags::SYN.intersects(TcpFlags::ACK));
+        assert!(!TcpFlags::SYN.intersects(TcpFlags::empty()));
+    }
+
+    #[test]
+    fn is_empty_only_when_no_bits_set() {
+        assert!(TcpFlags::empty().is_empty());
+        assert!(!TcpFlags::SYN.is_empty());
+    }
+
+    #[test]
+    fn bitor_unions_bits() {
+        // Overlapping bits so OR is distinguishable from XOR and AND.
+        assert_eq!((TcpFlags(0x12) | TcpFlags(0x10)).bits(), 0x12);
+        assert_eq!((TcpFlags::SYN | TcpFlags::ACK).bits(), 0x12);
+    }
+}

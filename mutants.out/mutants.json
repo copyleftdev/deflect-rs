@@ -1,0 +1,2242 @@
+[
+  {
+    "diff": "--- crates/deflect-core/src/lib.rs\n+++ replace Observation<'a>::source_key -> SourceKey with Default::default()\n@@ -33,17 +33,17 @@\n impl<'a> Observation<'a> {\n     #[must_use]\n     pub fn new(packet: Packet<'a>, ts_nanos: u64) -> Observation<'a> {\n         Observation { packet, ts_nanos }\n     }\n \n     #[must_use]\n     pub fn source_key(&self, agg: Aggregation) -> SourceKey {\n-        SourceKey::new(self.packet.src, agg)\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n /// A single mitigation decision over one observation.\n ///\n /// Stages are cheap, synchronous, and side-effecting only on their own state;\n /// enforcement (programming nftables, announcing a route) is a separate concern\n /// driven by the verdicts a stage returns.\n",
+    "file": "crates/deflect-core/src/lib.rs",
+    "function": {
+      "function_name": "Observation<'a>::source_key",
+      "return_type": "-> SourceKey",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 42
+        },
+        "start": {
+          "column": 5,
+          "line": 39
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/lib.rs:41:9: replace Observation<'a>::source_key -> SourceKey with Default::default()",
+    "package": "deflect-core",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 45,
+        "line": 41
+      },
+      "start": {
+        "column": 9,
+        "line": 41
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/clock.rs\n+++ replace <impl Clock for MonotonicClock>::now_nanos -> u64 with 0\n@@ -9,21 +9,17 @@\n /// Wall-clock monotonic time from the host, available with `std`.\n #[cfg(feature = \"std\")]\n #[derive(Debug, Default, Clone, Copy)]\n pub struct MonotonicClock;\n \n #[cfg(feature = \"std\")]\n impl Clock for MonotonicClock {\n     fn now_nanos(&self) -> u64 {\n-        use std::sync::OnceLock;\n-        use std::time::Instant;\n-        static START: OnceLock<Instant> = OnceLock::new();\n-        let start = START.get_or_init(Instant::now);\n-        u64::try_from(start.elapsed().as_nanos()).unwrap_or(u64::MAX)\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n /// A clock whose value is set explicitly, for deterministic tests.\n #[derive(Debug, Default)]\n pub struct ManualClock {\n     nanos: core::sync::atomic::AtomicU64,\n }\n",
+    "file": "crates/deflect-core/src/clock.rs",
+    "function": {
+      "function_name": "<impl Clock for MonotonicClock>::now_nanos",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 22
+        },
+        "start": {
+          "column": 5,
+          "line": 16
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/clock.rs:17:9: replace <impl Clock for MonotonicClock>::now_nanos -> u64 with 0",
+    "package": "deflect-core",
+    "replacement": "0",
+    "span": {
+      "end": {
+        "column": 70,
+        "line": 21
+      },
+      "start": {
+        "column": 9,
+        "line": 17
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/clock.rs\n+++ replace <impl Clock for MonotonicClock>::now_nanos -> u64 with 1\n@@ -9,21 +9,17 @@\n /// Wall-clock monotonic time from the host, available with `std`.\n #[cfg(feature = \"std\")]\n #[derive(Debug, Default, Clone, Copy)]\n pub struct MonotonicClock;\n \n #[cfg(feature = \"std\")]\n impl Clock for MonotonicClock {\n     fn now_nanos(&self) -> u64 {\n-        use std::sync::OnceLock;\n-        use std::time::Instant;\n-        static START: OnceLock<Instant> = OnceLock::new();\n-        let start = START.get_or_init(Instant::now);\n-        u64::try_from(start.elapsed().as_nanos()).unwrap_or(u64::MAX)\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n /// A clock whose value is set explicitly, for deterministic tests.\n #[derive(Debug, Default)]\n pub struct ManualClock {\n     nanos: core::sync::atomic::AtomicU64,\n }\n",
+    "file": "crates/deflect-core/src/clock.rs",
+    "function": {
+      "function_name": "<impl Clock for MonotonicClock>::now_nanos",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 22
+        },
+        "start": {
+          "column": 5,
+          "line": 16
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/clock.rs:17:9: replace <impl Clock for MonotonicClock>::now_nanos -> u64 with 1",
+    "package": "deflect-core",
+    "replacement": "1",
+    "span": {
+      "end": {
+        "column": 70,
+        "line": 21
+      },
+      "start": {
+        "column": 9,
+        "line": 17
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/clock.rs\n+++ replace ManualClock::advance_nanos with ()\n@@ -32,18 +32,17 @@\n     #[must_use]\n     pub fn new(start_nanos: u64) -> ManualClock {\n         ManualClock {\n             nanos: core::sync::atomic::AtomicU64::new(start_nanos),\n         }\n     }\n \n     pub fn advance_nanos(&self, delta: u64) {\n-        self.nanos\n-            .fetch_add(delta, core::sync::atomic::Ordering::Relaxed);\n+        () /* ~ changed by cargo-mutants ~ */\n     }\n \n     pub fn advance_millis(&self, delta: u64) {\n         self.advance_nanos(delta.saturating_mul(1_000_000));\n     }\n \n     pub fn advance_secs(&self, delta: u64) {\n         self.advance_nanos(delta.saturating_mul(1_000_000_000));\n",
+    "file": "crates/deflect-core/src/clock.rs",
+    "function": {
+      "function_name": "ManualClock::advance_nanos",
+      "return_type": "",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 42
+        },
+        "start": {
+          "column": 5,
+          "line": 39
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/clock.rs:40:9: replace ManualClock::advance_nanos with ()",
+    "package": "deflect-core",
+    "replacement": "()",
+    "span": {
+      "end": {
+        "column": 70,
+        "line": 41
+      },
+      "start": {
+        "column": 9,
+        "line": 40
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/clock.rs\n+++ replace ManualClock::advance_millis with ()\n@@ -37,17 +37,17 @@\n     }\n \n     pub fn advance_nanos(&self, delta: u64) {\n         self.nanos\n             .fetch_add(delta, core::sync::atomic::Ordering::Relaxed);\n     }\n \n     pub fn advance_millis(&self, delta: u64) {\n-        self.advance_nanos(delta.saturating_mul(1_000_000));\n+        () /* ~ changed by cargo-mutants ~ */\n     }\n \n     pub fn advance_secs(&self, delta: u64) {\n         self.advance_nanos(delta.saturating_mul(1_000_000_000));\n     }\n }\n \n impl Clock for ManualClock {\n",
+    "file": "crates/deflect-core/src/clock.rs",
+    "function": {
+      "function_name": "ManualClock::advance_millis",
+      "return_type": "",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 46
+        },
+        "start": {
+          "column": 5,
+          "line": 44
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/clock.rs:45:9: replace ManualClock::advance_millis with ()",
+    "package": "deflect-core",
+    "replacement": "()",
+    "span": {
+      "end": {
+        "column": 61,
+        "line": 45
+      },
+      "start": {
+        "column": 9,
+        "line": 45
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/clock.rs\n+++ replace ManualClock::advance_secs with ()\n@@ -41,17 +41,17 @@\n             .fetch_add(delta, core::sync::atomic::Ordering::Relaxed);\n     }\n \n     pub fn advance_millis(&self, delta: u64) {\n         self.advance_nanos(delta.saturating_mul(1_000_000));\n     }\n \n     pub fn advance_secs(&self, delta: u64) {\n-        self.advance_nanos(delta.saturating_mul(1_000_000_000));\n+        () /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n impl Clock for ManualClock {\n     fn now_nanos(&self) -> u64 {\n         self.nanos.load(core::sync::atomic::Ordering::Relaxed)\n     }\n }\n",
+    "file": "crates/deflect-core/src/clock.rs",
+    "function": {
+      "function_name": "ManualClock::advance_secs",
+      "return_type": "",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 50
+        },
+        "start": {
+          "column": 5,
+          "line": 48
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/clock.rs:49:9: replace ManualClock::advance_secs with ()",
+    "package": "deflect-core",
+    "replacement": "()",
+    "span": {
+      "end": {
+        "column": 65,
+        "line": 49
+      },
+      "start": {
+        "column": 9,
+        "line": 49
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/clock.rs\n+++ replace <impl Clock for ManualClock>::now_nanos -> u64 with 0\n@@ -47,17 +47,17 @@\n \n     pub fn advance_secs(&self, delta: u64) {\n         self.advance_nanos(delta.saturating_mul(1_000_000_000));\n     }\n }\n \n impl Clock for ManualClock {\n     fn now_nanos(&self) -> u64 {\n-        self.nanos.load(core::sync::atomic::Ordering::Relaxed)\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n impl<C: Clock + ?Sized> Clock for &C {\n     fn now_nanos(&self) -> u64 {\n         (**self).now_nanos()\n     }\n }\n",
+    "file": "crates/deflect-core/src/clock.rs",
+    "function": {
+      "function_name": "<impl Clock for ManualClock>::now_nanos",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 56
+        },
+        "start": {
+          "column": 5,
+          "line": 54
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/clock.rs:55:9: replace <impl Clock for ManualClock>::now_nanos -> u64 with 0",
+    "package": "deflect-core",
+    "replacement": "0",
+    "span": {
+      "end": {
+        "column": 63,
+        "line": 55
+      },
+      "start": {
+        "column": 9,
+        "line": 55
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/clock.rs\n+++ replace <impl Clock for ManualClock>::now_nanos -> u64 with 1\n@@ -47,17 +47,17 @@\n \n     pub fn advance_secs(&self, delta: u64) {\n         self.advance_nanos(delta.saturating_mul(1_000_000_000));\n     }\n }\n \n impl Clock for ManualClock {\n     fn now_nanos(&self) -> u64 {\n-        self.nanos.load(core::sync::atomic::Ordering::Relaxed)\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n impl<C: Clock + ?Sized> Clock for &C {\n     fn now_nanos(&self) -> u64 {\n         (**self).now_nanos()\n     }\n }\n",
+    "file": "crates/deflect-core/src/clock.rs",
+    "function": {
+      "function_name": "<impl Clock for ManualClock>::now_nanos",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 56
+        },
+        "start": {
+          "column": 5,
+          "line": 54
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/clock.rs:55:9: replace <impl Clock for ManualClock>::now_nanos -> u64 with 1",
+    "package": "deflect-core",
+    "replacement": "1",
+    "span": {
+      "end": {
+        "column": 63,
+        "line": 55
+      },
+      "start": {
+        "column": 9,
+        "line": 55
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/clock.rs\n+++ replace <impl Clock for &C>::now_nanos -> u64 with 0\n@@ -53,17 +53,17 @@\n impl Clock for ManualClock {\n     fn now_nanos(&self) -> u64 {\n         self.nanos.load(core::sync::atomic::Ordering::Relaxed)\n     }\n }\n \n impl<C: Clock + ?Sized> Clock for &C {\n     fn now_nanos(&self) -> u64 {\n-        (**self).now_nanos()\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     #[test]\n",
+    "file": "crates/deflect-core/src/clock.rs",
+    "function": {
+      "function_name": "<impl Clock for &C>::now_nanos",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 62
+        },
+        "start": {
+          "column": 5,
+          "line": 60
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/clock.rs:61:9: replace <impl Clock for &C>::now_nanos -> u64 with 0",
+    "package": "deflect-core",
+    "replacement": "0",
+    "span": {
+      "end": {
+        "column": 29,
+        "line": 61
+      },
+      "start": {
+        "column": 9,
+        "line": 61
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/clock.rs\n+++ replace <impl Clock for &C>::now_nanos -> u64 with 1\n@@ -53,17 +53,17 @@\n impl Clock for ManualClock {\n     fn now_nanos(&self) -> u64 {\n         self.nanos.load(core::sync::atomic::Ordering::Relaxed)\n     }\n }\n \n impl<C: Clock + ?Sized> Clock for &C {\n     fn now_nanos(&self) -> u64 {\n-        (**self).now_nanos()\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     #[test]\n",
+    "file": "crates/deflect-core/src/clock.rs",
+    "function": {
+      "function_name": "<impl Clock for &C>::now_nanos",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 62
+        },
+        "start": {
+          "column": 5,
+          "line": 60
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/clock.rs:61:9: replace <impl Clock for &C>::now_nanos -> u64 with 1",
+    "package": "deflect-core",
+    "replacement": "1",
+    "span": {
+      "end": {
+        "column": 29,
+        "line": 61
+      },
+      "start": {
+        "column": 9,
+        "line": 61
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace L4::from_ip_proto -> L4 with Default::default()\n@@ -11,23 +11,17 @@\n     Icmp,\n     IcmpV6,\n     Other(u8),\n }\n \n impl L4 {\n     #[must_use]\n     pub const fn from_ip_proto(proto: u8) -> L4 {\n-        match proto {\n-            1 => L4::Icmp,\n-            6 => L4::Tcp,\n-            17 => L4::Udp,\n-            58 => L4::IcmpV6,\n-            other => L4::Other(other),\n-        }\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub const fn ip_proto(self) -> u8 {\n         match self {\n             L4::Icmp => 1,\n             L4::Tcp => 6,\n             L4::Udp => 17,\n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "L4::from_ip_proto",
+      "return_type": "-> L4",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 26
+        },
+        "start": {
+          "column": 5,
+          "line": 17
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/observation.rs:19:9: replace L4::from_ip_proto -> L4 with Default::default()",
+    "package": "deflect-core",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 10,
+        "line": 25
+      },
+      "start": {
+        "column": 9,
+        "line": 19
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace L4::ip_proto -> u8 with 0\n@@ -22,23 +22,17 @@\n             17 => L4::Udp,\n             58 => L4::IcmpV6,\n             other => L4::Other(other),\n         }\n     }\n \n     #[must_use]\n     pub const fn ip_proto(self) -> u8 {\n-        match self {\n-            L4::Icmp => 1,\n-            L4::Tcp => 6,\n-            L4::Udp => 17,\n-            L4::IcmpV6 => 58,\n-            L4::Other(p) => p,\n-        }\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n /// TCP control bits, packed into one byte in the usual wire order.\n #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]\n #[cfg_attr(feature = \"serde\", derive(serde::Serialize, serde::Deserialize))]\n pub struct TcpFlags(pub u8);\n \n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "L4::ip_proto",
+      "return_type": "-> u8",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 37
+        },
+        "start": {
+          "column": 5,
+          "line": 28
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/observation.rs:30:9: replace L4::ip_proto -> u8 with 0",
+    "package": "deflect-core",
+    "replacement": "0",
+    "span": {
+      "end": {
+        "column": 10,
+        "line": 36
+      },
+      "start": {
+        "column": 9,
+        "line": 30
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace L4::ip_proto -> u8 with 1\n@@ -22,23 +22,17 @@\n             17 => L4::Udp,\n             58 => L4::IcmpV6,\n             other => L4::Other(other),\n         }\n     }\n \n     #[must_use]\n     pub const fn ip_proto(self) -> u8 {\n-        match self {\n-            L4::Icmp => 1,\n-            L4::Tcp => 6,\n-            L4::Udp => 17,\n-            L4::IcmpV6 => 58,\n-            L4::Other(p) => p,\n-        }\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n /// TCP control bits, packed into one byte in the usual wire order.\n #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]\n #[cfg_attr(feature = \"serde\", derive(serde::Serialize, serde::Deserialize))]\n pub struct TcpFlags(pub u8);\n \n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "L4::ip_proto",
+      "return_type": "-> u8",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 37
+        },
+        "start": {
+          "column": 5,
+          "line": 28
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/observation.rs:30:9: replace L4::ip_proto -> u8 with 1",
+    "package": "deflect-core",
+    "replacement": "1",
+    "span": {
+      "end": {
+        "column": 10,
+        "line": 36
+      },
+      "start": {
+        "column": 9,
+        "line": 30
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace TcpFlags::empty -> TcpFlags with Default::default()\n@@ -49,17 +49,17 @@\n     pub const PSH: TcpFlags = TcpFlags(0x08);\n     pub const ACK: TcpFlags = TcpFlags(0x10);\n     pub const URG: TcpFlags = TcpFlags(0x20);\n     pub const ECE: TcpFlags = TcpFlags(0x40);\n     pub const CWR: TcpFlags = TcpFlags(0x80);\n \n     #[must_use]\n     pub const fn empty() -> TcpFlags {\n-        TcpFlags(0)\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub const fn bits(self) -> u8 {\n         self.0\n     }\n \n     /// True if every bit set in `mask` is also set in `self`.\n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "TcpFlags::empty",
+      "return_type": "-> TcpFlags",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 58
+        },
+        "start": {
+          "column": 5,
+          "line": 55
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/observation.rs:57:9: replace TcpFlags::empty -> TcpFlags with Default::default()",
+    "package": "deflect-core",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 20,
+        "line": 57
+      },
+      "start": {
+        "column": 9,
+        "line": 57
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace TcpFlags::bits -> u8 with 0\n@@ -54,17 +54,17 @@\n \n     #[must_use]\n     pub const fn empty() -> TcpFlags {\n         TcpFlags(0)\n     }\n \n     #[must_use]\n     pub const fn bits(self) -> u8 {\n-        self.0\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// True if every bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn contains(self, mask: TcpFlags) -> bool {\n         self.0 & mask.0 == mask.0\n     }\n \n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "TcpFlags::bits",
+      "return_type": "-> u8",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 63
+        },
+        "start": {
+          "column": 5,
+          "line": 60
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/observation.rs:62:9: replace TcpFlags::bits -> u8 with 0",
+    "package": "deflect-core",
+    "replacement": "0",
+    "span": {
+      "end": {
+        "column": 15,
+        "line": 62
+      },
+      "start": {
+        "column": 9,
+        "line": 62
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace TcpFlags::bits -> u8 with 1\n@@ -54,17 +54,17 @@\n \n     #[must_use]\n     pub const fn empty() -> TcpFlags {\n         TcpFlags(0)\n     }\n \n     #[must_use]\n     pub const fn bits(self) -> u8 {\n-        self.0\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// True if every bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn contains(self, mask: TcpFlags) -> bool {\n         self.0 & mask.0 == mask.0\n     }\n \n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "TcpFlags::bits",
+      "return_type": "-> u8",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 63
+        },
+        "start": {
+          "column": 5,
+          "line": 60
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/observation.rs:62:9: replace TcpFlags::bits -> u8 with 1",
+    "package": "deflect-core",
+    "replacement": "1",
+    "span": {
+      "end": {
+        "column": 15,
+        "line": 62
+      },
+      "start": {
+        "column": 9,
+        "line": 62
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace TcpFlags::contains -> bool with true\n@@ -60,17 +60,17 @@\n     #[must_use]\n     pub const fn bits(self) -> u8 {\n         self.0\n     }\n \n     /// True if every bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn contains(self, mask: TcpFlags) -> bool {\n-        self.0 & mask.0 == mask.0\n+        true /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// True if any bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn intersects(self, mask: TcpFlags) -> bool {\n         self.0 & mask.0 != 0\n     }\n \n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "TcpFlags::contains",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 69
+        },
+        "start": {
+          "column": 5,
+          "line": 65
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/observation.rs:68:9: replace TcpFlags::contains -> bool with true",
+    "package": "deflect-core",
+    "replacement": "true",
+    "span": {
+      "end": {
+        "column": 34,
+        "line": 68
+      },
+      "start": {
+        "column": 9,
+        "line": 68
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace TcpFlags::contains -> bool with false\n@@ -60,17 +60,17 @@\n     #[must_use]\n     pub const fn bits(self) -> u8 {\n         self.0\n     }\n \n     /// True if every bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn contains(self, mask: TcpFlags) -> bool {\n-        self.0 & mask.0 == mask.0\n+        false /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// True if any bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn intersects(self, mask: TcpFlags) -> bool {\n         self.0 & mask.0 != 0\n     }\n \n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "TcpFlags::contains",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 69
+        },
+        "start": {
+          "column": 5,
+          "line": 65
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/observation.rs:68:9: replace TcpFlags::contains -> bool with false",
+    "package": "deflect-core",
+    "replacement": "false",
+    "span": {
+      "end": {
+        "column": 34,
+        "line": 68
+      },
+      "start": {
+        "column": 9,
+        "line": 68
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace == with != in TcpFlags::contains\n@@ -60,17 +60,17 @@\n     #[must_use]\n     pub const fn bits(self) -> u8 {\n         self.0\n     }\n \n     /// True if every bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn contains(self, mask: TcpFlags) -> bool {\n-        self.0 & mask.0 == mask.0\n+        self.0 & mask.0 != /* ~ changed by cargo-mutants ~ */ mask.0\n     }\n \n     /// True if any bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn intersects(self, mask: TcpFlags) -> bool {\n         self.0 & mask.0 != 0\n     }\n \n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "TcpFlags::contains",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 69
+        },
+        "start": {
+          "column": 5,
+          "line": 65
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/observation.rs:68:25: replace == with != in TcpFlags::contains",
+    "package": "deflect-core",
+    "replacement": "!=",
+    "span": {
+      "end": {
+        "column": 27,
+        "line": 68
+      },
+      "start": {
+        "column": 25,
+        "line": 68
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace & with | in TcpFlags::contains\n@@ -60,17 +60,17 @@\n     #[must_use]\n     pub const fn bits(self) -> u8 {\n         self.0\n     }\n \n     /// True if every bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn contains(self, mask: TcpFlags) -> bool {\n-        self.0 & mask.0 == mask.0\n+        self.0 | /* ~ changed by cargo-mutants ~ */ mask.0 == mask.0\n     }\n \n     /// True if any bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn intersects(self, mask: TcpFlags) -> bool {\n         self.0 & mask.0 != 0\n     }\n \n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "TcpFlags::contains",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 69
+        },
+        "start": {
+          "column": 5,
+          "line": 65
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/observation.rs:68:16: replace & with | in TcpFlags::contains",
+    "package": "deflect-core",
+    "replacement": "|",
+    "span": {
+      "end": {
+        "column": 17,
+        "line": 68
+      },
+      "start": {
+        "column": 16,
+        "line": 68
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace & with ^ in TcpFlags::contains\n@@ -60,17 +60,17 @@\n     #[must_use]\n     pub const fn bits(self) -> u8 {\n         self.0\n     }\n \n     /// True if every bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn contains(self, mask: TcpFlags) -> bool {\n-        self.0 & mask.0 == mask.0\n+        self.0 ^ /* ~ changed by cargo-mutants ~ */ mask.0 == mask.0\n     }\n \n     /// True if any bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn intersects(self, mask: TcpFlags) -> bool {\n         self.0 & mask.0 != 0\n     }\n \n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "TcpFlags::contains",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 69
+        },
+        "start": {
+          "column": 5,
+          "line": 65
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/observation.rs:68:16: replace & with ^ in TcpFlags::contains",
+    "package": "deflect-core",
+    "replacement": "^",
+    "span": {
+      "end": {
+        "column": 17,
+        "line": 68
+      },
+      "start": {
+        "column": 16,
+        "line": 68
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace TcpFlags::intersects -> bool with true\n@@ -66,17 +66,17 @@\n     #[must_use]\n     pub const fn contains(self, mask: TcpFlags) -> bool {\n         self.0 & mask.0 == mask.0\n     }\n \n     /// True if any bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn intersects(self, mask: TcpFlags) -> bool {\n-        self.0 & mask.0 != 0\n+        true /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub const fn is_empty(self) -> bool {\n         self.0 == 0\n     }\n }\n \n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "TcpFlags::intersects",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 75
+        },
+        "start": {
+          "column": 5,
+          "line": 71
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/observation.rs:74:9: replace TcpFlags::intersects -> bool with true",
+    "package": "deflect-core",
+    "replacement": "true",
+    "span": {
+      "end": {
+        "column": 29,
+        "line": 74
+      },
+      "start": {
+        "column": 9,
+        "line": 74
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace TcpFlags::intersects -> bool with false\n@@ -66,17 +66,17 @@\n     #[must_use]\n     pub const fn contains(self, mask: TcpFlags) -> bool {\n         self.0 & mask.0 == mask.0\n     }\n \n     /// True if any bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn intersects(self, mask: TcpFlags) -> bool {\n-        self.0 & mask.0 != 0\n+        false /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub const fn is_empty(self) -> bool {\n         self.0 == 0\n     }\n }\n \n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "TcpFlags::intersects",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 75
+        },
+        "start": {
+          "column": 5,
+          "line": 71
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/observation.rs:74:9: replace TcpFlags::intersects -> bool with false",
+    "package": "deflect-core",
+    "replacement": "false",
+    "span": {
+      "end": {
+        "column": 29,
+        "line": 74
+      },
+      "start": {
+        "column": 9,
+        "line": 74
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace != with == in TcpFlags::intersects\n@@ -66,17 +66,17 @@\n     #[must_use]\n     pub const fn contains(self, mask: TcpFlags) -> bool {\n         self.0 & mask.0 == mask.0\n     }\n \n     /// True if any bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn intersects(self, mask: TcpFlags) -> bool {\n-        self.0 & mask.0 != 0\n+        self.0 & mask.0 == /* ~ changed by cargo-mutants ~ */ 0\n     }\n \n     #[must_use]\n     pub const fn is_empty(self) -> bool {\n         self.0 == 0\n     }\n }\n \n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "TcpFlags::intersects",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 75
+        },
+        "start": {
+          "column": 5,
+          "line": 71
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/observation.rs:74:25: replace != with == in TcpFlags::intersects",
+    "package": "deflect-core",
+    "replacement": "==",
+    "span": {
+      "end": {
+        "column": 27,
+        "line": 74
+      },
+      "start": {
+        "column": 25,
+        "line": 74
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace & with | in TcpFlags::intersects\n@@ -66,17 +66,17 @@\n     #[must_use]\n     pub const fn contains(self, mask: TcpFlags) -> bool {\n         self.0 & mask.0 == mask.0\n     }\n \n     /// True if any bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn intersects(self, mask: TcpFlags) -> bool {\n-        self.0 & mask.0 != 0\n+        self.0 | /* ~ changed by cargo-mutants ~ */ mask.0 != 0\n     }\n \n     #[must_use]\n     pub const fn is_empty(self) -> bool {\n         self.0 == 0\n     }\n }\n \n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "TcpFlags::intersects",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 75
+        },
+        "start": {
+          "column": 5,
+          "line": 71
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/observation.rs:74:16: replace & with | in TcpFlags::intersects",
+    "package": "deflect-core",
+    "replacement": "|",
+    "span": {
+      "end": {
+        "column": 17,
+        "line": 74
+      },
+      "start": {
+        "column": 16,
+        "line": 74
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace & with ^ in TcpFlags::intersects\n@@ -66,17 +66,17 @@\n     #[must_use]\n     pub const fn contains(self, mask: TcpFlags) -> bool {\n         self.0 & mask.0 == mask.0\n     }\n \n     /// True if any bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn intersects(self, mask: TcpFlags) -> bool {\n-        self.0 & mask.0 != 0\n+        self.0 ^ /* ~ changed by cargo-mutants ~ */ mask.0 != 0\n     }\n \n     #[must_use]\n     pub const fn is_empty(self) -> bool {\n         self.0 == 0\n     }\n }\n \n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "TcpFlags::intersects",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 75
+        },
+        "start": {
+          "column": 5,
+          "line": 71
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/observation.rs:74:16: replace & with ^ in TcpFlags::intersects",
+    "package": "deflect-core",
+    "replacement": "^",
+    "span": {
+      "end": {
+        "column": 17,
+        "line": 74
+      },
+      "start": {
+        "column": 16,
+        "line": 74
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace TcpFlags::is_empty -> bool with true\n@@ -71,17 +71,17 @@\n     /// True if any bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn intersects(self, mask: TcpFlags) -> bool {\n         self.0 & mask.0 != 0\n     }\n \n     #[must_use]\n     pub const fn is_empty(self) -> bool {\n-        self.0 == 0\n+        true /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n impl core::ops::BitOr for TcpFlags {\n     type Output = TcpFlags;\n     fn bitor(self, rhs: TcpFlags) -> TcpFlags {\n         TcpFlags(self.0 | rhs.0)\n     }\n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "TcpFlags::is_empty",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 80
+        },
+        "start": {
+          "column": 5,
+          "line": 77
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/observation.rs:79:9: replace TcpFlags::is_empty -> bool with true",
+    "package": "deflect-core",
+    "replacement": "true",
+    "span": {
+      "end": {
+        "column": 20,
+        "line": 79
+      },
+      "start": {
+        "column": 9,
+        "line": 79
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace TcpFlags::is_empty -> bool with false\n@@ -71,17 +71,17 @@\n     /// True if any bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn intersects(self, mask: TcpFlags) -> bool {\n         self.0 & mask.0 != 0\n     }\n \n     #[must_use]\n     pub const fn is_empty(self) -> bool {\n-        self.0 == 0\n+        false /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n impl core::ops::BitOr for TcpFlags {\n     type Output = TcpFlags;\n     fn bitor(self, rhs: TcpFlags) -> TcpFlags {\n         TcpFlags(self.0 | rhs.0)\n     }\n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "TcpFlags::is_empty",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 80
+        },
+        "start": {
+          "column": 5,
+          "line": 77
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/observation.rs:79:9: replace TcpFlags::is_empty -> bool with false",
+    "package": "deflect-core",
+    "replacement": "false",
+    "span": {
+      "end": {
+        "column": 20,
+        "line": 79
+      },
+      "start": {
+        "column": 9,
+        "line": 79
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace == with != in TcpFlags::is_empty\n@@ -71,17 +71,17 @@\n     /// True if any bit set in `mask` is also set in `self`.\n     #[must_use]\n     pub const fn intersects(self, mask: TcpFlags) -> bool {\n         self.0 & mask.0 != 0\n     }\n \n     #[must_use]\n     pub const fn is_empty(self) -> bool {\n-        self.0 == 0\n+        self.0 != /* ~ changed by cargo-mutants ~ */ 0\n     }\n }\n \n impl core::ops::BitOr for TcpFlags {\n     type Output = TcpFlags;\n     fn bitor(self, rhs: TcpFlags) -> TcpFlags {\n         TcpFlags(self.0 | rhs.0)\n     }\n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "TcpFlags::is_empty",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 80
+        },
+        "start": {
+          "column": 5,
+          "line": 77
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/observation.rs:79:16: replace == with != in TcpFlags::is_empty",
+    "package": "deflect-core",
+    "replacement": "!=",
+    "span": {
+      "end": {
+        "column": 18,
+        "line": 79
+      },
+      "start": {
+        "column": 16,
+        "line": 79
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace <impl core::ops::BitOr for TcpFlags>::bitor -> TcpFlags with Default::default()\n@@ -78,17 +78,17 @@\n     pub const fn is_empty(self) -> bool {\n         self.0 == 0\n     }\n }\n \n impl core::ops::BitOr for TcpFlags {\n     type Output = TcpFlags;\n     fn bitor(self, rhs: TcpFlags) -> TcpFlags {\n-        TcpFlags(self.0 | rhs.0)\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n /// Metadata extracted from one packet, borrowing its payload rather than\n /// owning it so a stage can inspect bytes without a copy.\n #[derive(Debug, Clone, Copy)]\n pub struct Packet<'a> {\n     pub src: IpAddr,\n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "<impl core::ops::BitOr for TcpFlags>::bitor",
+      "return_type": "-> TcpFlags",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 87
+        },
+        "start": {
+          "column": 5,
+          "line": 85
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/observation.rs:86:9: replace <impl core::ops::BitOr for TcpFlags>::bitor -> TcpFlags with Default::default()",
+    "package": "deflect-core",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 33,
+        "line": 86
+      },
+      "start": {
+        "column": 9,
+        "line": 86
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace | with & in <impl core::ops::BitOr for TcpFlags>::bitor\n@@ -78,17 +78,17 @@\n     pub const fn is_empty(self) -> bool {\n         self.0 == 0\n     }\n }\n \n impl core::ops::BitOr for TcpFlags {\n     type Output = TcpFlags;\n     fn bitor(self, rhs: TcpFlags) -> TcpFlags {\n-        TcpFlags(self.0 | rhs.0)\n+        TcpFlags(self.0 & /* ~ changed by cargo-mutants ~ */ rhs.0)\n     }\n }\n \n /// Metadata extracted from one packet, borrowing its payload rather than\n /// owning it so a stage can inspect bytes without a copy.\n #[derive(Debug, Clone, Copy)]\n pub struct Packet<'a> {\n     pub src: IpAddr,\n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "<impl core::ops::BitOr for TcpFlags>::bitor",
+      "return_type": "-> TcpFlags",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 87
+        },
+        "start": {
+          "column": 5,
+          "line": 85
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/observation.rs:86:25: replace | with & in <impl core::ops::BitOr for TcpFlags>::bitor",
+    "package": "deflect-core",
+    "replacement": "&",
+    "span": {
+      "end": {
+        "column": 26,
+        "line": 86
+      },
+      "start": {
+        "column": 25,
+        "line": 86
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace | with ^ in <impl core::ops::BitOr for TcpFlags>::bitor\n@@ -78,17 +78,17 @@\n     pub const fn is_empty(self) -> bool {\n         self.0 == 0\n     }\n }\n \n impl core::ops::BitOr for TcpFlags {\n     type Output = TcpFlags;\n     fn bitor(self, rhs: TcpFlags) -> TcpFlags {\n-        TcpFlags(self.0 | rhs.0)\n+        TcpFlags(self.0 ^ /* ~ changed by cargo-mutants ~ */ rhs.0)\n     }\n }\n \n /// Metadata extracted from one packet, borrowing its payload rather than\n /// owning it so a stage can inspect bytes without a copy.\n #[derive(Debug, Clone, Copy)]\n pub struct Packet<'a> {\n     pub src: IpAddr,\n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "<impl core::ops::BitOr for TcpFlags>::bitor",
+      "return_type": "-> TcpFlags",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 87
+        },
+        "start": {
+          "column": 5,
+          "line": 85
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/observation.rs:86:25: replace | with ^ in <impl core::ops::BitOr for TcpFlags>::bitor",
+    "package": "deflect-core",
+    "replacement": "^",
+    "span": {
+      "end": {
+        "column": 26,
+        "line": 86
+      },
+      "start": {
+        "column": 25,
+        "line": 86
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace Packet<'a>::with_ports -> Self with Default::default()\n@@ -114,19 +114,17 @@\n             tcp_flags: TcpFlags::empty(),\n             wire_len: 0,\n             payload: &[],\n         }\n     }\n \n     #[must_use]\n     pub fn with_ports(mut self, src_port: u16, dst_port: u16) -> Self {\n-        self.src_port = src_port;\n-        self.dst_port = dst_port;\n-        self\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn with_flags(mut self, flags: TcpFlags) -> Self {\n         self.tcp_flags = flags;\n         self\n     }\n \n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "Packet<'a>::with_ports",
+      "return_type": "-> Self",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 125
+        },
+        "start": {
+          "column": 5,
+          "line": 120
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/observation.rs:122:9: replace Packet<'a>::with_ports -> Self with Default::default()",
+    "package": "deflect-core",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 13,
+        "line": 124
+      },
+      "start": {
+        "column": 9,
+        "line": 122
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace Packet<'a>::with_flags -> Self with Default::default()\n@@ -121,18 +121,17 @@\n     pub fn with_ports(mut self, src_port: u16, dst_port: u16) -> Self {\n         self.src_port = src_port;\n         self.dst_port = dst_port;\n         self\n     }\n \n     #[must_use]\n     pub fn with_flags(mut self, flags: TcpFlags) -> Self {\n-        self.tcp_flags = flags;\n-        self\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn with_wire_len(mut self, len: u32) -> Self {\n         self.wire_len = len;\n         self\n     }\n \n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "Packet<'a>::with_flags",
+      "return_type": "-> Self",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 131
+        },
+        "start": {
+          "column": 5,
+          "line": 127
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/observation.rs:129:9: replace Packet<'a>::with_flags -> Self with Default::default()",
+    "package": "deflect-core",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 13,
+        "line": 130
+      },
+      "start": {
+        "column": 9,
+        "line": 129
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace Packet<'a>::with_wire_len -> Self with Default::default()\n@@ -127,18 +127,17 @@\n     #[must_use]\n     pub fn with_flags(mut self, flags: TcpFlags) -> Self {\n         self.tcp_flags = flags;\n         self\n     }\n \n     #[must_use]\n     pub fn with_wire_len(mut self, len: u32) -> Self {\n-        self.wire_len = len;\n-        self\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn with_payload(mut self, payload: &'a [u8]) -> Self {\n         self.payload = payload;\n         self\n     }\n }\n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "Packet<'a>::with_wire_len",
+      "return_type": "-> Self",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 137
+        },
+        "start": {
+          "column": 5,
+          "line": 133
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/observation.rs:135:9: replace Packet<'a>::with_wire_len -> Self with Default::default()",
+    "package": "deflect-core",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 13,
+        "line": 136
+      },
+      "start": {
+        "column": 9,
+        "line": 135
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/observation.rs\n+++ replace Packet<'a>::with_payload -> Self with Default::default()\n@@ -133,18 +133,17 @@\n     #[must_use]\n     pub fn with_wire_len(mut self, len: u32) -> Self {\n         self.wire_len = len;\n         self\n     }\n \n     #[must_use]\n     pub fn with_payload(mut self, payload: &'a [u8]) -> Self {\n-        self.payload = payload;\n-        self\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     #[test]\n",
+    "file": "crates/deflect-core/src/observation.rs",
+    "function": {
+      "function_name": "Packet<'a>::with_payload",
+      "return_type": "-> Self",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 143
+        },
+        "start": {
+          "column": 5,
+          "line": 139
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/observation.rs:141:9: replace Packet<'a>::with_payload -> Self with Default::default()",
+    "package": "deflect-core",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 13,
+        "line": 142
+      },
+      "start": {
+        "column": 9,
+        "line": 141
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace SourceKey::host -> SourceKey with Default::default()\n@@ -52,17 +52,17 @@\n         match addr {\n             IpAddr::V4(v4) => SourceKey::V4(mask_v4(v4.octets(), agg.v4_bits)),\n             IpAddr::V6(v6) => SourceKey::V6(mask_v6(v6.octets(), agg.v6_bits)),\n         }\n     }\n \n     #[must_use]\n     pub fn host(addr: IpAddr) -> SourceKey {\n-        SourceKey::new(addr, Aggregation::HOST)\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn is_v4(&self) -> bool {\n         matches!(self, SourceKey::V4(_))\n     }\n \n     #[must_use]\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "SourceKey::host",
+      "return_type": "-> SourceKey",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 61
+        },
+        "start": {
+          "column": 5,
+          "line": 58
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/source.rs:60:9: replace SourceKey::host -> SourceKey with Default::default()",
+    "package": "deflect-core",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 48,
+        "line": 60
+      },
+      "start": {
+        "column": 9,
+        "line": 60
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace SourceKey::is_v4 -> bool with true\n@@ -57,17 +57,17 @@\n \n     #[must_use]\n     pub fn host(addr: IpAddr) -> SourceKey {\n         SourceKey::new(addr, Aggregation::HOST)\n     }\n \n     #[must_use]\n     pub fn is_v4(&self) -> bool {\n-        matches!(self, SourceKey::V4(_))\n+        true /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn addr(&self) -> IpAddr {\n         match self {\n             SourceKey::V4(o) => IpAddr::V4(Ipv4Addr::from(*o)),\n             SourceKey::V6(o) => IpAddr::V6(Ipv6Addr::from(*o)),\n         }\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "SourceKey::is_v4",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 66
+        },
+        "start": {
+          "column": 5,
+          "line": 63
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/source.rs:65:9: replace SourceKey::is_v4 -> bool with true",
+    "package": "deflect-core",
+    "replacement": "true",
+    "span": {
+      "end": {
+        "column": 41,
+        "line": 65
+      },
+      "start": {
+        "column": 9,
+        "line": 65
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace SourceKey::is_v4 -> bool with false\n@@ -57,17 +57,17 @@\n \n     #[must_use]\n     pub fn host(addr: IpAddr) -> SourceKey {\n         SourceKey::new(addr, Aggregation::HOST)\n     }\n \n     #[must_use]\n     pub fn is_v4(&self) -> bool {\n-        matches!(self, SourceKey::V4(_))\n+        false /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub fn addr(&self) -> IpAddr {\n         match self {\n             SourceKey::V4(o) => IpAddr::V4(Ipv4Addr::from(*o)),\n             SourceKey::V6(o) => IpAddr::V6(Ipv6Addr::from(*o)),\n         }\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "SourceKey::is_v4",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 66
+        },
+        "start": {
+          "column": 5,
+          "line": 63
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/source.rs:65:9: replace SourceKey::is_v4 -> bool with false",
+    "package": "deflect-core",
+    "replacement": "false",
+    "span": {
+      "end": {
+        "column": 41,
+        "line": 65
+      },
+      "start": {
+        "column": 9,
+        "line": 65
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace SourceKey::addr -> IpAddr with Default::default()\n@@ -62,20 +62,17 @@\n \n     #[must_use]\n     pub fn is_v4(&self) -> bool {\n         matches!(self, SourceKey::V4(_))\n     }\n \n     #[must_use]\n     pub fn addr(&self) -> IpAddr {\n-        match self {\n-            SourceKey::V4(o) => IpAddr::V4(Ipv4Addr::from(*o)),\n-            SourceKey::V6(o) => IpAddr::V6(Ipv6Addr::from(*o)),\n-        }\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {\n     let bits = (bits as usize).min(N * 8);\n     let full = bits / 8;\n     let rem = bits % 8;\n     if rem != 0 {\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "SourceKey::addr",
+      "return_type": "-> IpAddr",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 74
+        },
+        "start": {
+          "column": 5,
+          "line": 68
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/source.rs:70:9: replace SourceKey::addr -> IpAddr with Default::default()",
+    "package": "deflect-core",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 10,
+        "line": 73
+      },
+      "start": {
+        "column": 9,
+        "line": 70
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace mask_octets -> [u8; N] with [0; N]\n@@ -70,27 +70,17 @@\n         match self {\n             SourceKey::V4(o) => IpAddr::V4(Ipv4Addr::from(*o)),\n             SourceKey::V6(o) => IpAddr::V6(Ipv6Addr::from(*o)),\n         }\n     }\n }\n \n fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {\n-    let bits = (bits as usize).min(N * 8);\n-    let full = bits / 8;\n-    let rem = bits % 8;\n-    if rem != 0 {\n-        // Keep the high `rem` bits of the boundary octet, clear the rest.\n-        octets[full] &= 0xFFu8 << (8 - rem);\n-    }\n-    for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {\n-        *b = 0;\n-    }\n-    octets\n+    [0; N] /* ~ changed by cargo-mutants ~ */\n }\n \n fn mask_v4(octets: [u8; 4], bits: u8) -> [u8; 4] {\n     mask_octets(octets, bits)\n }\n \n fn mask_v6(octets: [u8; 16], bits: u8) -> [u8; 16] {\n     mask_octets(octets, bits)\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_octets",
+      "return_type": "-> [u8; N]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 89
+        },
+        "start": {
+          "column": 1,
+          "line": 77
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/source.rs:78:5: replace mask_octets -> [u8; N] with [0; N]",
+    "package": "deflect-core",
+    "replacement": "[0; N]",
+    "span": {
+      "end": {
+        "column": 11,
+        "line": 88
+      },
+      "start": {
+        "column": 5,
+        "line": 78
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace mask_octets -> [u8; N] with [1; N]\n@@ -70,27 +70,17 @@\n         match self {\n             SourceKey::V4(o) => IpAddr::V4(Ipv4Addr::from(*o)),\n             SourceKey::V6(o) => IpAddr::V6(Ipv6Addr::from(*o)),\n         }\n     }\n }\n \n fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {\n-    let bits = (bits as usize).min(N * 8);\n-    let full = bits / 8;\n-    let rem = bits % 8;\n-    if rem != 0 {\n-        // Keep the high `rem` bits of the boundary octet, clear the rest.\n-        octets[full] &= 0xFFu8 << (8 - rem);\n-    }\n-    for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {\n-        *b = 0;\n-    }\n-    octets\n+    [1; N] /* ~ changed by cargo-mutants ~ */\n }\n \n fn mask_v4(octets: [u8; 4], bits: u8) -> [u8; 4] {\n     mask_octets(octets, bits)\n }\n \n fn mask_v6(octets: [u8; 16], bits: u8) -> [u8; 16] {\n     mask_octets(octets, bits)\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_octets",
+      "return_type": "-> [u8; N]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 89
+        },
+        "start": {
+          "column": 1,
+          "line": 77
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/source.rs:78:5: replace mask_octets -> [u8; N] with [1; N]",
+    "package": "deflect-core",
+    "replacement": "[1; N]",
+    "span": {
+      "end": {
+        "column": 11,
+        "line": 88
+      },
+      "start": {
+        "column": 5,
+        "line": 78
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace * with + in mask_octets\n@@ -70,17 +70,17 @@\n         match self {\n             SourceKey::V4(o) => IpAddr::V4(Ipv4Addr::from(*o)),\n             SourceKey::V6(o) => IpAddr::V6(Ipv6Addr::from(*o)),\n         }\n     }\n }\n \n fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {\n-    let bits = (bits as usize).min(N * 8);\n+    let bits = (bits as usize).min(N + /* ~ changed by cargo-mutants ~ */ 8);\n     let full = bits / 8;\n     let rem = bits % 8;\n     if rem != 0 {\n         // Keep the high `rem` bits of the boundary octet, clear the rest.\n         octets[full] &= 0xFFu8 << (8 - rem);\n     }\n     for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {\n         *b = 0;\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_octets",
+      "return_type": "-> [u8; N]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 89
+        },
+        "start": {
+          "column": 1,
+          "line": 77
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/source.rs:78:38: replace * with + in mask_octets",
+    "package": "deflect-core",
+    "replacement": "+",
+    "span": {
+      "end": {
+        "column": 39,
+        "line": 78
+      },
+      "start": {
+        "column": 38,
+        "line": 78
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace * with / in mask_octets\n@@ -70,17 +70,17 @@\n         match self {\n             SourceKey::V4(o) => IpAddr::V4(Ipv4Addr::from(*o)),\n             SourceKey::V6(o) => IpAddr::V6(Ipv6Addr::from(*o)),\n         }\n     }\n }\n \n fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {\n-    let bits = (bits as usize).min(N * 8);\n+    let bits = (bits as usize).min(N / /* ~ changed by cargo-mutants ~ */ 8);\n     let full = bits / 8;\n     let rem = bits % 8;\n     if rem != 0 {\n         // Keep the high `rem` bits of the boundary octet, clear the rest.\n         octets[full] &= 0xFFu8 << (8 - rem);\n     }\n     for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {\n         *b = 0;\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_octets",
+      "return_type": "-> [u8; N]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 89
+        },
+        "start": {
+          "column": 1,
+          "line": 77
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/source.rs:78:38: replace * with / in mask_octets",
+    "package": "deflect-core",
+    "replacement": "/",
+    "span": {
+      "end": {
+        "column": 39,
+        "line": 78
+      },
+      "start": {
+        "column": 38,
+        "line": 78
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace / with % in mask_octets\n@@ -71,17 +71,17 @@\n             SourceKey::V4(o) => IpAddr::V4(Ipv4Addr::from(*o)),\n             SourceKey::V6(o) => IpAddr::V6(Ipv6Addr::from(*o)),\n         }\n     }\n }\n \n fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {\n     let bits = (bits as usize).min(N * 8);\n-    let full = bits / 8;\n+    let full = bits % /* ~ changed by cargo-mutants ~ */ 8;\n     let rem = bits % 8;\n     if rem != 0 {\n         // Keep the high `rem` bits of the boundary octet, clear the rest.\n         octets[full] &= 0xFFu8 << (8 - rem);\n     }\n     for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {\n         *b = 0;\n     }\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_octets",
+      "return_type": "-> [u8; N]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 89
+        },
+        "start": {
+          "column": 1,
+          "line": 77
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/source.rs:79:21: replace / with % in mask_octets",
+    "package": "deflect-core",
+    "replacement": "%",
+    "span": {
+      "end": {
+        "column": 22,
+        "line": 79
+      },
+      "start": {
+        "column": 21,
+        "line": 79
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace / with * in mask_octets\n@@ -71,17 +71,17 @@\n             SourceKey::V4(o) => IpAddr::V4(Ipv4Addr::from(*o)),\n             SourceKey::V6(o) => IpAddr::V6(Ipv6Addr::from(*o)),\n         }\n     }\n }\n \n fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {\n     let bits = (bits as usize).min(N * 8);\n-    let full = bits / 8;\n+    let full = bits * /* ~ changed by cargo-mutants ~ */ 8;\n     let rem = bits % 8;\n     if rem != 0 {\n         // Keep the high `rem` bits of the boundary octet, clear the rest.\n         octets[full] &= 0xFFu8 << (8 - rem);\n     }\n     for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {\n         *b = 0;\n     }\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_octets",
+      "return_type": "-> [u8; N]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 89
+        },
+        "start": {
+          "column": 1,
+          "line": 77
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/source.rs:79:21: replace / with * in mask_octets",
+    "package": "deflect-core",
+    "replacement": "*",
+    "span": {
+      "end": {
+        "column": 22,
+        "line": 79
+      },
+      "start": {
+        "column": 21,
+        "line": 79
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace % with / in mask_octets\n@@ -72,17 +72,17 @@\n             SourceKey::V6(o) => IpAddr::V6(Ipv6Addr::from(*o)),\n         }\n     }\n }\n \n fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {\n     let bits = (bits as usize).min(N * 8);\n     let full = bits / 8;\n-    let rem = bits % 8;\n+    let rem = bits / /* ~ changed by cargo-mutants ~ */ 8;\n     if rem != 0 {\n         // Keep the high `rem` bits of the boundary octet, clear the rest.\n         octets[full] &= 0xFFu8 << (8 - rem);\n     }\n     for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {\n         *b = 0;\n     }\n     octets\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_octets",
+      "return_type": "-> [u8; N]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 89
+        },
+        "start": {
+          "column": 1,
+          "line": 77
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/source.rs:80:20: replace % with / in mask_octets",
+    "package": "deflect-core",
+    "replacement": "/",
+    "span": {
+      "end": {
+        "column": 21,
+        "line": 80
+      },
+      "start": {
+        "column": 20,
+        "line": 80
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace % with + in mask_octets\n@@ -72,17 +72,17 @@\n             SourceKey::V6(o) => IpAddr::V6(Ipv6Addr::from(*o)),\n         }\n     }\n }\n \n fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {\n     let bits = (bits as usize).min(N * 8);\n     let full = bits / 8;\n-    let rem = bits % 8;\n+    let rem = bits + /* ~ changed by cargo-mutants ~ */ 8;\n     if rem != 0 {\n         // Keep the high `rem` bits of the boundary octet, clear the rest.\n         octets[full] &= 0xFFu8 << (8 - rem);\n     }\n     for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {\n         *b = 0;\n     }\n     octets\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_octets",
+      "return_type": "-> [u8; N]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 89
+        },
+        "start": {
+          "column": 1,
+          "line": 77
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/source.rs:80:20: replace % with + in mask_octets",
+    "package": "deflect-core",
+    "replacement": "+",
+    "span": {
+      "end": {
+        "column": 21,
+        "line": 80
+      },
+      "start": {
+        "column": 20,
+        "line": 80
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace != with == in mask_octets\n@@ -73,17 +73,17 @@\n         }\n     }\n }\n \n fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {\n     let bits = (bits as usize).min(N * 8);\n     let full = bits / 8;\n     let rem = bits % 8;\n-    if rem != 0 {\n+    if rem == /* ~ changed by cargo-mutants ~ */ 0 {\n         // Keep the high `rem` bits of the boundary octet, clear the rest.\n         octets[full] &= 0xFFu8 << (8 - rem);\n     }\n     for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {\n         *b = 0;\n     }\n     octets\n }\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_octets",
+      "return_type": "-> [u8; N]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 89
+        },
+        "start": {
+          "column": 1,
+          "line": 77
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/source.rs:81:12: replace != with == in mask_octets",
+    "package": "deflect-core",
+    "replacement": "==",
+    "span": {
+      "end": {
+        "column": 14,
+        "line": 81
+      },
+      "start": {
+        "column": 12,
+        "line": 81
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace &= with |= in mask_octets\n@@ -75,17 +75,17 @@\n }\n \n fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {\n     let bits = (bits as usize).min(N * 8);\n     let full = bits / 8;\n     let rem = bits % 8;\n     if rem != 0 {\n         // Keep the high `rem` bits of the boundary octet, clear the rest.\n-        octets[full] &= 0xFFu8 << (8 - rem);\n+        octets[full] |= /* ~ changed by cargo-mutants ~ */ 0xFFu8 << (8 - rem);\n     }\n     for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {\n         *b = 0;\n     }\n     octets\n }\n \n fn mask_v4(octets: [u8; 4], bits: u8) -> [u8; 4] {\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_octets",
+      "return_type": "-> [u8; N]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 89
+        },
+        "start": {
+          "column": 1,
+          "line": 77
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/source.rs:83:22: replace &= with |= in mask_octets",
+    "package": "deflect-core",
+    "replacement": "|=",
+    "span": {
+      "end": {
+        "column": 24,
+        "line": 83
+      },
+      "start": {
+        "column": 22,
+        "line": 83
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace << with >> in mask_octets\n@@ -75,17 +75,17 @@\n }\n \n fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {\n     let bits = (bits as usize).min(N * 8);\n     let full = bits / 8;\n     let rem = bits % 8;\n     if rem != 0 {\n         // Keep the high `rem` bits of the boundary octet, clear the rest.\n-        octets[full] &= 0xFFu8 << (8 - rem);\n+        octets[full] &= 0xFFu8 >> /* ~ changed by cargo-mutants ~ */ (8 - rem);\n     }\n     for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {\n         *b = 0;\n     }\n     octets\n }\n \n fn mask_v4(octets: [u8; 4], bits: u8) -> [u8; 4] {\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_octets",
+      "return_type": "-> [u8; N]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 89
+        },
+        "start": {
+          "column": 1,
+          "line": 77
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/source.rs:83:32: replace << with >> in mask_octets",
+    "package": "deflect-core",
+    "replacement": ">>",
+    "span": {
+      "end": {
+        "column": 34,
+        "line": 83
+      },
+      "start": {
+        "column": 32,
+        "line": 83
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace - with + in mask_octets\n@@ -75,17 +75,17 @@\n }\n \n fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {\n     let bits = (bits as usize).min(N * 8);\n     let full = bits / 8;\n     let rem = bits % 8;\n     if rem != 0 {\n         // Keep the high `rem` bits of the boundary octet, clear the rest.\n-        octets[full] &= 0xFFu8 << (8 - rem);\n+        octets[full] &= 0xFFu8 << (8 + /* ~ changed by cargo-mutants ~ */ rem);\n     }\n     for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {\n         *b = 0;\n     }\n     octets\n }\n \n fn mask_v4(octets: [u8; 4], bits: u8) -> [u8; 4] {\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_octets",
+      "return_type": "-> [u8; N]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 89
+        },
+        "start": {
+          "column": 1,
+          "line": 77
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/source.rs:83:38: replace - with + in mask_octets",
+    "package": "deflect-core",
+    "replacement": "+",
+    "span": {
+      "end": {
+        "column": 39,
+        "line": 83
+      },
+      "start": {
+        "column": 38,
+        "line": 83
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace - with / in mask_octets\n@@ -75,17 +75,17 @@\n }\n \n fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {\n     let bits = (bits as usize).min(N * 8);\n     let full = bits / 8;\n     let rem = bits % 8;\n     if rem != 0 {\n         // Keep the high `rem` bits of the boundary octet, clear the rest.\n-        octets[full] &= 0xFFu8 << (8 - rem);\n+        octets[full] &= 0xFFu8 << (8 / /* ~ changed by cargo-mutants ~ */ rem);\n     }\n     for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {\n         *b = 0;\n     }\n     octets\n }\n \n fn mask_v4(octets: [u8; 4], bits: u8) -> [u8; 4] {\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_octets",
+      "return_type": "-> [u8; N]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 89
+        },
+        "start": {
+          "column": 1,
+          "line": 77
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/source.rs:83:38: replace - with / in mask_octets",
+    "package": "deflect-core",
+    "replacement": "/",
+    "span": {
+      "end": {
+        "column": 39,
+        "line": 83
+      },
+      "start": {
+        "column": 38,
+        "line": 83
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace + with - in mask_octets\n@@ -77,17 +77,17 @@\n fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {\n     let bits = (bits as usize).min(N * 8);\n     let full = bits / 8;\n     let rem = bits % 8;\n     if rem != 0 {\n         // Keep the high `rem` bits of the boundary octet, clear the rest.\n         octets[full] &= 0xFFu8 << (8 - rem);\n     }\n-    for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {\n+    for b in octets.iter_mut().skip(full - /* ~ changed by cargo-mutants ~ */ usize::from(rem != 0)) {\n         *b = 0;\n     }\n     octets\n }\n \n fn mask_v4(octets: [u8; 4], bits: u8) -> [u8; 4] {\n     mask_octets(octets, bits)\n }\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_octets",
+      "return_type": "-> [u8; N]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 89
+        },
+        "start": {
+          "column": 1,
+          "line": 77
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/source.rs:85:42: replace + with - in mask_octets",
+    "package": "deflect-core",
+    "replacement": "-",
+    "span": {
+      "end": {
+        "column": 43,
+        "line": 85
+      },
+      "start": {
+        "column": 42,
+        "line": 85
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace + with * in mask_octets\n@@ -77,17 +77,17 @@\n fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {\n     let bits = (bits as usize).min(N * 8);\n     let full = bits / 8;\n     let rem = bits % 8;\n     if rem != 0 {\n         // Keep the high `rem` bits of the boundary octet, clear the rest.\n         octets[full] &= 0xFFu8 << (8 - rem);\n     }\n-    for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {\n+    for b in octets.iter_mut().skip(full * /* ~ changed by cargo-mutants ~ */ usize::from(rem != 0)) {\n         *b = 0;\n     }\n     octets\n }\n \n fn mask_v4(octets: [u8; 4], bits: u8) -> [u8; 4] {\n     mask_octets(octets, bits)\n }\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_octets",
+      "return_type": "-> [u8; N]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 89
+        },
+        "start": {
+          "column": 1,
+          "line": 77
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/source.rs:85:42: replace + with * in mask_octets",
+    "package": "deflect-core",
+    "replacement": "*",
+    "span": {
+      "end": {
+        "column": 43,
+        "line": 85
+      },
+      "start": {
+        "column": 42,
+        "line": 85
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace != with == in mask_octets\n@@ -77,17 +77,17 @@\n fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {\n     let bits = (bits as usize).min(N * 8);\n     let full = bits / 8;\n     let rem = bits % 8;\n     if rem != 0 {\n         // Keep the high `rem` bits of the boundary octet, clear the rest.\n         octets[full] &= 0xFFu8 << (8 - rem);\n     }\n-    for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {\n+    for b in octets.iter_mut().skip(full + usize::from(rem == /* ~ changed by cargo-mutants ~ */ 0)) {\n         *b = 0;\n     }\n     octets\n }\n \n fn mask_v4(octets: [u8; 4], bits: u8) -> [u8; 4] {\n     mask_octets(octets, bits)\n }\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_octets",
+      "return_type": "-> [u8; N]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 89
+        },
+        "start": {
+          "column": 1,
+          "line": 77
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/source.rs:85:60: replace != with == in mask_octets",
+    "package": "deflect-core",
+    "replacement": "==",
+    "span": {
+      "end": {
+        "column": 62,
+        "line": 85
+      },
+      "start": {
+        "column": 60,
+        "line": 85
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace mask_v4 -> [u8; 4] with [0; 4]\n@@ -84,17 +84,17 @@\n     }\n     for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {\n         *b = 0;\n     }\n     octets\n }\n \n fn mask_v4(octets: [u8; 4], bits: u8) -> [u8; 4] {\n-    mask_octets(octets, bits)\n+    [0; 4] /* ~ changed by cargo-mutants ~ */\n }\n \n fn mask_v6(octets: [u8; 16], bits: u8) -> [u8; 16] {\n     mask_octets(octets, bits)\n }\n \n #[cfg(test)]\n mod tests {\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_v4",
+      "return_type": "-> [u8; 4]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 93
+        },
+        "start": {
+          "column": 1,
+          "line": 91
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/source.rs:92:5: replace mask_v4 -> [u8; 4] with [0; 4]",
+    "package": "deflect-core",
+    "replacement": "[0; 4]",
+    "span": {
+      "end": {
+        "column": 30,
+        "line": 92
+      },
+      "start": {
+        "column": 5,
+        "line": 92
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace mask_v4 -> [u8; 4] with [1; 4]\n@@ -84,17 +84,17 @@\n     }\n     for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {\n         *b = 0;\n     }\n     octets\n }\n \n fn mask_v4(octets: [u8; 4], bits: u8) -> [u8; 4] {\n-    mask_octets(octets, bits)\n+    [1; 4] /* ~ changed by cargo-mutants ~ */\n }\n \n fn mask_v6(octets: [u8; 16], bits: u8) -> [u8; 16] {\n     mask_octets(octets, bits)\n }\n \n #[cfg(test)]\n mod tests {\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_v4",
+      "return_type": "-> [u8; 4]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 93
+        },
+        "start": {
+          "column": 1,
+          "line": 91
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/source.rs:92:5: replace mask_v4 -> [u8; 4] with [1; 4]",
+    "package": "deflect-core",
+    "replacement": "[1; 4]",
+    "span": {
+      "end": {
+        "column": 30,
+        "line": 92
+      },
+      "start": {
+        "column": 5,
+        "line": 92
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace mask_v6 -> [u8; 16] with [0; 16]\n@@ -88,17 +88,17 @@\n     octets\n }\n \n fn mask_v4(octets: [u8; 4], bits: u8) -> [u8; 4] {\n     mask_octets(octets, bits)\n }\n \n fn mask_v6(octets: [u8; 16], bits: u8) -> [u8; 16] {\n-    mask_octets(octets, bits)\n+    [0; 16] /* ~ changed by cargo-mutants ~ */\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     fn v4(s: &str) -> IpAddr {\n         IpAddr::V4(s.parse().unwrap())\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_v6",
+      "return_type": "-> [u8; 16]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 97
+        },
+        "start": {
+          "column": 1,
+          "line": 95
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/source.rs:96:5: replace mask_v6 -> [u8; 16] with [0; 16]",
+    "package": "deflect-core",
+    "replacement": "[0; 16]",
+    "span": {
+      "end": {
+        "column": 30,
+        "line": 96
+      },
+      "start": {
+        "column": 5,
+        "line": 96
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/source.rs\n+++ replace mask_v6 -> [u8; 16] with [1; 16]\n@@ -88,17 +88,17 @@\n     octets\n }\n \n fn mask_v4(octets: [u8; 4], bits: u8) -> [u8; 4] {\n     mask_octets(octets, bits)\n }\n \n fn mask_v6(octets: [u8; 16], bits: u8) -> [u8; 16] {\n-    mask_octets(octets, bits)\n+    [1; 16] /* ~ changed by cargo-mutants ~ */\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     fn v4(s: &str) -> IpAddr {\n         IpAddr::V4(s.parse().unwrap())\n",
+    "file": "crates/deflect-core/src/source.rs",
+    "function": {
+      "function_name": "mask_v6",
+      "return_type": "-> [u8; 16]",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 97
+        },
+        "start": {
+          "column": 1,
+          "line": 95
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/source.rs:96:5: replace mask_v6 -> [u8; 16] with [1; 16]",
+    "package": "deflect-core",
+    "replacement": "[1; 16]",
+    "span": {
+      "end": {
+        "column": 30,
+        "line": 96
+      },
+      "start": {
+        "column": 5,
+        "line": 96
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/verdict.rs\n+++ replace Verdict::severity -> u8 with 0\n@@ -37,22 +37,17 @@\n         retry_after: Duration,\n     },\n     Drop(DropReason),\n }\n \n impl Verdict {\n     #[must_use]\n     pub const fn severity(&self) -> u8 {\n-        match self {\n-            Verdict::Pass => 0,\n-            Verdict::Challenge(_) => 1,\n-            Verdict::RateLimit { .. } => 2,\n-            Verdict::Drop(_) => 3,\n-        }\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub const fn is_pass(&self) -> bool {\n         matches!(self, Verdict::Pass)\n     }\n \n     #[must_use]\n",
+    "file": "crates/deflect-core/src/verdict.rs",
+    "function": {
+      "function_name": "Verdict::severity",
+      "return_type": "-> u8",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 51
+        },
+        "start": {
+          "column": 5,
+          "line": 43
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/verdict.rs:45:9: replace Verdict::severity -> u8 with 0",
+    "package": "deflect-core",
+    "replacement": "0",
+    "span": {
+      "end": {
+        "column": 10,
+        "line": 50
+      },
+      "start": {
+        "column": 9,
+        "line": 45
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/verdict.rs\n+++ replace Verdict::severity -> u8 with 1\n@@ -37,22 +37,17 @@\n         retry_after: Duration,\n     },\n     Drop(DropReason),\n }\n \n impl Verdict {\n     #[must_use]\n     pub const fn severity(&self) -> u8 {\n-        match self {\n-            Verdict::Pass => 0,\n-            Verdict::Challenge(_) => 1,\n-            Verdict::RateLimit { .. } => 2,\n-            Verdict::Drop(_) => 3,\n-        }\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub const fn is_pass(&self) -> bool {\n         matches!(self, Verdict::Pass)\n     }\n \n     #[must_use]\n",
+    "file": "crates/deflect-core/src/verdict.rs",
+    "function": {
+      "function_name": "Verdict::severity",
+      "return_type": "-> u8",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 51
+        },
+        "start": {
+          "column": 5,
+          "line": 43
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/verdict.rs:45:9: replace Verdict::severity -> u8 with 1",
+    "package": "deflect-core",
+    "replacement": "1",
+    "span": {
+      "end": {
+        "column": 10,
+        "line": 50
+      },
+      "start": {
+        "column": 9,
+        "line": 45
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/verdict.rs\n+++ replace Verdict::is_pass -> bool with true\n@@ -47,17 +47,17 @@\n             Verdict::Challenge(_) => 1,\n             Verdict::RateLimit { .. } => 2,\n             Verdict::Drop(_) => 3,\n         }\n     }\n \n     #[must_use]\n     pub const fn is_pass(&self) -> bool {\n-        matches!(self, Verdict::Pass)\n+        true /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub const fn blocks(&self) -> bool {\n         matches!(self, Verdict::Drop(_) | Verdict::RateLimit { .. })\n     }\n \n     /// Combine two verdicts, keeping the more severe. On equal severity the\n",
+    "file": "crates/deflect-core/src/verdict.rs",
+    "function": {
+      "function_name": "Verdict::is_pass",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 56
+        },
+        "start": {
+          "column": 5,
+          "line": 53
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/verdict.rs:55:9: replace Verdict::is_pass -> bool with true",
+    "package": "deflect-core",
+    "replacement": "true",
+    "span": {
+      "end": {
+        "column": 38,
+        "line": 55
+      },
+      "start": {
+        "column": 9,
+        "line": 55
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/verdict.rs\n+++ replace Verdict::is_pass -> bool with false\n@@ -47,17 +47,17 @@\n             Verdict::Challenge(_) => 1,\n             Verdict::RateLimit { .. } => 2,\n             Verdict::Drop(_) => 3,\n         }\n     }\n \n     #[must_use]\n     pub const fn is_pass(&self) -> bool {\n-        matches!(self, Verdict::Pass)\n+        false /* ~ changed by cargo-mutants ~ */\n     }\n \n     #[must_use]\n     pub const fn blocks(&self) -> bool {\n         matches!(self, Verdict::Drop(_) | Verdict::RateLimit { .. })\n     }\n \n     /// Combine two verdicts, keeping the more severe. On equal severity the\n",
+    "file": "crates/deflect-core/src/verdict.rs",
+    "function": {
+      "function_name": "Verdict::is_pass",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 56
+        },
+        "start": {
+          "column": 5,
+          "line": 53
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/verdict.rs:55:9: replace Verdict::is_pass -> bool with false",
+    "package": "deflect-core",
+    "replacement": "false",
+    "span": {
+      "end": {
+        "column": 38,
+        "line": 55
+      },
+      "start": {
+        "column": 9,
+        "line": 55
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/verdict.rs\n+++ replace Verdict::blocks -> bool with true\n@@ -52,17 +52,17 @@\n \n     #[must_use]\n     pub const fn is_pass(&self) -> bool {\n         matches!(self, Verdict::Pass)\n     }\n \n     #[must_use]\n     pub const fn blocks(&self) -> bool {\n-        matches!(self, Verdict::Drop(_) | Verdict::RateLimit { .. })\n+        true /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Combine two verdicts, keeping the more severe. On equal severity the\n     /// left verdict wins, so a pipeline's earlier stages set the reason.\n     #[must_use]\n     pub fn worst(self, other: Verdict) -> Verdict {\n         if other.severity() > self.severity() {\n             other\n",
+    "file": "crates/deflect-core/src/verdict.rs",
+    "function": {
+      "function_name": "Verdict::blocks",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 61
+        },
+        "start": {
+          "column": 5,
+          "line": 58
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/verdict.rs:60:9: replace Verdict::blocks -> bool with true",
+    "package": "deflect-core",
+    "replacement": "true",
+    "span": {
+      "end": {
+        "column": 69,
+        "line": 60
+      },
+      "start": {
+        "column": 9,
+        "line": 60
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/verdict.rs\n+++ replace Verdict::blocks -> bool with false\n@@ -52,17 +52,17 @@\n \n     #[must_use]\n     pub const fn is_pass(&self) -> bool {\n         matches!(self, Verdict::Pass)\n     }\n \n     #[must_use]\n     pub const fn blocks(&self) -> bool {\n-        matches!(self, Verdict::Drop(_) | Verdict::RateLimit { .. })\n+        false /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Combine two verdicts, keeping the more severe. On equal severity the\n     /// left verdict wins, so a pipeline's earlier stages set the reason.\n     #[must_use]\n     pub fn worst(self, other: Verdict) -> Verdict {\n         if other.severity() > self.severity() {\n             other\n",
+    "file": "crates/deflect-core/src/verdict.rs",
+    "function": {
+      "function_name": "Verdict::blocks",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 61
+        },
+        "start": {
+          "column": 5,
+          "line": 58
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/verdict.rs:60:9: replace Verdict::blocks -> bool with false",
+    "package": "deflect-core",
+    "replacement": "false",
+    "span": {
+      "end": {
+        "column": 69,
+        "line": 60
+      },
+      "start": {
+        "column": 9,
+        "line": 60
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/verdict.rs\n+++ replace Verdict::worst -> Verdict with Default::default()\n@@ -59,21 +59,17 @@\n     pub const fn blocks(&self) -> bool {\n         matches!(self, Verdict::Drop(_) | Verdict::RateLimit { .. })\n     }\n \n     /// Combine two verdicts, keeping the more severe. On equal severity the\n     /// left verdict wins, so a pipeline's earlier stages set the reason.\n     #[must_use]\n     pub fn worst(self, other: Verdict) -> Verdict {\n-        if other.severity() > self.severity() {\n-            other\n-        } else {\n-            self\n-        }\n+        Default::default() /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     #[test]\n",
+    "file": "crates/deflect-core/src/verdict.rs",
+    "function": {
+      "function_name": "Verdict::worst",
+      "return_type": "-> Verdict",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 72
+        },
+        "start": {
+          "column": 5,
+          "line": 63
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "crates/deflect-core/src/verdict.rs:67:9: replace Verdict::worst -> Verdict with Default::default()",
+    "package": "deflect-core",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 10,
+        "line": 71
+      },
+      "start": {
+        "column": 9,
+        "line": 67
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/verdict.rs\n+++ replace > with == in Verdict::worst\n@@ -59,17 +59,17 @@\n     pub const fn blocks(&self) -> bool {\n         matches!(self, Verdict::Drop(_) | Verdict::RateLimit { .. })\n     }\n \n     /// Combine two verdicts, keeping the more severe. On equal severity the\n     /// left verdict wins, so a pipeline's earlier stages set the reason.\n     #[must_use]\n     pub fn worst(self, other: Verdict) -> Verdict {\n-        if other.severity() > self.severity() {\n+        if other.severity() == /* ~ changed by cargo-mutants ~ */ self.severity() {\n             other\n         } else {\n             self\n         }\n     }\n }\n \n #[cfg(test)]\n",
+    "file": "crates/deflect-core/src/verdict.rs",
+    "function": {
+      "function_name": "Verdict::worst",
+      "return_type": "-> Verdict",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 72
+        },
+        "start": {
+          "column": 5,
+          "line": 63
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/verdict.rs:67:29: replace > with == in Verdict::worst",
+    "package": "deflect-core",
+    "replacement": "==",
+    "span": {
+      "end": {
+        "column": 30,
+        "line": 67
+      },
+      "start": {
+        "column": 29,
+        "line": 67
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/verdict.rs\n+++ replace > with < in Verdict::worst\n@@ -59,17 +59,17 @@\n     pub const fn blocks(&self) -> bool {\n         matches!(self, Verdict::Drop(_) | Verdict::RateLimit { .. })\n     }\n \n     /// Combine two verdicts, keeping the more severe. On equal severity the\n     /// left verdict wins, so a pipeline's earlier stages set the reason.\n     #[must_use]\n     pub fn worst(self, other: Verdict) -> Verdict {\n-        if other.severity() > self.severity() {\n+        if other.severity() < /* ~ changed by cargo-mutants ~ */ self.severity() {\n             other\n         } else {\n             self\n         }\n     }\n }\n \n #[cfg(test)]\n",
+    "file": "crates/deflect-core/src/verdict.rs",
+    "function": {
+      "function_name": "Verdict::worst",
+      "return_type": "-> Verdict",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 72
+        },
+        "start": {
+          "column": 5,
+          "line": 63
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/verdict.rs:67:29: replace > with < in Verdict::worst",
+    "package": "deflect-core",
+    "replacement": "<",
+    "span": {
+      "end": {
+        "column": 30,
+        "line": 67
+      },
+      "start": {
+        "column": 29,
+        "line": 67
+      }
+    }
+  },
+  {
+    "diff": "--- crates/deflect-core/src/verdict.rs\n+++ replace > with >= in Verdict::worst\n@@ -59,17 +59,17 @@\n     pub const fn blocks(&self) -> bool {\n         matches!(self, Verdict::Drop(_) | Verdict::RateLimit { .. })\n     }\n \n     /// Combine two verdicts, keeping the more severe. On equal severity the\n     /// left verdict wins, so a pipeline's earlier stages set the reason.\n     #[must_use]\n     pub fn worst(self, other: Verdict) -> Verdict {\n-        if other.severity() > self.severity() {\n+        if other.severity() >= /* ~ changed by cargo-mutants ~ */ self.severity() {\n             other\n         } else {\n             self\n         }\n     }\n }\n \n #[cfg(test)]\n",
+    "file": "crates/deflect-core/src/verdict.rs",
+    "function": {
+      "function_name": "Verdict::worst",
+      "return_type": "-> Verdict",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 72
+        },
+        "start": {
+          "column": 5,
+          "line": 63
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "crates/deflect-core/src/verdict.rs:67:29: replace > with >= in Verdict::worst",
+    "package": "deflect-core",
+    "replacement": ">=",
+    "span": {
+      "end": {
+        "column": 30,
+        "line": 67
+      },
+      "start": {
+        "column": 29,
+        "line": 67
+      }
+    }
+  }
+]

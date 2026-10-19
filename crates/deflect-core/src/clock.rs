@@ -75,4 +75,29 @@ mod tests {
         c.advance_millis(500);
         assert_eq!(c.now_nanos(), 1_500_000_000);
     }
+
+    #[test]
+    fn reference_clock_delegates_to_inner() {
+        fn read<C: Clock>(c: C) -> u64 {
+            c.now_nanos()
+        }
+        let m = ManualClock::new(999);
+        // Passing `&m` selects the blanket `impl Clock for &C`, which must
+        // forward to the inner clock rather than returning a constant.
+        assert_eq!(read(&m), 999);
+    }
+
+    #[cfg(feature = "std")]
+    #[test]
+    fn monotonic_clock_strictly_advances_over_real_work() {
+        let c = MonotonicClock;
+        let a = c.now_nanos();
+        let mut acc = 0u64;
+        for i in 0..2_000_000u64 {
+            acc = acc.wrapping_add(i);
+        }
+        core::hint::black_box(acc);
+        let b = c.now_nanos();
+        assert!(b > a, "monotonic clock did not advance: {a} then {b}");
+    }
 }

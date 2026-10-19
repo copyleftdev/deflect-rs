@@ -1,0 +1,21 @@
+--- crates/deflect-core/src/observation.rs
++++ replace TcpFlags::empty -> TcpFlags with Default::default()
+@@ -49,17 +49,17 @@
+     pub const PSH: TcpFlags = TcpFlags(0x08);
+     pub const ACK: TcpFlags = TcpFlags(0x10);
+     pub const URG: TcpFlags = TcpFlags(0x20);
+     pub const ECE: TcpFlags = TcpFlags(0x40);
+     pub const CWR: TcpFlags = TcpFlags(0x80);
+ 
+     #[must_use]
+     pub const fn empty() -> TcpFlags {
+-        TcpFlags(0)
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     #[must_use]
+     pub const fn bits(self) -> u8 {
+         self.0
+     }
+ 
+     /// True if every bit set in `mask` is also set in `self`.

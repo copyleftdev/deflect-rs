@@ -1,0 +1,60 @@
+crates/deflect-core/src/clock.rs:61:9: replace <impl Clock for &C>::now_nanos -> u64 with 0
+crates/deflect-core/src/clock.rs:61:9: replace <impl Clock for &C>::now_nanos -> u64 with 1
+crates/deflect-core/src/observation.rs:30:9: replace L4::ip_proto -> u8 with 0
+crates/deflect-core/src/observation.rs:30:9: replace L4::ip_proto -> u8 with 1
+crates/deflect-core/src/observation.rs:62:9: replace TcpFlags::bits -> u8 with 0
+crates/deflect-core/src/observation.rs:62:9: replace TcpFlags::bits -> u8 with 1
+crates/deflect-core/src/observation.rs:68:9: replace TcpFlags::contains -> bool with true
+crates/deflect-core/src/observation.rs:68:9: replace TcpFlags::contains -> bool with false
+crates/deflect-core/src/observation.rs:68:25: replace == with != in TcpFlags::contains
+crates/deflect-core/src/observation.rs:68:16: replace & with | in TcpFlags::contains
+crates/deflect-core/src/clock.rs:40:9: replace ManualClock::advance_nanos with ()
+crates/deflect-core/src/clock.rs:45:9: replace ManualClock::advance_millis with ()
+crates/deflect-core/src/observation.rs:68:16: replace & with ^ in TcpFlags::contains
+crates/deflect-core/src/clock.rs:17:9: replace <impl Clock for MonotonicClock>::now_nanos -> u64 with 1
+crates/deflect-core/src/observation.rs:74:9: replace TcpFlags::intersects -> bool with true
+crates/deflect-core/src/observation.rs:74:9: replace TcpFlags::intersects -> bool with false
+crates/deflect-core/src/observation.rs:74:25: replace != with == in TcpFlags::intersects
+crates/deflect-core/src/clock.rs:17:9: replace <impl Clock for MonotonicClock>::now_nanos -> u64 with 0
+crates/deflect-core/src/observation.rs:74:16: replace & with | in TcpFlags::intersects
+crates/deflect-core/src/observation.rs:74:16: replace & with ^ in TcpFlags::intersects
+crates/deflect-core/src/clock.rs:55:9: replace <impl Clock for ManualClock>::now_nanos -> u64 with 1
+crates/deflect-core/src/observation.rs:79:9: replace TcpFlags::is_empty -> bool with true
+crates/deflect-core/src/observation.rs:79:9: replace TcpFlags::is_empty -> bool with false
+crates/deflect-core/src/observation.rs:79:16: replace == with != in TcpFlags::is_empty
+crates/deflect-core/src/clock.rs:55:9: replace <impl Clock for ManualClock>::now_nanos -> u64 with 0
+crates/deflect-core/src/clock.rs:49:9: replace ManualClock::advance_secs with ()
+crates/deflect-core/src/observation.rs:86:25: replace | with & in <impl core::ops::BitOr for TcpFlags>::bitor
+crates/deflect-core/src/observation.rs:86:25: replace | with ^ in <impl core::ops::BitOr for TcpFlags>::bitor
+crates/deflect-core/src/source.rs:65:9: replace SourceKey::is_v4 -> bool with false
+crates/deflect-core/src/source.rs:65:9: replace SourceKey::is_v4 -> bool with true
+crates/deflect-core/src/source.rs:78:38: replace * with + in mask_octets
+crates/deflect-core/src/source.rs:78:38: replace * with / in mask_octets
+crates/deflect-core/src/source.rs:79:21: replace / with % in mask_octets
+crates/deflect-core/src/source.rs:79:21: replace / with * in mask_octets
+crates/deflect-core/src/source.rs:78:5: replace mask_octets -> [u8; N] with [0; N]
+crates/deflect-core/src/source.rs:80:20: replace % with / in mask_octets
+crates/deflect-core/src/source.rs:78:5: replace mask_octets -> [u8; N] with [1; N]
+crates/deflect-core/src/source.rs:80:20: replace % with + in mask_octets
+crates/deflect-core/src/source.rs:83:22: replace &= with |= in mask_octets
+crates/deflect-core/src/source.rs:81:12: replace != with == in mask_octets
+crates/deflect-core/src/source.rs:83:38: replace - with + in mask_octets
+crates/deflect-core/src/source.rs:83:32: replace << with >> in mask_octets
+crates/deflect-core/src/source.rs:85:42: replace + with - in mask_octets
+crates/deflect-core/src/source.rs:85:60: replace != with == in mask_octets
+crates/deflect-core/src/source.rs:92:5: replace mask_v4 -> [u8; 4] with [0; 4]
+crates/deflect-core/src/source.rs:92:5: replace mask_v4 -> [u8; 4] with [1; 4]
+crates/deflect-core/src/source.rs:85:42: replace + with * in mask_octets
+crates/deflect-core/src/source.rs:83:38: replace - with / in mask_octets
+crates/deflect-core/src/source.rs:96:5: replace mask_v6 -> [u8; 16] with [0; 16]
+crates/deflect-core/src/source.rs:96:5: replace mask_v6 -> [u8; 16] with [1; 16]
+crates/deflect-core/src/verdict.rs:45:9: replace Verdict::severity -> u8 with 0
+crates/deflect-core/src/verdict.rs:45:9: replace Verdict::severity -> u8 with 1
+crates/deflect-core/src/verdict.rs:55:9: replace Verdict::is_pass -> bool with true
+crates/deflect-core/src/verdict.rs:55:9: replace Verdict::is_pass -> bool with false
+crates/deflect-core/src/verdict.rs:60:9: replace Verdict::blocks -> bool with false
+crates/deflect-core/src/verdict.rs:60:9: replace Verdict::blocks -> bool with true
+crates/deflect-core/src/verdict.rs:67:29: replace > with == in Verdict::worst
+crates/deflect-core/src/verdict.rs:67:9: replace Verdict::worst -> Verdict with Default::default()
+crates/deflect-core/src/verdict.rs:67:29: replace > with < in Verdict::worst
+crates/deflect-core/src/verdict.rs:67:29: replace > with >= in Verdict::worst

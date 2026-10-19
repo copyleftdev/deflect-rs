@@ -1,0 +1,21 @@
+--- crates/deflect-core/src/source.rs
++++ replace % with + in mask_octets
+@@ -72,17 +72,17 @@
+             SourceKey::V6(o) => IpAddr::V6(Ipv6Addr::from(*o)),
+         }
+     }
+ }
+ 
+ fn mask_octets<const N: usize>(mut octets: [u8; N], bits: u8) -> [u8; N] {
+     let bits = (bits as usize).min(N * 8);
+     let full = bits / 8;
+-    let rem = bits % 8;
++    let rem = bits + /* ~ changed by cargo-mutants ~ */ 8;
+     if rem != 0 {
+         // Keep the high `rem` bits of the boundary octet, clear the rest.
+         octets[full] &= 0xFFu8 << (8 - rem);
+     }
+     for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {
+         *b = 0;
+     }
+     octets

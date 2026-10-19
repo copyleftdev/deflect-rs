@@ -1,0 +1,26 @@
+--- crates/deflect-core/src/verdict.rs
++++ replace Verdict::severity -> u8 with 1
+@@ -37,22 +37,17 @@
+         retry_after: Duration,
+     },
+     Drop(DropReason),
+ }
+ 
+ impl Verdict {
+     #[must_use]
+     pub const fn severity(&self) -> u8 {
+-        match self {
+-            Verdict::Pass => 0,
+-            Verdict::Challenge(_) => 1,
+-            Verdict::RateLimit { .. } => 2,
+-            Verdict::Drop(_) => 3,
+-        }
++        1 /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     #[must_use]
+     pub const fn is_pass(&self) -> bool {
+         matches!(self, Verdict::Pass)
+     }
+ 
+     #[must_use]

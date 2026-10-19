@@ -1,0 +1,159 @@
+
+*** crates/deflect-core/src/observation.rs:74:9: replace TcpFlags::intersects -> bool with true
+
+*** mutation diff:
+--- crates/deflect-core/src/observation.rs
++++ replace TcpFlags::intersects -> bool with true
+@@ -66,17 +66,17 @@
+     #[must_use]
+     pub const fn contains(self, mask: TcpFlags) -> bool {
+         self.0 & mask.0 == mask.0
+     }
+ 
+     /// True if any bit set in `mask` is also set in `self`.
+     #[must_use]
+     pub const fn intersects(self, mask: TcpFlags) -> bool {
+-        self.0 & mask.0 != 0
++        true /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     #[must_use]
+     pub const fn is_empty(self) -> bool {
+         self.0 == 0
+     }
+ }
+ 
+
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=deflect-core@0.1.0
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh linux-raw-sys v0.12.1
+       Fresh autocfg v1.5.1
+       Fresh bitflags v2.13.2
+       Fresh once_cell v1.21.4
+       Fresh fastrand v2.5.0
+       Fresh wait-timeout v0.2.1
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+       Fresh getrandom v0.4.3
+       Fresh rustix v1.1.5
+       Fresh cpufeatures v0.3.1
+       Fresh bit-vec v0.10.1
+       Fresh rand_xorshift v0.5.0
+       Fresh core_detect v1.0.0
+       Fresh tempfile v3.27.0
+       Fresh bit-set v0.11.1
+       Fresh rand v0.10.3
+       Fresh chacha20 v0.10.2
+       Fresh num-traits v0.2.19
+       Fresh unarray v0.1.4
+       Fresh regex-syntax v0.8.11
+       Fresh rusty-fork v0.3.1
+       Dirty deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-kUoEou.tmp/crates/deflect-core): the file `crates/deflect-core/src/clock.rs` has changed (1792414448.627057521s, 5s after last build at 1792414443.099766782s)
+   Compiling deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-kUoEou.tmp/crates/deflect-core)
+       Fresh proptest v1.12.0
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_core --edition=2021 crates/deflect-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "serde", "std"))' -C metadata=5709365a141f2efe -C extra-filename=-fe48be381571e222 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-kUoEou.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-kUoEou.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-kUoEou.tmp/target/debug/deps --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-kUoEou.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_core --edition=2021 crates/deflect-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "serde", "std"))' -C metadata=31e441099e50ab36 -C extra-filename=-c20ab55aa2afaf71 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-kUoEou.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-kUoEou.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-kUoEou.tmp/target/debug/deps`
+warning: unused variable: `mask`
+  --> crates/deflect-core/src/observation.rs:73:35
+   |
+73 |     pub const fn intersects(self, mask: TcpFlags) -> bool {
+   |                                   ^^^^ help: if this is intentional, prefix it with an underscore: `_mask`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `deflect-core` (lib) generated 1 warning (run `cargo fix --lib -p deflect-core` to apply 1 suggestion)
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name properties --edition=2021 crates/deflect-core/tests/properties.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "serde", "std"))' -C metadata=5da57e64efe03e95 -C extra-filename=-5a48042ca5e6a3ff --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-kUoEou.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-kUoEou.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-kUoEou.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-kUoEou.tmp/target/debug/deps/libdeflect_core-c20ab55aa2afaf71.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-kUoEou.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+warning: `deflect-core` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.27s
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-kUoEou.tmp/target/debug/deps/deflect_core-fe48be381571e222`
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-kUoEou.tmp/target/debug/deps/properties-5a48042ca5e6a3ff`
+
+*** result: Success
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=deflect-core@0.1.0
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh linux-raw-sys v0.12.1
+       Fresh autocfg v1.5.1
+       Fresh bitflags v2.13.2
+       Fresh once_cell v1.21.4
+       Fresh fastrand v2.5.0
+       Fresh wait-timeout v0.2.1
+       Fresh cpufeatures v0.3.1
+       Fresh bit-vec v0.10.1
+       Fresh quick-error v1.2.3
+       Fresh getrandom v0.4.3
+       Fresh rustix v1.1.5
+       Fresh fnv v1.0.7
+       Fresh chacha20 v0.10.2
+       Fresh bit-set v0.11.1
+       Fresh rand_xorshift v0.5.0
+       Fresh core_detect v1.0.0
+       Fresh unarray v0.1.4
+       Fresh regex-syntax v0.8.11
+       Fresh tempfile v3.27.0
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+warning: unused variable: `mask`
+  --> crates/deflect-core/src/observation.rs:73:35
+   |
+73 |     pub const fn intersects(self, mask: TcpFlags) -> bool {
+   |                                   ^^^^ help: if this is intentional, prefix it with an underscore: `_mask`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `deflect-core` (lib) generated 1 warning (run `cargo fix --lib -p deflect-core` to apply 1 suggestion)
+       Fresh rusty-fork v0.3.1
+       Fresh proptest v1.12.0
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-kUoEou.tmp/crates/deflect-core)
+warning: `deflect-core` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s
+     Running `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-kUoEou.tmp/target/debug/deps/deflect_core-fe48be381571e222`
+
+running 24 tests
+test clock::tests::manual_clock_advances ... ok
+test clock::tests::monotonic_clock_strictly_advances_over_real_work ... ok
+test clock::tests::reference_clock_delegates_to_inner ... ok
+test observation::tests::bitor_unions_bits ... ok
+test observation::tests::bits_returns_the_raw_byte ... ok
+test observation::tests::contains_requires_every_masked_bit ... ok
+test observation::tests::intersects_requires_any_masked_bit ... FAILED
+test observation::tests::ip_proto_roundtrips_known_protocols ... ok
+test observation::tests::is_empty_only_when_no_bits_set ... ok
+test source::tests::addr_roundtrips_the_masked_key ... ok
+test source::tests::bits_beyond_width_are_clamped ... ok
+test source::tests::host_keeps_full_v4 ... ok
+test source::tests::is_v4_distinguishes_family ... ok
+test source::tests::mask_v6_keeps_prefix_and_zeroes_host ... ok
+test source::tests::non_octet_boundary_masks_partial_byte ... ok
+test source::tests::subnet_collapses_same_v4_prefix ... ok
+test source::tests::subnet_separates_different_v4_prefix ... ok
+test source::tests::v6_aggregates_to_64 ... ok
+test verdict::tests::blocks_for_ratelimit_and_drop_only ... ok
+test verdict::tests::is_pass_only_for_pass ... ok
+test verdict::tests::severity_is_ordered ... ok
+test verdict::tests::worst_is_symmetric_in_severity ... ok
+test verdict::tests::worst_keeps_more_severe ... ok
+test verdict::tests::worst_left_wins_on_tie ... ok
+
+failures:
+
+---- observation::tests::intersects_requires_any_masked_bit stdout ----
+
+thread 'observation::tests::intersects_requires_any_masked_bit' (3449303) panicked at crates/deflect-core/src/observation.rs:182:9:
+assertion failed: !TcpFlags::SYN.intersects(TcpFlags::ACK)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    observation::tests::intersects_requires_any_masked_bit
+
+test result: FAILED. 23 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p deflect-core --lib`
+
+*** result: Failure(101)

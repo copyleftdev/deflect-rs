@@ -1,0 +1,21 @@
+--- crates/deflect-core/src/source.rs
++++ replace mask_v4 -> [u8; 4] with [1; 4]
+@@ -84,17 +84,17 @@
+     }
+     for b in octets.iter_mut().skip(full + usize::from(rem != 0)) {
+         *b = 0;
+     }
+     octets
+ }
+ 
+ fn mask_v4(octets: [u8; 4], bits: u8) -> [u8; 4] {
+-    mask_octets(octets, bits)
++    [1; 4] /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ fn mask_v6(octets: [u8; 16], bits: u8) -> [u8; 16] {
+     mask_octets(octets, bits)
+ }
+ 
+ #[cfg(test)]
+ mod tests {

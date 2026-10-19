@@ -1,0 +1,21 @@
+--- crates/deflect-core/src/verdict.rs
++++ replace > with < in Verdict::worst
+@@ -59,17 +59,17 @@
+     pub const fn blocks(&self) -> bool {
+         matches!(self, Verdict::Drop(_) | Verdict::RateLimit { .. })
+     }
+ 
+     /// Combine two verdicts, keeping the more severe. On equal severity the
+     /// left verdict wins, so a pipeline's earlier stages set the reason.
+     #[must_use]
+     pub fn worst(self, other: Verdict) -> Verdict {
+-        if other.severity() > self.severity() {
++        if other.severity() < /* ~ changed by cargo-mutants ~ */ self.severity() {
+             other
+         } else {
+             self
+         }
+     }
+ }
+ 
+ #[cfg(test)]

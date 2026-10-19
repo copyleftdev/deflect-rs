@@ -147,4 +147,29 @@ mod tests {
         let k = SourceKey::new(v4("1.2.3.4"), Aggregation::new(200, 200));
         assert_eq!(k, SourceKey::V4([1, 2, 3, 4]));
     }
+
+    #[test]
+    fn is_v4_distinguishes_family() {
+        assert!(SourceKey::host(v4("203.0.113.5")).is_v4());
+        let v6: IpAddr = "2001:db8::1".parse().unwrap();
+        assert!(!SourceKey::host(v6).is_v4());
+    }
+
+    #[test]
+    fn mask_v6_keeps_prefix_and_zeroes_host() {
+        // A concrete masked value, so the mask is checked rather than only that
+        // two addresses in one prefix compare equal.
+        let a: IpAddr = "2001:db8::dead:beef".parse().unwrap();
+        let k = SourceKey::new(a, Aggregation::SUBNET);
+        assert_eq!(
+            k,
+            SourceKey::V6([0x20, 0x01, 0x0d, 0xb8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+        );
+    }
+
+    #[test]
+    fn addr_roundtrips_the_masked_key() {
+        let k = SourceKey::new(v4("203.0.113.200"), Aggregation::SUBNET);
+        assert_eq!(k.addr(), v4("203.0.113.0"));
+    }
 }

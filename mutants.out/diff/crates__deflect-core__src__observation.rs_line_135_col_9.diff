@@ -1,0 +1,22 @@
+--- crates/deflect-core/src/observation.rs
++++ replace Packet<'a>::with_wire_len -> Self with Default::default()
+@@ -127,18 +127,17 @@
+     #[must_use]
+     pub fn with_flags(mut self, flags: TcpFlags) -> Self {
+         self.tcp_flags = flags;
+         self
+     }
+ 
+     #[must_use]
+     pub fn with_wire_len(mut self, len: u32) -> Self {
+-        self.wire_len = len;
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     #[must_use]
+     pub fn with_payload(mut self, payload: &'a [u8]) -> Self {
+         self.payload = payload;
+         self
+     }
+ }
