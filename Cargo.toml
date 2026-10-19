@@ -12,6 +12,7 @@ members = [
     "crates/deflect-telemetry",
     "crates/deflect-bgp",
     "crates/deflect-packet",
+    "crates/deflect",
 ]
 
 [workspace.package]
@@ -21,10 +22,12 @@ rust-version = "1.85"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/copyleftdev/deflect-rs"
 authors = ["copyleftdev"]
+keywords = ["ddos", "mitigation", "network", "security"]
+categories = ["network-programming"]
 
 [workspace.dependencies]
-deflect-core = { path = "crates/deflect-core", default-features = false }
-deflect-packet = { path = "crates/deflect-packet", default-features = false }
+deflect-core = { path = "crates/deflect-core", version = "0.1.0", default-features = false }
+deflect-packet = { path = "crates/deflect-packet", version = "0.1.0", default-features = false }
 
 [profile.release]
 lto = "thin"

@@ -1,0 +1,72 @@
+[package]
+name = "deflect"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+description = "Composable DDoS-mitigation primitives: one umbrella over the deflect-rs crates, each behind a feature flag."
+keywords = ["ddos", "mitigation", "network", "security", "firewall"]
+categories = ["network-programming"]
+readme = "README.md"
+
+[dependencies]
+deflect-core = { workspace = true }
+deflect-ratelimit = { path = "../deflect-ratelimit", version = "0.1.0", optional = true, default-features = false }
+deflect-detect = { path = "../deflect-detect", version = "0.1.0", optional = true, default-features = false }
+deflect-syncookie = { path = "../deflect-syncookie", version = "0.1.0", optional = true, default-features = false }
+deflect-signature = { path = "../deflect-signature", version = "0.1.0", optional = true, default-features = false }
+deflect-reflect = { path = "../deflect-reflect", version = "0.1.0", optional = true, default-features = false }
+deflect-fingerprint = { path = "../deflect-fingerprint", version = "0.1.0", optional = true, default-features = false }
+deflect-enforce = { path = "../deflect-enforce", version = "0.1.0", optional = true, default-features = false }
+deflect-telemetry = { path = "../deflect-telemetry", version = "0.1.0", optional = true, default-features = false }
+deflect-packet = { path = "../deflect-packet", version = "0.1.0", optional = true, default-features = false }
+deflect-bgp = { path = "../deflect-bgp", version = "0.1.0", optional = true, default-features = false }
+
+[features]
+default = ["std"]
+std = [
+    "deflect-core/std",
+    "deflect-ratelimit?/std",
+    "deflect-detect?/std",
+    "deflect-syncookie?/std",
+    "deflect-signature?/std",
+    "deflect-reflect?/std",
+    "deflect-fingerprint?/std",
+    "deflect-enforce?/std",
+    "deflect-telemetry?/std",
+    "deflect-packet?/std",
+    "deflect-bgp?/std",
+]
+serde = ["deflect-core/serde", "deflect-signature?/serde"]
+ratelimit = ["dep:deflect-ratelimit"]
+detect = ["dep:deflect-detect"]
+syncookie = ["dep:deflect-syncookie"]
+signature = ["dep:deflect-signature"]
+reflect = ["dep:deflect-reflect"]
+fingerprint = ["dep:deflect-fingerprint"]
+enforce = ["dep:deflect-enforce"]
+telemetry = ["dep:deflect-telemetry"]
+packet = ["dep:deflect-packet"]
+bgp = ["dep:deflect-bgp"]
+full = [
+    "ratelimit",
+    "detect",
+    "syncookie",
+    "signature",
+    "reflect",
+    "fingerprint",
+    "enforce",
+    "telemetry",
+    "packet",
+    "bgp",
+]
+
+[[example]]
+name = "pipeline"
+required-features = ["full"]
+
+[lints.clippy]
+all = "warn"
+pedantic = "warn"
