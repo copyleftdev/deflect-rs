@@ -1,0 +1,21 @@
+--- crates/deflect-telemetry/src/template.rs
++++ replace TemplateRegistry::insert with ()
+@@ -41,17 +41,17 @@
+     }
+ 
+     #[must_use]
+     pub fn is_empty(&self) -> bool {
+         self.map.is_empty()
+     }
+ 
+     fn insert(&mut self, domain: u32, id: u16, template: Template) {
+-        self.map.insert((domain, id), template);
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn remove(&mut self, domain: u32, id: u16) {
+         self.map.remove(&(domain, id));
+     }
+ 
+     fn get(&self, domain: u32, id: u16) -> Option<&Template> {
+         self.map.get(&(domain, id))

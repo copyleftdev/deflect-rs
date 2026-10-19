@@ -1,0 +1,174 @@
+
+*** crates/deflect-telemetry/src/record.rs:90:9: replace FlowBuilder::set_tcp_flags with ()
+
+*** mutation diff:
+--- crates/deflect-telemetry/src/record.rs
++++ replace FlowBuilder::set_tcp_flags with ()
+@@ -82,17 +82,17 @@
+     }
+     pub(crate) fn set_src_port(&mut self, p: u16) {
+         self.src_port = p;
+     }
+     pub(crate) fn set_dst_port(&mut self, p: u16) {
+         self.dst_port = p;
+     }
+     pub(crate) fn set_tcp_flags(&mut self, f: u8) {
+-        self.tcp_flags = f;
++        () /* ~ changed by cargo-mutants ~ */
+     }
+     pub(crate) fn set_packets(&mut self, n: u64) {
+         self.packets = n;
+     }
+     pub(crate) fn set_bytes(&mut self, n: u64) {
+         self.bytes = n;
+     }
+ 
+
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=deflect-telemetry@0.1.0
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh getrandom v0.4.3
+       Fresh autocfg v1.5.1
+       Fresh bitflags v2.13.2
+       Fresh linux-raw-sys v0.12.1
+       Fresh rustix v1.1.5
+       Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
+       Fresh tempfile v3.27.0
+       Fresh wait-timeout v0.2.1
+       Fresh cpufeatures v0.3.1
+       Fresh bit-vec v0.10.1
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+       Fresh bit-set v0.11.1
+       Fresh rusty-fork v0.3.1
+       Fresh chacha20 v0.10.2
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh unarray v0.1.4
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/crates/deflect-core)
+       Fresh regex-syntax v0.8.11
+       Fresh core_detect v1.0.0
+       Dirty deflect-telemetry v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/crates/deflect-telemetry): the file `crates/deflect-telemetry/src/reader.rs` has changed (1792418499.412771464s, 3s after last build at 1792418496.517622613s)
+   Compiling deflect-telemetry v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/crates/deflect-telemetry)
+       Fresh proptest v1.12.0
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_telemetry --edition=2021 crates/deflect-telemetry/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=c0ae8f0726545ab8 -C extra-filename=-6ccca850dc2e396c --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_telemetry --edition=2021 crates/deflect-telemetry/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=a577af00607bc106 -C extra-filename=-731869fdd02777c1 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rmeta`
+warning: unused variable: `f`
+  --> crates/deflect-telemetry/src/record.rs:89:44
+   |
+89 |     pub(crate) fn set_tcp_flags(&mut self, f: u8) {
+   |                                            ^ help: if this is intentional, prefix it with an underscore: `_f`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `deflect-telemetry` (lib) generated 1 warning (run `cargo fix --lib -p deflect-telemetry` to apply 1 suggestion)
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name properties --edition=2021 crates/deflect-telemetry/tests/properties.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=2422ffb94b893ce8 -C extra-filename=-9e32fd40eb7ab043 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern deflect_telemetry=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/target/debug/deps/libdeflect_telemetry-731869fdd02777c1.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+warning: `deflect-telemetry` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.33s
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/target/debug/deps/deflect_telemetry-6ccca850dc2e396c`
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/target/debug/deps/properties-9e32fd40eb7ab043`
+
+*** result: Success
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=deflect-telemetry@0.1.0
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh bitflags v2.13.2
+       Fresh linux-raw-sys v0.12.1
+       Fresh autocfg v1.5.1
+       Fresh once_cell v1.21.4
+       Fresh fastrand v2.5.0
+       Fresh wait-timeout v0.2.1
+       Fresh getrandom v0.4.3
+       Fresh rustix v1.1.5
+       Fresh fnv v1.0.7
+       Fresh cpufeatures v0.3.1
+       Fresh bit-vec v0.10.1
+       Fresh quick-error v1.2.3
+       Fresh tempfile v3.27.0
+       Fresh rand v0.10.3
+       Fresh chacha20 v0.10.2
+       Fresh bit-set v0.11.1
+       Fresh rand_xorshift v0.5.0
+       Fresh core_detect v1.0.0
+       Fresh num-traits v0.2.19
+       Fresh rusty-fork v0.3.1
+       Fresh unarray v0.1.4
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/crates/deflect-core)
+       Fresh regex-syntax v0.8.11
+       Fresh proptest v1.12.0
+warning: unused variable: `f`
+  --> crates/deflect-telemetry/src/record.rs:89:44
+   |
+89 |     pub(crate) fn set_tcp_flags(&mut self, f: u8) {
+   |                                            ^ help: if this is intentional, prefix it with an underscore: `_f`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `deflect-telemetry` (lib) generated 1 warning (run `cargo fix --lib -p deflect-telemetry` to apply 1 suggestion)
+       Fresh deflect-telemetry v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/crates/deflect-telemetry)
+warning: `deflect-telemetry` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.23s
+     Running `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-ZtURKU.tmp/target/debug/deps/deflect_telemetry-6ccca850dc2e396c`
+
+running 29 tests
+test netflow_v5::tests::count_larger_than_body_yields_available_records ... ok
+test netflow_v5::tests::empty_body_is_ok ... ok
+test netflow_v5::tests::parses_two_records ... ok
+test netflow_v5::tests::rejects_wrong_version ... ok
+test netflow_v5::tests::truncated_header_errors ... ok
+test reader::tests::addresses_parse ... ok
+test reader::tests::is_empty_is_false_with_bytes_remaining ... ok
+test reader::tests::reads_big_endian_scalars ... ok
+test reader::tests::sub_bounds_a_nested_region ... ok
+test reader::tests::truncation_is_an_error_not_a_panic ... ok
+test reader::tests::uint_reads_variable_width ... ok
+test reader::tests::uint_wider_than_eight_skips_the_high_bytes ... ok
+test reader::tests::uint_zero_width_is_zero ... ok
+test template::tests::registry_is_empty_tracks_contents ... ok
+test tests::data_before_template_is_skipped_then_decoded_after ... ok
+test tests::data_set_at_a_reserved_id_is_not_decoded ... ok
+test tests::decoder_dispatches_netflow_v5 ... ok
+test tests::empty_set_is_stepped_over ... ok
+test tests::garbage_sets_are_ignored ... ok
+test tests::ipfix_template_then_data_decodes ... ok
+test tests::ipv6_addresses_decode ... ok
+test tests::multiple_records_in_one_data_set ... ok
+test tests::tcp_control_bits_field_decodes ... FAILED
+test tests::template_withdrawal_forgets_it ... ok
+test tests::truncated_datagram_does_not_panic ... ok
+test tests::variable_length_long_form_is_measured ... ok
+test tests::variable_length_short_form_is_measured ... ok
+test tests::wrong_length_address_fields_are_skipped ... ok
+test tests::wrong_version_is_rejected ... ok
+
+failures:
+
+---- tests::tcp_control_bits_field_decodes stdout ----
+
+thread 'tests::tcp_control_bits_field_decodes' (4107317) panicked at crates/deflect-telemetry/src/lib.rs:402:9:
+assertion `left == right` failed
+  left: TcpFlags(0)
+ right: TcpFlags(18)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    tests::tcp_control_bits_field_decodes
+
+test result: FAILED. 28 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p deflect-telemetry --lib`
+
+*** result: Failure(101)

@@ -1,0 +1,21 @@
+--- crates/deflect-telemetry/src/template.rs
++++ replace < with > in decode_sets
+@@ -75,17 +75,17 @@
+         (2u16, 3u16)
+     } else {
+         (0u16, 1u16)
+     };
+ 
+     while r.remaining() >= 4 {
+         let Ok(set_id) = r.u16() else { break };
+         let Ok(set_len) = r.u16() else { break };
+-        if (set_len as usize) < 4 {
++        if (set_len as usize) > /* ~ changed by cargo-mutants ~ */ 4 {
+             break;
+         }
+         let Ok(mut body) = r.sub(set_len as usize - 4) else {
+             break;
+         };
+ 
+         if set_id == template_set_id {
+             decode_template_set(&mut body, domain, enterprise, registry);

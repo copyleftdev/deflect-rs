@@ -1,0 +1,21 @@
+--- crates/deflect-telemetry/src/lib.rs
++++ replace parse_netflow_v5 -> Result<Vec<FlowRecord>, ParseV5Error> with Ok(vec![Default::default()])
+@@ -45,17 +45,17 @@
+ pub use record::{field, FlowRecord};
+ pub use template::{FieldSpec, Template, TemplateRegistry};
+ 
+ /// Stateless NetFlow v5 parse; re-exported for callers that only speak v5.
+ ///
+ /// # Errors
+ /// See [`ParseV5Error`].
+ pub fn parse_netflow_v5(datagram: &[u8]) -> Result<Vec<FlowRecord>, ParseV5Error> {
+-    netflow_v5::parse(datagram)
++    Ok(vec![Default::default()]) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Why a template-based datagram could not be parsed.
+ #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+ pub enum ParseError {
+     /// The fixed header was incomplete.
+     Truncated,
+     /// The version field did not match the expected protocol.

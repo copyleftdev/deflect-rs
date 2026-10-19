@@ -1,0 +1,22 @@
+--- crates/deflect-telemetry/src/reader.rs
++++ replace Reader<'a>::u32 -> Result<u32, Truncated> with Ok(0)
+@@ -73,18 +73,17 @@
+     pub fn u16(&mut self) -> Result<u16, Truncated> {
+         let b = self.bytes(2)?;
+         Ok(u16::from_be_bytes([b[0], b[1]]))
+     }
+ 
+     /// # Errors
+     /// Returns [`Truncated`] if fewer than four bytes remain.
+     pub fn u32(&mut self) -> Result<u32, Truncated> {
+-        let b = self.bytes(4)?;
+-        Ok(u32::from_be_bytes([b[0], b[1], b[2], b[3]]))
++        Ok(0) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Read `n` (1..=8) bytes as a big-endian unsigned integer, widened to
+     /// `u64`. `n == 0` yields `0`; `n > 8` reads the low 8 and skips the rest.
+     ///
+     /// # Errors
+     /// Returns [`Truncated`] if fewer than `n` bytes remain.
+     pub fn uint(&mut self, n: usize) -> Result<u64, Truncated> {

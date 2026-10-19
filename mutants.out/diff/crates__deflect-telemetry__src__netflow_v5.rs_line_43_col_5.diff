@@ -1,0 +1,44 @@
+--- crates/deflect-telemetry/src/netflow_v5.rs
++++ replace parse_record -> Result<FlowRecord, Truncated> with Ok(Default::default())
+@@ -35,40 +35,17 @@
+             Ok(rec) => out.push(rec),
+             Err(_) => break,
+         }
+     }
+     Ok(out)
+ }
+ 
+ fn parse_record(r: &mut Reader<'_>) -> Result<FlowRecord, Truncated> {
+-    let src = r.ipv4()?;
+-    let dst = r.ipv4()?;
+-    r.skip(4)?; // nexthop
+-    r.skip(4)?; // input + output ifindex
+-    let packets = u64::from(r.u32()?);
+-    let bytes = u64::from(r.u32()?);
+-    r.skip(8)?; // first + last sysuptime
+-    let src_port = r.u16()?;
+-    let dst_port = r.u16()?;
+-    r.skip(1)?; // pad
+-    let tcp_flags = r.u8()?;
+-    let protocol = r.u8()?;
+-    r.skip(1)?; // tos
+-    r.skip(8)?; // src_as, dst_as, src_mask, dst_mask, pad2
+-    Ok(FlowRecord {
+-        src,
+-        dst,
+-        protocol,
+-        src_port,
+-        dst_port,
+-        tcp_flags: TcpFlags(tcp_flags),
+-        packets,
+-        bytes,
+-    })
++    Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Why a NetFlow v5 datagram could not be parsed.
+ #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+ pub enum ParseV5Error {
+     Truncated,
+     NotV5(u16),
+ }

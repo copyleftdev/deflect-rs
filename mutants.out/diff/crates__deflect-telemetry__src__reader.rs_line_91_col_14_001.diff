@@ -1,0 +1,21 @@
+--- crates/deflect-telemetry/src/reader.rs
++++ replace > with < in Reader<'a>::uint
+@@ -83,17 +83,17 @@
+     }
+ 
+     /// Read `n` (1..=8) bytes as a big-endian unsigned integer, widened to
+     /// `u64`. `n == 0` yields `0`; `n > 8` reads the low 8 and skips the rest.
+     ///
+     /// # Errors
+     /// Returns [`Truncated`] if fewer than `n` bytes remain.
+     pub fn uint(&mut self, n: usize) -> Result<u64, Truncated> {
+-        if n > 8 {
++        if n < /* ~ changed by cargo-mutants ~ */ 8 {
+             self.skip(n - 8)?;
+             return self.uint(8);
+         }
+         let raw = self.bytes(n)?;
+         // Right-align the bytes in an 8-byte big-endian buffer so the value is
+         // their unsigned interpretation; no manual shift-or (keeps the decode
+         // free of an and/or/xor that a flipped operator could not change).
+         let mut buf = [0u8; 8];

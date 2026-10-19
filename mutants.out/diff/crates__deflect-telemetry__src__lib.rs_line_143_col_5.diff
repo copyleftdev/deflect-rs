@@ -1,0 +1,22 @@
+--- crates/deflect-telemetry/src/lib.rs
++++ replace peek_version -> Result<u16, ParseError> with Ok(0)
+@@ -135,18 +135,17 @@
+ 
+         let mut out = Vec::new();
+         template::decode_sets(&mut r, source_id, false, &mut self.registry, &mut out);
+         Ok(out)
+     }
+ }
+ 
+ fn peek_version(datagram: &[u8]) -> Result<u16, ParseError> {
+-    let mut r = reader::Reader::new(datagram);
+-    r.u16().map_err(|_| ParseError::Truncated)
++    Ok(0) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+     use alloc::vec;
+     use alloc::vec::Vec;
+     use core::net::IpAddr;

@@ -1,0 +1,24 @@
+--- crates/deflect-telemetry/src/reader.rs
++++ replace Reader<'a>::ipv6 -> Result<IpAddr, Truncated> with Ok(Default::default())
+@@ -106,20 +106,17 @@
+     pub fn ipv4(&mut self) -> Result<IpAddr, Truncated> {
+         let b = self.bytes(4)?;
+         Ok(IpAddr::V4(Ipv4Addr::new(b[0], b[1], b[2], b[3])))
+     }
+ 
+     /// # Errors
+     /// Returns [`Truncated`] if fewer than sixteen bytes remain.
+     pub fn ipv6(&mut self) -> Result<IpAddr, Truncated> {
+-        let b = self.bytes(16)?;
+-        let mut octets = [0u8; 16];
+-        octets.copy_from_slice(b);
+-        Ok(IpAddr::V6(Ipv6Addr::from(octets)))
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+ 
+     #[test]

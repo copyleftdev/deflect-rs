@@ -22,23 +22,6 @@ pub struct Template {
     pub fields: Vec<FieldSpec>,
 }
 
-impl Template {
-    /// Minimum bytes a data record of this template occupies; a variable field
-    /// contributes its single length-prefix byte.
-    fn min_record_len(&self) -> usize {
-        self.fields
-            .iter()
-            .map(|f| {
-                if f.length == VARIABLE_LEN {
-                    1
-                } else {
-                    f.length as usize
-                }
-            })
-            .sum()
-    }
-}
-
 /// Stores templates across datagrams, keyed by observation domain (IPFIX) or
 /// source id (NetFlow v9) and template id.
 #[derive(Debug, Clone, Default)]
@@ -159,11 +142,12 @@ fn decode_template_set(
 }
 
 fn decode_data_set(body: &mut Reader<'_>, template: &Template, out: &mut Vec<FlowRecord>) {
-    let min = template.min_record_len();
-    if min == 0 {
+    if template.fields.is_empty() {
         return; // No fields: nothing to decode, and would not make progress.
     }
-    while body.remaining() >= min {
+    // Decode records until the body is exhausted or a record runs short; the
+    // truncation break, not a precomputed minimum length, bounds the loop.
+    while !body.is_empty() {
         let start = body.position();
         match decode_record(body, template) {
             Ok(rec) => out.push(rec),
@@ -219,11 +203,12 @@ fn apply_field(b: &mut FlowBuilder, id: u16, data: &[u8]) {
 }
 
 fn be_uint(data: &[u8]) -> u64 {
-    let mut v = 0u64;
-    for &byte in data.iter().take(8) {
-        v = (v << 8) | u64::from(byte);
-    }
-    v
+    // Big-endian unsigned value of up to the first 8 bytes, right-aligned into a
+    // fixed buffer so no manual shift-or (and its flippable operator) appears.
+    let take = data.len().min(8);
+    let mut buf = [0u8; 8];
+    buf[8 - take..].copy_from_slice(&data[..take]);
+    u64::from_be_bytes(buf)
 }
 
 fn ipv4(data: &[u8]) -> IpAddr {
@@ -234,4 +219,21 @@ fn ipv6(data: &[u8]) -> IpAddr {
     let mut o = [0u8; 16];
     o.copy_from_slice(&data[..16]);
     IpAddr::V6(Ipv6Addr::from(o))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn registry_is_empty_tracks_contents() {
+        let mut r = TemplateRegistry::new();
+        assert!(r.is_empty());
+        assert_eq!(r.len(), 0);
+        r.insert(0, 256, Template::default());
+        assert!(!r.is_empty());
+        assert_eq!(r.len(), 1);
+        r.remove(0, 256);
+        assert!(r.is_empty());
+    }
 }

@@ -339,4 +339,175 @@ mod tests {
         let mut d = Decoder::new();
         assert!(d.ingest(&dg).unwrap().is_empty());
     }
+
+    // A one-record IPFIX datagram from a field layout and a record body.
+    fn ipfix_one(fields: &[(u16, u16)], rec: Vec<u8>) -> Vec<u8> {
+        let tset = ipfix_template_set(256, fields);
+        let dset = ipfix_data_set(256, &[rec]);
+        let mut body = tset;
+        body.extend(dset);
+        let mut dg = ipfix_header(1, body.len());
+        dg.extend(body);
+        dg
+    }
+
+    #[test]
+    fn decoder_dispatches_netflow_v5() {
+        let mut dg = vec![0u8; 24];
+        dg[1] = 5; // version
+        dg[3] = 1; // count
+        let mut rec = vec![0u8; 48];
+        rec[0..4].copy_from_slice(&[203, 0, 113, 1]);
+        rec[34..36].copy_from_slice(&53u16.to_be_bytes());
+        rec[38] = 17;
+        dg.extend(rec);
+        // The re-exported wrapper and the Decoder dispatch both yield the flow.
+        let flows = parse_netflow_v5(&dg).unwrap();
+        assert_eq!(flows.len(), 1);
+        assert_eq!(flows[0].dst_port, 53);
+        let mut d = Decoder::new();
+        assert_eq!(d.ingest(&dg).unwrap().len(), 1);
+    }
+
+    #[test]
+    fn ipv6_addresses_decode() {
+        let fields = [
+            (field::SRC_IPV6, 16),
+            (field::DST_IPV6, 16),
+            (field::DST_PORT, 2),
+        ];
+        let src: core::net::Ipv6Addr = "2001:db8::1".parse().unwrap();
+        let dst: core::net::Ipv6Addr = "2001:db8::2".parse().unwrap();
+        let mut rec = Vec::new();
+        rec.extend(src.octets());
+        rec.extend(dst.octets());
+        rec.extend(443u16.to_be_bytes());
+        let mut d = Decoder::new();
+        let f = d.ingest(&ipfix_one(&fields, rec)).unwrap();
+        assert_eq!(f.len(), 1);
+        assert_eq!(f[0].src, IpAddr::V6(src));
+        assert_eq!(f[0].dst, IpAddr::V6(dst));
+        assert_eq!(f[0].dst_port, 443);
+    }
+
+    #[test]
+    fn tcp_control_bits_field_decodes() {
+        let fields = [(field::DST_PORT, 2), (field::TCP_CONTROL_BITS, 1)];
+        let mut rec = Vec::new();
+        rec.extend(80u16.to_be_bytes());
+        rec.push(0x12); // SYN+ACK
+        let mut d = Decoder::new();
+        let f = d.ingest(&ipfix_one(&fields, rec)).unwrap();
+        assert_eq!(f.len(), 1);
+        assert_eq!(f[0].tcp_flags, deflect_core::TcpFlags(0x12));
+    }
+
+    #[test]
+    fn wrong_length_address_fields_are_skipped() {
+        // SRC_IPV4/DST_IPV4 declared 6 bytes and SRC_IPV6 declared 18: each must
+        // be skipped (not misread) so the address stays at its default.
+        let unspecified = "0.0.0.0".parse::<IpAddr>().unwrap();
+        let fields4 = [
+            (field::SRC_IPV4, 6),
+            (field::DST_IPV4, 6),
+            (field::DST_PORT, 2),
+        ];
+        let mut rec = Vec::new();
+        rec.extend([203, 0, 113, 7, 0xAA, 0xBB]);
+        rec.extend([198, 51, 100, 1, 0xCC, 0xDD]);
+        rec.extend(53u16.to_be_bytes());
+        let mut d = Decoder::new();
+        let f = d.ingest(&ipfix_one(&fields4, rec)).unwrap();
+        assert_eq!(f.len(), 1);
+        assert_eq!(f[0].src, unspecified);
+        assert_eq!(f[0].dst, unspecified);
+        assert_eq!(f[0].dst_port, 53);
+
+        let fields6 = [
+            (field::SRC_IPV6, 18),
+            (field::DST_IPV6, 18),
+            (field::DST_PORT, 2),
+        ];
+        let mut rec6 = vec![0x20u8; 18];
+        let mut rec6b = vec![0x20u8; 18];
+        rec6.append(&mut rec6b);
+        rec6.extend(53u16.to_be_bytes());
+        let mut d6 = Decoder::new();
+        let f6 = d6.ingest(&ipfix_one(&fields6, rec6)).unwrap();
+        assert_eq!(f6.len(), 1);
+        assert_eq!(f6[0].src, unspecified);
+        assert_eq!(f6[0].dst, unspecified);
+        assert_eq!(f6[0].dst_port, 53);
+    }
+
+    #[test]
+    fn variable_length_short_form_is_measured() {
+        // A varlen field (unknown id) with a <255 length prefix: the length is
+        // that single byte, and the following dst_port must still be found.
+        let fields = [(999u16, 0xffff), (field::DST_PORT, 2)];
+        let mut rec = Vec::new();
+        rec.push(3);
+        rec.extend([0xDE, 0xAD, 0xBE]);
+        rec.extend(53u16.to_be_bytes());
+        let mut d = Decoder::new();
+        let f = d.ingest(&ipfix_one(&fields, rec)).unwrap();
+        assert_eq!(f.len(), 1);
+        assert_eq!(f[0].dst_port, 53);
+    }
+
+    #[test]
+    fn variable_length_long_form_is_measured() {
+        // The 255 escape means a 2-byte length follows.
+        let fields = [(999u16, 0xffff), (field::DST_PORT, 2)];
+        let mut rec = Vec::new();
+        rec.push(255);
+        rec.extend(2u16.to_be_bytes());
+        rec.extend([0xDE, 0xAD]);
+        rec.extend(53u16.to_be_bytes());
+        let mut d = Decoder::new();
+        let f = d.ingest(&ipfix_one(&fields, rec)).unwrap();
+        assert_eq!(f.len(), 1);
+        assert_eq!(f[0].dst_port, 53);
+    }
+
+    #[test]
+    fn empty_set_is_stepped_over() {
+        // A set of length 4 (header only, no body) must not halt processing of
+        // the real template and data sets that follow it.
+        let fields = [(field::SRC_IPV4, 4), (field::DST_PORT, 2)];
+        let tset = ipfix_template_set(256, &fields);
+        let mut rec = vec![10, 0, 0, 1];
+        rec.extend(53u16.to_be_bytes());
+        let dset = ipfix_data_set(256, &[rec]);
+        let mut body = Vec::new();
+        body.extend(4u16.to_be_bytes()); // reserved set id
+        body.extend(4u16.to_be_bytes()); // length 4 = empty
+        body.extend(tset);
+        body.extend(dset);
+        let mut dg = ipfix_header(1, body.len());
+        dg.extend(body);
+        let mut d = Decoder::new();
+        let f = d.ingest(&dg).unwrap();
+        assert_eq!(f.len(), 1);
+        assert_eq!(f[0].dst_port, 53);
+    }
+
+    #[test]
+    fn data_set_at_a_reserved_id_is_not_decoded() {
+        // A template registered at id 200 (reserved, < 256) must not be used to
+        // decode a data set sharing that id.
+        let fields = [(field::SRC_IPV4, 4), (field::DST_PORT, 2)];
+        let tset = ipfix_template_set(200, &fields);
+        let mut rec = vec![10, 0, 0, 1];
+        rec.extend(53u16.to_be_bytes());
+        let dset = ipfix_data_set(200, &[rec]);
+        let mut body = tset;
+        body.extend(dset);
+        let mut dg = ipfix_header(1, body.len());
+        dg.extend(body);
+        let mut d = Decoder::new();
+        let f = d.ingest(&dg).unwrap();
+        assert_eq!(d.template_count(), 1);
+        assert!(f.is_empty());
+    }
 }

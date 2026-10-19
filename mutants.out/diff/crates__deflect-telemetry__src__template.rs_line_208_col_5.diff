@@ -1,0 +1,24 @@
+--- crates/deflect-telemetry/src/template.rs
++++ replace be_uint -> u64 with 0
+@@ -200,20 +200,17 @@
+         field::PACKET_DELTA_COUNT => b.set_packets(be_uint(data)),
+         _ => {}
+     }
+ }
+ 
+ fn be_uint(data: &[u8]) -> u64 {
+     // Big-endian unsigned value of up to the first 8 bytes, right-aligned into a
+     // fixed buffer so no manual shift-or (and its flippable operator) appears.
+-    let take = data.len().min(8);
+-    let mut buf = [0u8; 8];
+-    buf[8 - take..].copy_from_slice(&data[..take]);
+-    u64::from_be_bytes(buf)
++    0 /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ fn ipv4(data: &[u8]) -> IpAddr {
+     IpAddr::V4(Ipv4Addr::new(data[0], data[1], data[2], data[3]))
+ }
+ 
+ fn ipv6(data: &[u8]) -> IpAddr {
+     let mut o = [0u8; 16];

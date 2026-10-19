@@ -1,0 +1,21 @@
+--- crates/deflect-telemetry/src/template.rs
++++ replace - with / in decode_sets
+@@ -78,17 +78,17 @@
+     };
+ 
+     while r.remaining() >= 4 {
+         let Ok(set_id) = r.u16() else { break };
+         let Ok(set_len) = r.u16() else { break };
+         if (set_len as usize) < 4 {
+             break;
+         }
+-        let Ok(mut body) = r.sub(set_len as usize - 4) else {
++        let Ok(mut body) = r.sub(set_len as usize / /* ~ changed by cargo-mutants ~ */ 4) else {
+             break;
+         };
+ 
+         if set_id == template_set_id {
+             decode_template_set(&mut body, domain, enterprise, registry);
+         } else if set_id == options_set_id || set_id < 256 {
+             // Options templates and other reserved sets: skipped (body dropped).
+         } else if let Some(template) = registry.get(domain, set_id).cloned() {

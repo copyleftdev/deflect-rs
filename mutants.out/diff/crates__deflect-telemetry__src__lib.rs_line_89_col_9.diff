@@ -1,0 +1,27 @@
+--- crates/deflect-telemetry/src/lib.rs
++++ replace Decoder::ingest -> Result<Vec<FlowRecord>, ParseError> with Ok(vec![])
+@@ -81,23 +81,17 @@
+     }
+ 
+     /// Decode one datagram, dispatching on its version field: 5 → NetFlow v5,
+     /// 9 → NetFlow v9, 10 → IPFIX.
+     ///
+     /// # Errors
+     /// Returns [`ParseError`] on a truncated header or an unrecognised version.
+     pub fn ingest(&mut self, datagram: &[u8]) -> Result<Vec<FlowRecord>, ParseError> {
+-        let version = peek_version(datagram)?;
+-        match version {
+-            5 => parse_netflow_v5(datagram).map_err(|_| ParseError::Truncated),
+-            9 => self.ingest_netflow_v9(datagram),
+-            10 => self.ingest_ipfix(datagram),
+-            other => Err(ParseError::BadVersion(other)),
+-        }
++        Ok(vec![]) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Decode an IPFIX (version 10) message.
+     ///
+     /// # Errors
+     /// Returns [`ParseError`] on a truncated header or wrong version.
+     pub fn ingest_ipfix(&mut self, datagram: &[u8]) -> Result<Vec<FlowRecord>, ParseError> {
+         let mut r = reader::Reader::new(datagram);

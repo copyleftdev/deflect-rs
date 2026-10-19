@@ -1,0 +1,273 @@
+
+*** crates/deflect-telemetry/src/reader.rs:24:9: replace Reader<'a>::remaining -> usize with 1
+
+*** mutation diff:
+--- crates/deflect-telemetry/src/reader.rs
++++ replace Reader<'a>::remaining -> usize with 1
+@@ -16,17 +16,17 @@
+ impl<'a> Reader<'a> {
+     #[must_use]
+     pub fn new(buf: &'a [u8]) -> Reader<'a> {
+         Reader { buf, pos: 0 }
+     }
+ 
+     #[must_use]
+     pub fn remaining(&self) -> usize {
+-        self.buf.len().saturating_sub(self.pos)
++        1 /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     #[must_use]
+     pub fn is_empty(&self) -> bool {
+         self.remaining() == 0
+     }
+ 
+     #[must_use]
+
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=deflect-telemetry@0.1.0
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh autocfg v1.5.1
+       Fresh getrandom v0.4.3
+       Fresh linux-raw-sys v0.12.1
+       Fresh bitflags v2.13.2
+       Fresh fastrand v2.5.0
+       Fresh rustix v1.1.5
+       Fresh once_cell v1.21.4
+       Fresh tempfile v3.27.0
+       Fresh wait-timeout v0.2.1
+       Fresh bit-vec v0.10.1
+       Fresh quick-error v1.2.3
+       Fresh cpufeatures v0.3.1
+       Fresh fnv v1.0.7
+       Fresh rusty-fork v0.3.1
+       Fresh chacha20 v0.10.2
+       Fresh bit-set v0.11.1
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/crates/deflect-core)
+       Fresh core_detect v1.0.0
+       Fresh unarray v0.1.4
+       Fresh regex-syntax v0.8.11
+       Dirty deflect-telemetry v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/crates/deflect-telemetry): the file `crates/deflect-telemetry/src/lib.rs` has changed (1792418465.553030602s, 17s after last build at 1792418448.642161148s)
+   Compiling deflect-telemetry v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/crates/deflect-telemetry)
+       Fresh proptest v1.12.0
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_telemetry --edition=2021 crates/deflect-telemetry/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=c0ae8f0726545ab8 -C extra-filename=-6ccca850dc2e396c --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_telemetry --edition=2021 crates/deflect-telemetry/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=a577af00607bc106 -C extra-filename=-731869fdd02777c1 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rmeta`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name properties --edition=2021 crates/deflect-telemetry/tests/properties.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=2422ffb94b893ce8 -C extra-filename=-9e32fd40eb7ab043 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern deflect_telemetry=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/target/debug/deps/libdeflect_telemetry-731869fdd02777c1.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.47s
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/target/debug/deps/deflect_telemetry-6ccca850dc2e396c`
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/target/debug/deps/properties-9e32fd40eb7ab043`
+
+*** result: Success
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=deflect-telemetry@0.1.0
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh autocfg v1.5.1
+       Fresh getrandom v0.4.3
+       Fresh bitflags v2.13.2
+       Fresh linux-raw-sys v0.12.1
+       Fresh rustix v1.1.5
+       Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
+       Fresh wait-timeout v0.2.1
+       Fresh tempfile v3.27.0
+       Fresh cpufeatures v0.3.1
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+       Fresh bit-vec v0.10.1
+       Fresh chacha20 v0.10.2
+       Fresh rusty-fork v0.3.1
+       Fresh bit-set v0.11.1
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh core_detect v1.0.0
+       Fresh unarray v0.1.4
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/crates/deflect-core)
+       Fresh regex-syntax v0.8.11
+       Fresh proptest v1.12.0
+       Fresh deflect-telemetry v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/crates/deflect-telemetry)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.41s
+     Running `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-z8VDS0.tmp/target/debug/deps/deflect_telemetry-6ccca850dc2e396c`
+
+running 29 tests
+test netflow_v5::tests::count_larger_than_body_yields_available_records ... FAILED
+test netflow_v5::tests::empty_body_is_ok ... ok
+test netflow_v5::tests::parses_two_records ... FAILED
+test netflow_v5::tests::rejects_wrong_version ... ok
+test netflow_v5::tests::truncated_header_errors ... ok
+test reader::tests::addresses_parse ... ok
+test reader::tests::is_empty_is_false_with_bytes_remaining ... FAILED
+test reader::tests::reads_big_endian_scalars ... FAILED
+test reader::tests::sub_bounds_a_nested_region ... FAILED
+test reader::tests::truncation_is_an_error_not_a_panic ... ok
+test reader::tests::uint_reads_variable_width ... ok
+test reader::tests::uint_wider_than_eight_skips_the_high_bytes ... FAILED
+test reader::tests::uint_zero_width_is_zero ... ok
+test template::tests::registry_is_empty_tracks_contents ... ok
+test tests::data_before_template_is_skipped_then_decoded_after ... FAILED
+test tests::data_set_at_a_reserved_id_is_not_decoded ... FAILED
+test tests::decoder_dispatches_netflow_v5 ... FAILED
+test tests::empty_set_is_stepped_over ... FAILED
+test tests::garbage_sets_are_ignored ... ok
+test tests::ipfix_template_then_data_decodes ... FAILED
+test tests::ipv6_addresses_decode ... FAILED
+test tests::multiple_records_in_one_data_set ... FAILED
+test tests::tcp_control_bits_field_decodes ... FAILED
+test tests::template_withdrawal_forgets_it ... ok
+test tests::truncated_datagram_does_not_panic ... ok
+test tests::variable_length_long_form_is_measured ... FAILED
+test tests::variable_length_short_form_is_measured ... FAILED
+test tests::wrong_length_address_fields_are_skipped ... FAILED
+test tests::wrong_version_is_rejected ... ok
+
+failures:
+
+---- netflow_v5::tests::count_larger_than_body_yields_available_records stdout ----
+
+thread 'netflow_v5::tests::count_larger_than_body_yields_available_records' (4093288) panicked at crates/deflect-telemetry/src/netflow_v5.rs:164:9:
+assertion `left == right` failed
+  left: 0
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- netflow_v5::tests::parses_two_records stdout ----
+
+thread 'netflow_v5::tests::parses_two_records' (4093290) panicked at crates/deflect-telemetry/src/netflow_v5.rs:137:9:
+assertion `left == right` failed
+  left: 0
+ right: 2
+
+---- reader::tests::is_empty_is_false_with_bytes_remaining stdout ----
+
+thread 'reader::tests::is_empty_is_false_with_bytes_remaining' (4093298) panicked at crates/deflect-telemetry/src/reader.rs:162:9:
+assertion failed: r.is_empty()
+
+---- reader::tests::reads_big_endian_scalars stdout ----
+
+thread 'reader::tests::reads_big_endian_scalars' (4093300) panicked at crates/deflect-telemetry/src/reader.rs:131:9:
+assertion failed: r.is_empty()
+
+---- reader::tests::sub_bounds_a_nested_region stdout ----
+
+thread 'reader::tests::sub_bounds_a_nested_region' (4093301) panicked at crates/deflect-telemetry/src/reader.rs:177:9:
+assertion `left == right` failed
+  left: 1
+ right: 2
+
+---- reader::tests::uint_wider_than_eight_skips_the_high_bytes stdout ----
+
+thread 'reader::tests::uint_wider_than_eight_skips_the_high_bytes' (4093304) panicked at crates/deflect-telemetry/src/reader.rs:170:9:
+assertion failed: r.is_empty()
+
+---- tests::data_before_template_is_skipped_then_decoded_after stdout ----
+
+thread 'tests::data_before_template_is_skipped_then_decoded_after' (4093307) panicked at crates/deflect-telemetry/src/lib.rs:269:9:
+assertion `left == right` failed
+  left: 0
+ right: 1
+
+---- tests::data_set_at_a_reserved_id_is_not_decoded stdout ----
+
+thread 'tests::data_set_at_a_reserved_id_is_not_decoded' (4093308) panicked at crates/deflect-telemetry/src/lib.rs:510:9:
+assertion `left == right` failed
+  left: 0
+ right: 1
+
+---- tests::decoder_dispatches_netflow_v5 stdout ----
+
+thread 'tests::decoder_dispatches_netflow_v5' (4093309) panicked at crates/deflect-telemetry/src/lib.rs:366:9:
+assertion `left == right` failed
+  left: 0
+ right: 1
+
+---- tests::empty_set_is_stepped_over stdout ----
+
+thread 'tests::empty_set_is_stepped_over' (4093310) panicked at crates/deflect-telemetry/src/lib.rs:491:9:
+assertion `left == right` failed
+  left: 0
+ right: 1
+
+---- tests::ipfix_template_then_data_decodes stdout ----
+
+thread 'tests::ipfix_template_then_data_decodes' (4093312) panicked at crates/deflect-telemetry/src/lib.rs:227:9:
+assertion `left == right` failed
+  left: 0
+ right: 1
+
+---- tests::ipv6_addresses_decode stdout ----
+
+thread 'tests::ipv6_addresses_decode' (4093313) panicked at crates/deflect-telemetry/src/lib.rs:387:9:
+assertion `left == right` failed
+  left: 0
+ right: 1
+
+---- tests::multiple_records_in_one_data_set stdout ----
+
+thread 'tests::multiple_records_in_one_data_set' (4093314) panicked at crates/deflect-telemetry/src/lib.rs:290:9:
+assertion `left == right` failed
+  left: 0
+ right: 3
+
+---- tests::tcp_control_bits_field_decodes stdout ----
+
+thread 'tests::tcp_control_bits_field_decodes' (4093315) panicked at crates/deflect-telemetry/src/lib.rs:401:9:
+assertion `left == right` failed
+  left: 0
+ right: 1
+
+---- tests::variable_length_long_form_is_measured stdout ----
+
+thread 'tests::variable_length_long_form_is_measured' (4093318) panicked at crates/deflect-telemetry/src/lib.rs:469:9:
+assertion `left == right` failed
+  left: 0
+ right: 1
+
+---- tests::variable_length_short_form_is_measured stdout ----
+
+thread 'tests::variable_length_short_form_is_measured' (4093319) panicked at crates/deflect-telemetry/src/lib.rs:454:9:
+assertion `left == right` failed
+  left: 0
+ right: 1
+
+---- tests::wrong_length_address_fields_are_skipped stdout ----
+
+thread 'tests::wrong_length_address_fields_are_skipped' (4093320) panicked at crates/deflect-telemetry/src/lib.rs:421:9:
+assertion `left == right` failed
+  left: 0
+ right: 1
+
+
+failures:
+    netflow_v5::tests::count_larger_than_body_yields_available_records
+    netflow_v5::tests::parses_two_records
+    reader::tests::is_empty_is_false_with_bytes_remaining
+    reader::tests::reads_big_endian_scalars
+    reader::tests::sub_bounds_a_nested_region
+    reader::tests::uint_wider_than_eight_skips_the_high_bytes
+    tests::data_before_template_is_skipped_then_decoded_after
+    tests::data_set_at_a_reserved_id_is_not_decoded
+    tests::decoder_dispatches_netflow_v5
+    tests::empty_set_is_stepped_over
+    tests::ipfix_template_then_data_decodes
+    tests::ipv6_addresses_decode
+    tests::multiple_records_in_one_data_set
+    tests::tcp_control_bits_field_decodes
+    tests::variable_length_long_form_is_measured
+    tests::variable_length_short_form_is_measured
+    tests::wrong_length_address_fields_are_skipped
+
+test result: FAILED. 12 passed; 17 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+error: test failed, to rerun pass `-p deflect-telemetry --lib`
+
+*** result: Failure(101)

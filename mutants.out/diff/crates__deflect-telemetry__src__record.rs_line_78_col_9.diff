@@ -1,0 +1,21 @@
+--- crates/deflect-telemetry/src/record.rs
++++ replace FlowBuilder::set_dst with ()
+@@ -70,17 +70,17 @@
+     }
+ }
+ 
+ impl FlowBuilder {
+     pub(crate) fn set_src(&mut self, a: IpAddr) {
+         self.src = a;
+     }
+     pub(crate) fn set_dst(&mut self, a: IpAddr) {
+-        self.dst = a;
++        () /* ~ changed by cargo-mutants ~ */
+     }
+     pub(crate) fn set_protocol(&mut self, p: u8) {
+         self.protocol = p;
+     }
+     pub(crate) fn set_src_port(&mut self, p: u16) {
+         self.src_port = p;
+     }
+     pub(crate) fn set_dst_port(&mut self, p: u16) {

@@ -1,0 +1,24 @@
+--- crates/deflect-telemetry/src/record.rs
++++ replace FlowBuilder::build -> FlowRecord with Default::default()
+@@ -92,20 +92,11 @@
+     pub(crate) fn set_packets(&mut self, n: u64) {
+         self.packets = n;
+     }
+     pub(crate) fn set_bytes(&mut self, n: u64) {
+         self.bytes = n;
+     }
+ 
+     pub(crate) fn build(self) -> FlowRecord {
+-        FlowRecord {
+-            src: self.src,
+-            dst: self.dst,
+-            protocol: self.protocol,
+-            src_port: self.src_port,
+-            dst_port: self.dst_port,
+-            tcp_flags: TcpFlags(self.tcp_flags),
+-            packets: self.packets,
+-            bytes: self.bytes,
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }

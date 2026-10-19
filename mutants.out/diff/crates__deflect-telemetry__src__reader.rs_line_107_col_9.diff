@@ -1,0 +1,22 @@
+--- crates/deflect-telemetry/src/reader.rs
++++ replace Reader<'a>::ipv4 -> Result<IpAddr, Truncated> with Ok(Default::default())
+@@ -99,18 +99,17 @@
+         let mut buf = [0u8; 8];
+         buf[8 - n..].copy_from_slice(raw);
+         Ok(u64::from_be_bytes(buf))
+     }
+ 
+     /// # Errors
+     /// Returns [`Truncated`] if fewer than four bytes remain.
+     pub fn ipv4(&mut self) -> Result<IpAddr, Truncated> {
+-        let b = self.bytes(4)?;
+-        Ok(IpAddr::V4(Ipv4Addr::new(b[0], b[1], b[2], b[3])))
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// # Errors
+     /// Returns [`Truncated`] if fewer than sixteen bytes remain.
+     pub fn ipv6(&mut self) -> Result<IpAddr, Truncated> {
+         let b = self.bytes(16)?;
+         let mut octets = [0u8; 16];
+         octets.copy_from_slice(b);

@@ -1,0 +1,21 @@
+--- crates/deflect-telemetry/src/template.rs
++++ delete ! in decode_data_set
+@@ -142,17 +142,17 @@
+ }
+ 
+ fn decode_data_set(body: &mut Reader<'_>, template: &Template, out: &mut Vec<FlowRecord>) {
+     if template.fields.is_empty() {
+         return; // No fields: nothing to decode, and would not make progress.
+     }
+     // Decode records until the body is exhausted or a record runs short; the
+     // truncation break, not a precomputed minimum length, bounds the loop.
+-    while !body.is_empty() {
++    while  /* ~ changed by cargo-mutants ~ */body.is_empty() {
+         let start = body.position();
+         match decode_record(body, template) {
+             Ok(rec) => out.push(rec),
+             Err(_) => break,
+         }
+         if body.position() == start {
+             break; // Defensive: guarantee forward progress.
+         }

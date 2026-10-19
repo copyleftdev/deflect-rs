@@ -1,0 +1,21 @@
+--- crates/deflect-telemetry/src/template.rs
++++ replace TemplateRegistry::is_empty -> bool with true
+@@ -37,17 +37,17 @@
+ 
+     #[must_use]
+     pub fn len(&self) -> usize {
+         self.map.len()
+     }
+ 
+     #[must_use]
+     pub fn is_empty(&self) -> bool {
+-        self.map.is_empty()
++        true /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn insert(&mut self, domain: u32, id: u16, template: Template) {
+         self.map.insert((domain, id), template);
+     }
+ 
+     fn remove(&mut self, domain: u32, id: u16) {
+         self.map.remove(&(domain, id));

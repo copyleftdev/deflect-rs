@@ -1,0 +1,21 @@
+--- crates/deflect-telemetry/src/template.rs
++++ replace >= with < in decode_template_set
+@@ -98,17 +98,17 @@
+ }
+ 
+ fn decode_template_set(
+     body: &mut Reader<'_>,
+     domain: u32,
+     enterprise: bool,
+     registry: &mut TemplateRegistry,
+ ) {
+-    while body.remaining() >= 4 {
++    while body.remaining() < /* ~ changed by cargo-mutants ~ */ 4 {
+         let Ok(template_id) = body.u16() else { break };
+         let Ok(field_count) = body.u16() else { break };
+         if field_count == 0 {
+             // Template withdrawal.
+             registry.remove(domain, template_id);
+             continue;
+         }
+         let mut fields = Vec::with_capacity(field_count as usize);

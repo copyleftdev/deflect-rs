@@ -1,0 +1,21 @@
+--- crates/deflect-telemetry/src/reader.rs
++++ replace == with != in Reader<'a>::is_empty
+@@ -21,17 +21,17 @@
+ 
+     #[must_use]
+     pub fn remaining(&self) -> usize {
+         self.buf.len().saturating_sub(self.pos)
+     }
+ 
+     #[must_use]
+     pub fn is_empty(&self) -> bool {
+-        self.remaining() == 0
++        self.remaining() != /* ~ changed by cargo-mutants ~ */ 0
+     }
+ 
+     #[must_use]
+     pub fn position(&self) -> usize {
+         self.pos
+     }
+ 
+     /// Borrow the next `n` bytes and advance.

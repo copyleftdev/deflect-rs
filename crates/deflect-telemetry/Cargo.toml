@@ -11,6 +11,9 @@ description = "Flow-telemetry ingestion for deflect-rs: NetFlow v5/v9 and IPFIX 
 [dependencies]
 deflect-core = { workspace = true }
 
+[dev-dependencies]
+proptest = "1.6.0"
+
 [features]
 default = ["std"]
 std = ["deflect-core/std"]

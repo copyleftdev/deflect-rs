@@ -1,0 +1,23 @@
+--- crates/deflect-telemetry/src/template.rs
++++ replace ipv6 -> IpAddr with Default::default()
+@@ -211,19 +211,17 @@
+     u64::from_be_bytes(buf)
+ }
+ 
+ fn ipv4(data: &[u8]) -> IpAddr {
+     IpAddr::V4(Ipv4Addr::new(data[0], data[1], data[2], data[3]))
+ }
+ 
+ fn ipv6(data: &[u8]) -> IpAddr {
+-    let mut o = [0u8; 16];
+-    o.copy_from_slice(&data[..16]);
+-    IpAddr::V6(Ipv6Addr::from(o))
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+ 
+     #[test]
+     fn registry_is_empty_tracks_contents() {

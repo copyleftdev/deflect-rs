@@ -1,0 +1,115 @@
+
+*** crates/deflect-telemetry/src/netflow_v5.rs:43:5: replace parse_record -> Result<FlowRecord, Truncated> with Ok(Default::default())
+
+*** mutation diff:
+--- crates/deflect-telemetry/src/netflow_v5.rs
++++ replace parse_record -> Result<FlowRecord, Truncated> with Ok(Default::default())
+@@ -35,40 +35,17 @@
+             Ok(rec) => out.push(rec),
+             Err(_) => break,
+         }
+     }
+     Ok(out)
+ }
+ 
+ fn parse_record(r: &mut Reader<'_>) -> Result<FlowRecord, Truncated> {
+-    let src = r.ipv4()?;
+-    let dst = r.ipv4()?;
+-    r.skip(4)?; // nexthop
+-    r.skip(4)?; // input + output ifindex
+-    let packets = u64::from(r.u32()?);
+-    let bytes = u64::from(r.u32()?);
+-    r.skip(8)?; // first + last sysuptime
+-    let src_port = r.u16()?;
+-    let dst_port = r.u16()?;
+-    r.skip(1)?; // pad
+-    let tcp_flags = r.u8()?;
+-    let protocol = r.u8()?;
+-    r.skip(1)?; // tos
+-    r.skip(8)?; // src_as, dst_as, src_mask, dst_mask, pad2
+-    Ok(FlowRecord {
+-        src,
+-        dst,
+-        protocol,
+-        src_port,
+-        dst_port,
+-        tcp_flags: TcpFlags(tcp_flags),
+-        packets,
+-        bytes,
+-    })
++    Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Why a NetFlow v5 datagram could not be parsed.
+ #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+ pub enum ParseV5Error {
+     Truncated,
+     NotV5(u16),
+ }
+
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=deflect-telemetry@0.1.0
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh getrandom v0.4.3
+       Fresh linux-raw-sys v0.12.1
+       Fresh bitflags v2.13.2
+       Fresh autocfg v1.5.1
+       Fresh rustix v1.1.5
+       Fresh once_cell v1.21.4
+       Fresh fastrand v2.5.0
+       Fresh tempfile v3.27.0
+       Fresh wait-timeout v0.2.1
+       Fresh bit-vec v0.10.1
+       Fresh fnv v1.0.7
+       Fresh cpufeatures v0.3.1
+       Fresh quick-error v1.2.3
+       Fresh rusty-fork v0.3.1
+       Fresh chacha20 v0.10.2
+       Fresh bit-set v0.11.1
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/crates/deflect-core)
+       Fresh unarray v0.1.4
+       Fresh regex-syntax v0.8.11
+       Fresh core_detect v1.0.0
+       Fresh proptest v1.12.0
+       Dirty deflect-telemetry v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/crates/deflect-telemetry): the file `crates/deflect-telemetry/src/netflow_v5.rs` has changed (1792418463.601930288s, 3s after last build at 1792418460.931793006s)
+   Compiling deflect-telemetry v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/crates/deflect-telemetry)
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_telemetry --edition=2021 crates/deflect-telemetry/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=a577af00607bc106 -C extra-filename=-731869fdd02777c1 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rmeta`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_telemetry --edition=2021 crates/deflect-telemetry/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=c0ae8f0726545ab8 -C extra-filename=-6ccca850dc2e396c --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+warning: unused import: `deflect_core::TcpFlags`
+ --> crates/deflect-telemetry/src/netflow_v5.rs:3:5
+  |
+3 | use deflect_core::TcpFlags;
+  |     ^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+error[E0277]: the trait bound `FlowRecord: Default` is not satisfied
+  --> crates/deflect-telemetry/src/netflow_v5.rs:43:8
+   |
+43 |     Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+   |        ^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+   |
+help: the trait `Default` is not implemented for `FlowRecord`
+  --> crates/deflect-telemetry/src/record.rs:10:1
+   |
+10 | pub struct FlowRecord {
+   | ^^^^^^^^^^^^^^^^^^^^^
+
+For more information about this error, try `rustc --explain E0277`.
+warning: `deflect-telemetry` (lib) generated 1 warning
+error: could not compile `deflect-telemetry` (lib) due to 1 previous error; 1 warning emitted
+
+Caused by:
+  process didn't exit successfully: `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_telemetry --edition=2021 crates/deflect-telemetry/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=a577af00607bc106 -C extra-filename=-731869fdd02777c1 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rmeta` (exit status: 1)
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `deflect-telemetry` (lib test) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_telemetry --edition=2021 crates/deflect-telemetry/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=c0ae8f0726545ab8 -C extra-filename=-6ccca850dc2e396c --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-Ht58Jg.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib` (exit status: 1)
+
+*** result: Failure(101)

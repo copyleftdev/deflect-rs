@@ -1,0 +1,21 @@
+--- crates/deflect-telemetry/src/record.rs
++++ replace FlowRecord::l4 -> L4 with Default::default()
+@@ -16,17 +16,17 @@
+     pub tcp_flags: TcpFlags,
+     pub packets: u64,
+     pub bytes: u64,
+ }
+ 
+ impl FlowRecord {
+     #[must_use]
+     pub fn l4(&self) -> L4 {
+-        L4::from_ip_proto(self.protocol)
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// IANA IPFIX information element IDs (shared with NetFlow v9 field types) that
+ /// this decoder understands. Unlisted fields are skipped by length.
+ pub mod field {
+     pub const OCTET_DELTA_COUNT: u16 = 1;
+     pub const PACKET_DELTA_COUNT: u16 = 2;

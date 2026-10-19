@@ -92,11 +92,13 @@ impl<'a> Reader<'a> {
             self.skip(n - 8)?;
             return self.uint(8);
         }
-        let mut v = 0u64;
-        for &byte in self.bytes(n)? {
-            v = (v << 8) | u64::from(byte);
-        }
-        Ok(v)
+        let raw = self.bytes(n)?;
+        // Right-align the bytes in an 8-byte big-endian buffer so the value is
+        // their unsigned interpretation; no manual shift-or (keeps the decode
+        // free of an and/or/xor that a flipped operator could not change).
+        let mut buf = [0u8; 8];
+        buf[8 - n..].copy_from_slice(raw);
+        Ok(u64::from_be_bytes(buf))
     }
 
     /// # Errors
@@ -150,6 +152,22 @@ mod tests {
         let mut r = Reader::new(&[0xAA]);
         assert_eq!(r.uint(0).unwrap(), 0);
         assert_eq!(r.remaining(), 1);
+    }
+
+    #[test]
+    fn is_empty_is_false_with_bytes_remaining() {
+        let mut r = Reader::new(&[0x01, 0x02]);
+        assert!(!r.is_empty());
+        r.u16().unwrap();
+        assert!(r.is_empty());
+    }
+
+    #[test]
+    fn uint_wider_than_eight_skips_the_high_bytes() {
+        // 10-byte field: the leading 2 bytes are skipped, the low 8 form the value.
+        let mut r = Reader::new(&[0xAA, 0xBB, 0, 0, 0, 0, 0, 0, 0x01, 0x00]);
+        assert_eq!(r.uint(10).unwrap(), 256);
+        assert!(r.is_empty());
     }
 
     #[test]

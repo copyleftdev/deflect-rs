@@ -1,0 +1,21 @@
+--- crates/deflect-telemetry/src/lib.rs
++++ replace != with == in Decoder::ingest_netflow_v9
+@@ -118,17 +118,17 @@
+ 
+     /// Decode a NetFlow v9 (version 9) message.
+     ///
+     /// # Errors
+     /// Returns [`ParseError`] on a truncated header or wrong version.
+     pub fn ingest_netflow_v9(&mut self, datagram: &[u8]) -> Result<Vec<FlowRecord>, ParseError> {
+         let mut r = reader::Reader::new(datagram);
+         let version = r.u16().map_err(|_| ParseError::Truncated)?;
+-        if version != 9 {
++        if version == /* ~ changed by cargo-mutants ~ */ 9 {
+             return Err(ParseError::BadVersion(version));
+         }
+         // count, sys_uptime, unix_secs, sequence, then source id.
+         r.u16().map_err(|_| ParseError::Truncated)?;
+         r.u32().map_err(|_| ParseError::Truncated)?;
+         r.u32().map_err(|_| ParseError::Truncated)?;
+         r.u32().map_err(|_| ParseError::Truncated)?;
+         let source_id = r.u32().map_err(|_| ParseError::Truncated)?;

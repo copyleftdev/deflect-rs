@@ -1,0 +1,22 @@
+--- crates/deflect-telemetry/src/reader.rs
++++ replace Reader<'a>::u16 -> Result<u16, Truncated> with Ok(0)
+@@ -66,18 +66,17 @@
+     /// Returns [`Truncated`] if no byte remains.
+     pub fn u8(&mut self) -> Result<u8, Truncated> {
+         Ok(self.bytes(1)?[0])
+     }
+ 
+     /// # Errors
+     /// Returns [`Truncated`] if fewer than two bytes remain.
+     pub fn u16(&mut self) -> Result<u16, Truncated> {
+-        let b = self.bytes(2)?;
+-        Ok(u16::from_be_bytes([b[0], b[1]]))
++        Ok(0) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// # Errors
+     /// Returns [`Truncated`] if fewer than four bytes remain.
+     pub fn u32(&mut self) -> Result<u32, Truncated> {
+         let b = self.bytes(4)?;
+         Ok(u32::from_be_bytes([b[0], b[1], b[2], b[3]]))
+     }

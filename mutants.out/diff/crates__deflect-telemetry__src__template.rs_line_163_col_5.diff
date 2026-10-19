@@ -1,0 +1,27 @@
+--- crates/deflect-telemetry/src/template.rs
++++ replace decode_record -> Result<FlowRecord, Truncated> with Ok(Default::default())
+@@ -155,23 +155,17 @@
+         }
+         if body.position() == start {
+             break; // Defensive: guarantee forward progress.
+         }
+     }
+ }
+ 
+ fn decode_record(body: &mut Reader<'_>, template: &Template) -> Result<FlowRecord, Truncated> {
+-    let mut b = FlowBuilder::default();
+-    for &spec in &template.fields {
+-        let len = field_value_len(body, spec)?;
+-        let data = body.bytes(len)?;
+-        apply_field(&mut b, spec.id, data);
+-    }
+-    Ok(b.build())
++    Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Resolve the on-wire value length of a field, reading the IPFIX
+ /// variable-length prefix when the template marks the field variable.
+ fn field_value_len(body: &mut Reader<'_>, spec: FieldSpec) -> Result<usize, Truncated> {
+     if spec.length != VARIABLE_LEN {
+         return Ok(spec.length as usize);
+     }

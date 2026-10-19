@@ -1,0 +1,35 @@
+--- crates/deflect-telemetry/src/lib.rs
++++ replace Decoder::ingest_netflow_v9 -> Result<Vec<FlowRecord>, ParseError> with Ok(vec![])
+@@ -116,31 +116,17 @@
+         Ok(out)
+     }
+ 
+     /// Decode a NetFlow v9 (version 9) message.
+     ///
+     /// # Errors
+     /// Returns [`ParseError`] on a truncated header or wrong version.
+     pub fn ingest_netflow_v9(&mut self, datagram: &[u8]) -> Result<Vec<FlowRecord>, ParseError> {
+-        let mut r = reader::Reader::new(datagram);
+-        let version = r.u16().map_err(|_| ParseError::Truncated)?;
+-        if version != 9 {
+-            return Err(ParseError::BadVersion(version));
+-        }
+-        // count, sys_uptime, unix_secs, sequence, then source id.
+-        r.u16().map_err(|_| ParseError::Truncated)?;
+-        r.u32().map_err(|_| ParseError::Truncated)?;
+-        r.u32().map_err(|_| ParseError::Truncated)?;
+-        r.u32().map_err(|_| ParseError::Truncated)?;
+-        let source_id = r.u32().map_err(|_| ParseError::Truncated)?;
+-
+-        let mut out = Vec::new();
+-        template::decode_sets(&mut r, source_id, false, &mut self.registry, &mut out);
+-        Ok(out)
++        Ok(vec![]) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ fn peek_version(datagram: &[u8]) -> Result<u16, ParseError> {
+     let mut r = reader::Reader::new(datagram);
+     r.u16().map_err(|_| ParseError::Truncated)
+ }
+ 
