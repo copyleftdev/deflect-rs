@@ -754,7 +754,14 @@ mod tests {
         // Pins the `enterprise == 0 && ...` guard against becoming `||`.
         let hdr = ipv4_tcp_header([1, 1, 1, 1], [2, 2, 2, 2], 10, 20, 0x02);
         let data_format = (1u32 << 12) | 1;
-        let dg = sflow_datagram(1, &[flow_sample(data_format, 1, &[raw_header_record(100, 11, &hdr)])]);
+        let dg = sflow_datagram(
+            1,
+            &[flow_sample(
+                data_format,
+                1,
+                &[raw_header_record(100, 11, &hdr)],
+            )],
+        );
         assert!(parse_sflow(&dg).unwrap().is_empty());
     }
 

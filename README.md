@@ -141,7 +141,7 @@ subtraction (a remotely reachable panic in debug builds); it is now rejected.
 
 ## Status
 
-Early but well-tested. Eleven crates are implemented, with **319 tests** (321
+Early but well-tested. Eleven crates are implemented, with **322 tests** (324
 with `serde`) and zero mutation survivors across all of them. The data,
 detection, action, ingestion, and upstream-signalling planes are all present, and
 flow ingestion now covers NetFlow v5/v9, IPFIX, and sFlow v5 (the last built on a
