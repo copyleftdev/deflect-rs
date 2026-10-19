@@ -36,7 +36,7 @@ time-dependent primitive is driven deterministically in tests.
 | `deflect-detect` | ✅ | `SlidingWindow` exact rate counter; `Trigger`, dual-watermark attack detection with hysteresis |
 | `deflect-syncookie` | ✅ | Stateless SYN-cookie issuance and validation (SipHash-2-4 keyed) |
 | `deflect-signature` | ✅ | Protocol/port/flag/payload signature engine; `methods.json`-style rules load via `serde` |
-| `deflect-reflect` | ⏳ | Reflection/amplification defense |
+| `deflect-reflect` | ✅ | Reflection/amplification defense via request/response correlation |
 | `deflect-fingerprint` | ⏳ | Learning fingerprints of unknown attacks |
 | `deflect-enforce` | ⏳ | nftables / XDP enforcement backends behind a trait |
 | `deflect-telemetry` | ⏳ | sFlow / NetFlow v5·v9 / IPFIX ingestion |
@@ -73,10 +73,17 @@ time-dependent primitive is driven deterministically in tests.
   `deflect-reflect` and rate-limiting primitives, not a blind signature. Payload
   search uses `memchr` (SIMD) because scanning bytes per-packet during a flood is
   a hot path; rules load from JSON via the optional `serde` feature.
+- **Reflection defense keys on solicitation, not ports.** `deflect-reflect`
+  records outbound requests to amplifier ports and drops only *unsolicited*
+  inbound replies — so real DNS/NTP the host asked for passes, while a spoofed
+  flood from the same ports is dropped. One request authorises one reply; the
+  amplifier-port set is an 8 KiB bitmap and the request table is fixed-size. An
+  inbound-only `size_only` mode falls back to a reply-size threshold when egress
+  isn't visible.
 
 ## Status
 
-Early. Five crates are implemented and tested (63 tests default, 65 with
+Early. Six crates are implemented and tested (75 tests default, 77 with
 `serde`; `clippy -W pedantic` clean; core primitives build `no_std`). The
 remaining crates are scaffolded as roadmap.
 
