@@ -11,8 +11,33 @@
 //! returns `None` where it cannot continue and never panics, and a header cut off
 //! after the IP addresses still yields the addresses and protocol with ports left
 //! at zero.
+//!
+//! ```
+//! # use deflect_packet::{link_type, parse_sampled_header};
+//! # use core::net::IpAddr;
+//! // Ethernet II + IPv4 + a TCP SYN, 192.0.2.1:12345 -> 192.0.2.2:443.
+//! let frame = [
+//!     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // destination and source MAC
+//!     0x08, 0x00, // EtherType: IPv4
+//!     0x45, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x00, 0x40, 0x06, 0x00, 0x00,
+//!     192, 0, 2, 1, // source address
+//!     192, 0, 2, 2, // destination address
+//!     0x30, 0x39, // source port 12345
+//!     0x01, 0xbb, // destination port 443
+//!     0, 0, 0, 0, 0, 0, 0, 0, // sequence and acknowledgement numbers
+//!     0x50, 0x02, // data offset and the SYN control bit
+//! ];
+//! let tuple = parse_sampled_header(link_type::ETHERNET, &frame).unwrap();
+//! assert_eq!(tuple.src, "192.0.2.1".parse::<IpAddr>().unwrap());
+//! assert_eq!(tuple.dst, "192.0.2.2".parse::<IpAddr>().unwrap());
+//! assert_eq!(tuple.protocol, 6);
+//! assert_eq!(tuple.src_port, 12345);
+//! assert_eq!(tuple.dst_port, 443);
+//! assert_eq!(tuple.tcp_flags.0, 0x02);
+//! ```
 #![cfg_attr(not(feature = "std"), no_std)]
 #![forbid(unsafe_code)]
+#![deny(missing_docs)]
 // Test fixtures build packets with length casts; that pedantic lint adds nothing
 // to fixture code.
 #![cfg_attr(test, allow(clippy::cast_possible_truncation))]
@@ -31,11 +56,18 @@ use cursor::Cursor;
 /// sampled header was truncated before the layer-4 header.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct FiveTuple {
+    /// Source IP address, IPv4 or IPv6 to match the parsed packet.
     pub src: IpAddr,
+    /// Destination IP address, IPv4 or IPv6 to match the parsed packet.
     pub dst: IpAddr,
+    /// IANA layer-4 protocol number from the IP header (e.g. 6 TCP, 17 UDP).
     pub protocol: u8,
+    /// Source layer-4 port; zero when the protocol has no ports, the packet is
+    /// a non-leading fragment, or the header was truncated before it.
     pub src_port: u16,
+    /// Destination layer-4 port, zero under the same conditions as `src_port`.
     pub dst_port: u16,
+    /// TCP control bits; zero for non-TCP protocols and when they were not reached.
     pub tcp_flags: TcpFlags,
 }
 

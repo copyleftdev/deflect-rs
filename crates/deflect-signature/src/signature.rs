@@ -19,6 +19,8 @@ pub enum Action {
 }
 
 impl Action {
+    /// The [`Verdict`] this action yields: `Allow` passes, `Drop(reason)` drops
+    /// carrying the same reason.
     #[must_use]
     pub fn verdict(self) -> Verdict {
         match self {
@@ -36,23 +38,34 @@ impl Action {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Signature {
+    /// Caller-assigned identifier, surfaced for reporting; not used in matching.
     pub id: u32,
+    /// Human-readable label for the rule; not used in matching.
     pub name: Cow<'static, str>,
+    /// Evaluation order within a set; lower sorts first and wins on a tie.
     pub priority: i32,
+    /// Required L4 protocol, or `None` to match any protocol.
     #[cfg_attr(feature = "serde", serde(default))]
     pub l4: Option<L4>,
+    /// Constraint on the packet's source port.
     #[cfg_attr(feature = "serde", serde(default))]
     pub src_port: PortMatch,
+    /// Constraint on the packet's destination port.
     #[cfg_attr(feature = "serde", serde(default))]
     pub dst_port: PortMatch,
+    /// Constraint on TCP control bits; applies only to TCP packets.
     #[cfg_attr(feature = "serde", serde(default = "FlagMatch::any"))]
     pub flags: FlagMatch,
+    /// Minimum on-wire length in bytes (inclusive); defaults to 0.
     #[cfg_attr(feature = "serde", serde(default))]
     pub min_wire_len: u32,
+    /// Maximum on-wire length in bytes (inclusive); defaults to `u32::MAX`.
     #[cfg_attr(feature = "serde", serde(default = "max_wire_default"))]
     pub max_wire_len: u32,
+    /// Constraint on the packet payload bytes.
     #[cfg_attr(feature = "serde", serde(default))]
     pub payload: PayloadMatch,
+    /// Verdict to apply when every condition holds.
     pub action: Action,
 }
 
@@ -81,36 +94,43 @@ impl Signature {
         }
     }
 
+    /// Sets the evaluation priority and returns `self`.
     #[must_use]
     pub fn priority(mut self, p: i32) -> Self {
         self.priority = p;
         self
     }
 
+    /// Pins the required L4 protocol and returns `self`.
     #[must_use]
     pub fn proto(mut self, l4: L4) -> Self {
         self.l4 = Some(l4);
         self
     }
 
+    /// Sets the source-port constraint and returns `self`.
     #[must_use]
     pub fn src_port(mut self, m: PortMatch) -> Self {
         self.src_port = m;
         self
     }
 
+    /// Sets the destination-port constraint and returns `self`.
     #[must_use]
     pub fn dst_port(mut self, m: PortMatch) -> Self {
         self.dst_port = m;
         self
     }
 
+    /// Sets the TCP flag constraint and returns `self`.
     #[must_use]
     pub fn flags(mut self, m: FlagMatch) -> Self {
         self.flags = m;
         self
     }
 
+    /// Sets the inclusive wire-length bounds and returns `self`; the arguments
+    /// are normalised so the smaller becomes the minimum.
     #[must_use]
     pub fn wire_len(mut self, min: u32, max: u32) -> Self {
         self.min_wire_len = min.min(max);
@@ -118,18 +138,22 @@ impl Signature {
         self
     }
 
+    /// Sets the payload constraint and returns `self`.
     #[must_use]
     pub fn payload(mut self, m: PayloadMatch) -> Self {
         self.payload = m;
         self
     }
 
+    /// Sets the action to apply on a match and returns `self`.
     #[must_use]
     pub fn action(mut self, a: Action) -> Self {
         self.action = a;
         self
     }
 
+    /// Sets the action to [`Action::Allow`], making this an allowlist rule, and
+    /// returns `self`.
     #[must_use]
     pub fn allow(mut self) -> Self {
         self.action = Action::Allow;

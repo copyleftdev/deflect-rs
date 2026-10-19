@@ -8,17 +8,26 @@ use deflect_core::{TcpFlags, L4};
 /// than per-packet matching.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct FlowRecord {
+    /// Source IP address of the flow.
     pub src: IpAddr,
+    /// Destination IP address of the flow.
     pub dst: IpAddr,
+    /// IANA IP protocol number (e.g. 6 TCP, 17 UDP).
     pub protocol: u8,
+    /// Source transport port (0 when the protocol has none or it was not captured).
     pub src_port: u16,
+    /// Destination transport port (0 when the protocol has none or it was not captured).
     pub dst_port: u16,
+    /// Union of TCP control bits seen across the flow's packets.
     pub tcp_flags: TcpFlags,
+    /// Packet count the exporter attributes to the flow.
     pub packets: u64,
+    /// Byte count the exporter attributes to the flow.
     pub bytes: u64,
 }
 
 impl FlowRecord {
+    /// The layer-4 protocol, derived from [`protocol`](Self::protocol).
     #[must_use]
     pub fn l4(&self) -> L4 {
         L4::from_ip_proto(self.protocol)
@@ -28,15 +37,25 @@ impl FlowRecord {
 /// IANA IPFIX information element IDs (shared with NetFlow v9 field types) that
 /// this decoder understands. Unlisted fields are skipped by length.
 pub mod field {
+    /// Bytes in the flow (IE 1); maps to [`FlowRecord::bytes`](super::FlowRecord::bytes).
     pub const OCTET_DELTA_COUNT: u16 = 1;
+    /// Packets in the flow (IE 2); maps to [`FlowRecord::packets`](super::FlowRecord::packets).
     pub const PACKET_DELTA_COUNT: u16 = 2;
+    /// IP protocol number (IE 4).
     pub const PROTOCOL: u16 = 4;
+    /// TCP control bits (IE 6).
     pub const TCP_CONTROL_BITS: u16 = 6;
+    /// Source transport port (IE 7).
     pub const SRC_PORT: u16 = 7;
+    /// Source IPv4 address (IE 8); honoured only at a 4-byte length.
     pub const SRC_IPV4: u16 = 8;
+    /// Destination transport port (IE 11).
     pub const DST_PORT: u16 = 11;
+    /// Destination IPv4 address (IE 12); honoured only at a 4-byte length.
     pub const DST_IPV4: u16 = 12;
+    /// Source IPv6 address (IE 27); honoured only at a 16-byte length.
     pub const SRC_IPV6: u16 = 27;
+    /// Destination IPv6 address (IE 28); honoured only at a 16-byte length.
     pub const DST_IPV6: u16 = 28;
 }
 

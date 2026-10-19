@@ -8,11 +8,14 @@ pub const PREFIX_LEN: usize = 8;
 /// same bytes.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Prefix {
+    /// The leading payload bytes, zero-padded past [`Prefix::len`].
     pub bytes: [u8; PREFIX_LEN],
+    /// How many of `bytes` are real payload; padding beyond it is not matched.
     pub len: u8,
 }
 
 impl Prefix {
+    /// Capture the first [`PREFIX_LEN`] bytes of `payload` (fewer if shorter).
     #[must_use]
     pub fn from_payload(payload: &[u8]) -> Prefix {
         let n = payload.len().min(PREFIX_LEN);
@@ -25,11 +28,13 @@ impl Prefix {
         }
     }
 
+    /// The real captured bytes, excluding any zero padding.
     #[must_use]
     pub fn as_slice(&self) -> &[u8] {
         &self.bytes[..self.len as usize]
     }
 
+    /// Whether `payload` begins with this prefix's captured bytes.
     #[must_use]
     pub fn matches(&self, payload: &[u8]) -> bool {
         payload.starts_with(self.as_slice())
@@ -38,13 +43,19 @@ impl Prefix {
 
 /// A synthesized attack fingerprint: the conjunction of the feature values that
 /// dominated a sample of unrecognised traffic. Every set field must hold for a
-/// packet to match; unset fields are unconstrained.
+/// packet to match; unset fields are unconstrained. Implements
+/// [`deflect_core::Stage`], dropping any packet it matches.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Fingerprint {
+    /// Dominant transport protocol, when it too dominated; a refining constraint.
     pub l4: Option<L4>,
+    /// Dominant destination port; a specific dimension that can justify a rule.
     pub dst_port: Option<u16>,
+    /// Dominant wire length; a specific dimension that can justify a rule.
     pub wire_len: Option<u32>,
+    /// Dominant non-zero TCP flags, when present; a refining constraint.
     pub flags: Option<TcpFlags>,
+    /// Dominant non-empty payload prefix; a specific dimension that can justify a rule.
     pub prefix: Option<Prefix>,
     /// Lower-bound share (percent) of the sample this fingerprint covers,
     /// taken as the least-dominant of its constituent features.
@@ -62,6 +73,8 @@ impl Fingerprint {
             + u8::from(self.prefix.is_some())
     }
 
+    /// Whether `packet` satisfies every constrained dimension; unset fields
+    /// impose no constraint.
     #[must_use]
     pub fn matches(&self, packet: &Packet<'_>) -> bool {
         if let Some(l4) = self.l4 {

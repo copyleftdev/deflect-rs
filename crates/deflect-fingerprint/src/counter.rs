@@ -28,6 +28,7 @@ impl<V: Copy + PartialEq> TopValues<V> {
         }
     }
 
+    /// Fold one occurrence of `value` into the summary.
     pub fn observe(&mut self, value: V) {
         self.total += 1;
         if let Some(entry) = self.entries.iter_mut().find(|(v, _)| *v == value) {
@@ -46,6 +47,7 @@ impl<V: Copy + PartialEq> TopValues<V> {
         self.entries.retain(|(_, c)| *c > 0);
     }
 
+    /// Total number of values observed, including any since evicted.
     #[must_use]
     pub fn total(&self) -> u64 {
         self.total
@@ -67,6 +69,7 @@ impl<V: Copy + PartialEq> TopValues<V> {
         u8::try_from(count * 100 / self.total).unwrap_or(100)
     }
 
+    /// Discard all tracked values and reset the total to zero.
     pub fn clear(&mut self) {
         self.entries.clear();
         self.total = 0;

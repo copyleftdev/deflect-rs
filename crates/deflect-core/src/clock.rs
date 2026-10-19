@@ -3,6 +3,7 @@
 /// Every time-dependent primitive takes a `Clock` so it can be driven
 /// deterministically in tests and simulation instead of sleeping.
 pub trait Clock {
+    /// Returns the current time in nanoseconds; must never move backward.
     fn now_nanos(&self) -> u64;
 }
 
@@ -29,6 +30,7 @@ pub struct ManualClock {
 }
 
 impl ManualClock {
+    /// Creates a clock reading `start_nanos`.
     #[must_use]
     pub fn new(start_nanos: u64) -> ManualClock {
         ManualClock {
@@ -36,15 +38,18 @@ impl ManualClock {
         }
     }
 
+    /// Advances the clock by `delta` nanoseconds.
     pub fn advance_nanos(&self, delta: u64) {
         self.nanos
             .fetch_add(delta, core::sync::atomic::Ordering::Relaxed);
     }
 
+    /// Advances the clock by `delta` milliseconds, saturating the conversion.
     pub fn advance_millis(&self, delta: u64) {
         self.advance_nanos(delta.saturating_mul(1_000_000));
     }
 
+    /// Advances the clock by `delta` seconds, saturating the conversion.
     pub fn advance_secs(&self, delta: u64) {
         self.advance_nanos(delta.saturating_mul(1_000_000_000));
     }

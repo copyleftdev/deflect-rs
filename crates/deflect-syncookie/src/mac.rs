@@ -17,11 +17,14 @@ pub struct CookieKey {
 }
 
 impl CookieKey {
+    /// Build a key from the two 64-bit `SipHash` halves directly.
     #[must_use]
     pub const fn from_u64s(k0: u64, k1: u64) -> CookieKey {
         CookieKey { k0, k1 }
     }
 
+    /// Build a key from 16 raw bytes, read little-endian as the two halves
+    /// (bytes `0..8` as `k0`, `8..16` as `k1`) — the shape `getrandom` fills.
     #[must_use]
     pub fn from_bytes(bytes: [u8; 16]) -> CookieKey {
         let mut lo = [0u8; 8];

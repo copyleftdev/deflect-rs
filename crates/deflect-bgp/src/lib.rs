@@ -22,17 +22,51 @@
 //! than a floor or the default route is ever announced; every blackhole carries
 //! `NO_EXPORT` so it cannot leak into the global table; and every blackhole has
 //! a deadline so a forgotten one lifts itself.
+//!
+//! ```
+//! # use core::time::Duration;
+//! # use deflect_bgp::{exabgp, Blackhole, BgpError, Cidr, NullSession, RtbhController, Scope, ScopeError};
+//! # use deflect_core::ManualClock;
+//! // Declare the address space we own, then front every announcement through it.
+//! let scope = Scope::new(vec![Cidr::new("203.0.113.0".parse().unwrap(), 24)]);
+//! let rtbh = RtbhController::new(scope, NullSession, ManualClock::new(0), 64);
+//!
+//! // Blackhole a host under attack inside owned space, lifting after 10 minutes.
+//! let victim = Cidr::host("203.0.113.9".parse().unwrap());
+//! rtbh.blackhole_destination(victim, Some(Duration::from_secs(600)))?;
+//! assert_eq!(rtbh.active_count(), 1);
+//!
+//! // The exact line handed to ExaBGP: BLACKHOLE (RFC 7999) + NO_EXPORT.
+//! assert_eq!(
+//!     exabgp::announce_command(&Blackhole::destination(victim)),
+//!     "announce route 203.0.113.9/32 next-hop self community [65535:666 65535:65281]\n",
+//! );
+//!
+//! // A prefix outside owned space is a hijack — refused before the wire.
+//! let not_ours = Cidr::host("198.51.100.9".parse().unwrap());
+//! assert!(matches!(
+//!     rtbh.blackhole_destination(not_ours, None),
+//!     Err(BgpError::Scope(ScopeError::Unowned(_))),
+//! ));
+//! # Ok::<(), BgpError>(())
+//! ```
 #![forbid(unsafe_code)]
+#![deny(missing_docs)]
 // Protocol and product names (ExaBGP, RTBH, NO_EXPORT) read better as prose than
 // as code spans throughout the docs.
 #![allow(clippy::doc_markdown)]
 
 extern crate alloc;
 
+/// Network prefixes (CIDR blocks) and containment tests.
 pub mod cidr;
+/// BGP standard communities, including the RFC 7999 well-known values.
 pub mod community;
+/// Rendering of blackhole routes into ExaBGP `announce`/`withdraw` command lines.
 pub mod exabgp;
+/// Blackhole routes: their direction, signalling, and builders.
 pub mod route;
+/// The ownership and blast-radius authorization boundary for announcements.
 pub mod scope;
 
 pub use cidr::Cidr;
@@ -53,7 +87,10 @@ pub enum BgpError {
     Scope(ScopeError),
     /// The live-announcement table is full; raising it risks tripping the
     /// upstream's max-prefix limit and tearing down the session.
-    CapacityExceeded { max: usize },
+    CapacityExceeded {
+        /// The announcement cap that was reached.
+        max: usize,
+    },
     /// The session could not transmit the command.
     Transport(std::io::Error),
 }
@@ -104,6 +141,7 @@ pub struct WriterSession<W: std::io::Write> {
 }
 
 impl<W: std::io::Write> WriterSession<W> {
+    /// Wrap a writer, serializing concurrent sends behind an internal lock.
     pub fn new(out: W) -> WriterSession<W> {
         WriterSession {
             out: Mutex::new(out),
@@ -145,6 +183,9 @@ pub struct RtbhController<S: BgpSession, C: Clock> {
 }
 
 impl<S: BgpSession, C: Clock> RtbhController<S, C> {
+    /// Build a controller that authorizes through `scope`, transmits over
+    /// `session`, times deadlines against `clock`, and holds at most
+    /// `max_routes` live blackholes at once.
     #[must_use]
     pub fn new(scope: Scope, session: S, clock: C, max_routes: usize) -> RtbhController<S, C> {
         RtbhController {

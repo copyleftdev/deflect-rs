@@ -12,7 +12,12 @@ pub enum ScopeError {
     Unowned(Cidr),
     /// The prefix is broader (numerically shorter) than the configured floor,
     /// so it would blackhole far more than the target.
-    TooBroad { prefix: Cidr, floor: u8 },
+    TooBroad {
+        /// The refused prefix.
+        prefix: Cidr,
+        /// The broadest prefix length allowed for its family.
+        floor: u8,
+    },
     /// The default route (`/0`) — never blackhole-able; it is a total outage.
     DefaultRoute,
 }
@@ -76,6 +81,7 @@ impl Scope {
         self
     }
 
+    /// The declared owned prefixes a destination blackhole must fall within.
     #[must_use]
     pub fn owned(&self) -> &[Cidr] {
         &self.owned

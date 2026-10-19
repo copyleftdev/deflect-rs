@@ -28,13 +28,21 @@ pub enum RtbhKind {
 /// [`Community::NO_EXPORT`] — the containment RFC 7999 requires.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Blackhole {
+    /// The prefix whose traffic the upstream is asked to discard.
     pub prefix: Cidr,
+    /// Whether the prefix is the traffic's destination or its source.
     pub kind: RtbhKind,
+    /// An explicit discard next hop for legacy next-hop-based RTBH; `None`
+    /// advertises with `self` and relies on the community.
     pub next_hop: Option<IpAddr>,
+    /// The communities tagging the route, signalling the upstream to blackhole
+    /// it and keep it contained.
     pub communities: Vec<Community>,
 }
 
 impl Blackhole {
+    /// A destination blackhole for `prefix`, defaulting to community signalling
+    /// that carries [`Community::BLACKHOLE`] and [`Community::NO_EXPORT`].
     #[must_use]
     pub fn destination(prefix: Cidr) -> Blackhole {
         Blackhole {
@@ -45,6 +53,8 @@ impl Blackhole {
         }
     }
 
+    /// A source blackhole for `prefix` (attacker space), with the same default
+    /// contained community set as [`Blackhole::destination`].
     #[must_use]
     pub fn source(prefix: Cidr) -> Blackhole {
         Blackhole {

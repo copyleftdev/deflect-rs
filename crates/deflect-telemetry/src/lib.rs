@@ -22,8 +22,35 @@
 //! it carries sampled *packet headers* rather than pre-aggregated flows, so it
 //! parses each header with the [`deflect_packet`] primitive and scales the sample
 //! up by its sampling rate into the same [`FlowRecord`].
+//!
+//! ```
+//! use deflect_telemetry::Decoder;
+//!
+//! // A NetFlow v5 datagram: a 24-byte header declaring one flow, then one
+//! // 48-byte record for 203.0.113.1 -> 198.51.100.2, UDP, dst port 53.
+//! let mut datagram = vec![0u8; 24];
+//! datagram[1] = 5; // version = 5
+//! datagram[3] = 1; // flow count = 1
+//! let mut record = vec![0u8; 48];
+//! record[0..4].copy_from_slice(&[203, 0, 113, 1]); // source address
+//! record[4..8].copy_from_slice(&[198, 51, 100, 2]); // destination address
+//! record[16..20].copy_from_slice(&10u32.to_be_bytes()); // packet count
+//! record[20..24].copy_from_slice(&1500u32.to_be_bytes()); // byte count
+//! record[34..36].copy_from_slice(&53u16.to_be_bytes()); // destination port
+//! record[38] = 17; // protocol = UDP
+//! datagram.extend(record);
+//!
+//! // One Decoder handles every flow-telemetry format; ingest dispatches on
+//! // the version field and yields unified `FlowRecord`s.
+//! let mut decoder = Decoder::new();
+//! let flows = decoder.ingest(&datagram).expect("valid v5 datagram");
+//! assert_eq!(flows.len(), 1);
+//! assert_eq!(flows[0].dst_port, 53);
+//! assert_eq!(flows[0].packets, 10);
+//! ```
 #![cfg_attr(not(feature = "std"), no_std)]
 #![forbid(unsafe_code)]
+#![deny(missing_docs)]
 // The docs name protocols (NetFlow, IPFIX, sFlow) and hex constants as prose,
 // not code, so the identifier-backtick lint only produces noise here.
 #![allow(clippy::doc_markdown)]
@@ -85,6 +112,7 @@ pub struct Decoder {
 }
 
 impl Decoder {
+    /// Create a decoder with an empty template registry.
     #[must_use]
     pub fn new() -> Decoder {
         Decoder::default()

@@ -12,13 +12,16 @@ const ENTERPRISE_BIT: u16 = 0x8000;
 /// A length of `0xffff` marks a variable-length field (IPFIX only).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct FieldSpec {
+    /// Information-element id identifying the field's meaning.
     pub id: u16,
+    /// Wire length in bytes, or `0xffff` for an IPFIX variable-length field.
     pub length: u16,
 }
 
 /// The field layout a data record follows, learned from a template record.
 #[derive(Debug, Clone, Default)]
 pub struct Template {
+    /// Fields in wire order; a data record carries one value per field.
     pub fields: Vec<FieldSpec>,
 }
 
@@ -30,16 +33,19 @@ pub struct TemplateRegistry {
 }
 
 impl TemplateRegistry {
+    /// Create an empty registry.
     #[must_use]
     pub fn new() -> TemplateRegistry {
         TemplateRegistry::default()
     }
 
+    /// Number of templates currently held.
     #[must_use]
     pub fn len(&self) -> usize {
         self.map.len()
     }
 
+    /// Whether no templates are held.
     #[must_use]
     pub fn is_empty(&self) -> bool {
         self.map.is_empty()

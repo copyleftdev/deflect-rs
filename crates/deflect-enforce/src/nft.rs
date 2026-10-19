@@ -1,3 +1,11 @@
+//! nftables script builders: pure string rendering of the ban mechanism.
+//!
+//! Every function here returns the text of an `nft -f -` script and touches
+//! neither the kernel nor any privilege, so the policy that decides a ban is
+//! separable from the mechanism that applies it and the scripts are tested as
+//! plain strings. IPv4 and IPv6 sources land in separate timeout-capable sets
+//! (`banned4`, `banned6`) drained by a drop chain at priority `-300`.
+
 use core::fmt::Write as _;
 use core::net::IpAddr;
 use core::time::Duration;

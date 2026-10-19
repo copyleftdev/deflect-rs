@@ -22,10 +22,15 @@ pub enum Spend {
     /// The cost was not available; the bucket is unchanged. `retry_after_nanos`
     /// is the earliest time from `now` at which the same cost would succeed if
     /// no other spend intervenes.
-    Throttled { retry_after_nanos: u64 },
+    Throttled {
+        /// Nanoseconds from `now` until the refused cost would next succeed;
+        /// [`u64::MAX`] when the bucket never refills (`rate_per_sec` of zero).
+        retry_after_nanos: u64,
+    },
 }
 
 impl Spend {
+    /// Whether this is [`Spend::Allowed`].
     #[must_use]
     pub const fn is_allowed(&self) -> bool {
         matches!(self, Spend::Allowed)

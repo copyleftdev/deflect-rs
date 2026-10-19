@@ -11,11 +11,59 @@
 //!
 //! The summaries never overstate a value's share, so a synthesized fingerprint
 //! reflects traffic that really dominated the sample. Feeding only
-//! *unrecognised* packets (those a [`deflect_signature`] set passed) and only
-//! while a [`deflect_detect`] trigger reports an attack is the caller's job;
+//! *unrecognised* packets (those a `deflect_signature` set passed) and only
+//! while a `deflect_detect` trigger reports an attack is the caller's job;
 //! this crate counts what it is given and reports what dominates.
+//!
+//! ```
+//! use deflect_fingerprint::Fingerprinter;
+//! use deflect_core::{Packet, L4};
+//! # use core::net::{IpAddr, Ipv4Addr};
+//! # let src = IpAddr::V4(Ipv4Addr::new(198, 51, 100, 1));
+//! # let dst = IpAddr::V4(Ipv4Addr::new(203, 0, 113, 5));
+//!
+//! // A homogeneous UDP flood: one port, one length, one payload prefix.
+//! let fp = Fingerprinter::with_defaults();
+//! for _ in 0..95 {
+//!     fp.observe(
+//!         &Packet::new(src, dst, L4::Udp)
+//!             .with_ports(12345, 80)
+//!             .with_wire_len(1400)
+//!             .with_payload(b"\xde\xad\xbe\xef"),
+//!     );
+//! }
+//! // A handful of diverse legitimate packets dilute, but do not displace, it.
+//! for i in 0..5u8 {
+//!     fp.observe(
+//!         &Packet::new(src, dst, L4::Tcp)
+//!             .with_ports(40000 + u16::from(i), 443)
+//!             .with_wire_len(60 + u32::from(i))
+//!             .with_payload(&[i]),
+//!     );
+//! }
+//!
+//! // The dominant port, length, and prefix are captured — nothing broader.
+//! let f = fp.synthesize(80).expect("the flood dominates the sample");
+//! assert_eq!(f.l4, Some(L4::Udp));
+//! assert_eq!(f.dst_port, Some(80));
+//! assert_eq!(f.wire_len, Some(1400));
+//! assert_eq!(f.prefix.unwrap().as_slice(), b"\xde\xad\xbe\xef");
+//!
+//! // Diffuse traffic that no specific value dominates yields no fingerprint.
+//! let diffuse = Fingerprinter::with_defaults();
+//! for i in 0..200u32 {
+//!     diffuse.observe(
+//!         &Packet::new(src, dst, L4::Udp)
+//!             .with_ports(10000, u16::try_from(i % 1000).unwrap())
+//!             .with_wire_len(100 + i)
+//!             .with_payload(&i.to_be_bytes()),
+//!     );
+//! }
+//! assert!(diffuse.synthesize(80).is_none());
+//! ```
 #![cfg_attr(not(feature = "std"), no_std)]
 #![forbid(unsafe_code)]
+#![deny(missing_docs)]
 
 extern crate alloc;
 
@@ -62,6 +110,8 @@ pub struct Fingerprinter {
 }
 
 impl Fingerprinter {
+    /// Construct a fingerprinter whose per-dimension summaries each hold at most
+    /// `capacity` distinct values. A `capacity` of zero is raised to one.
     #[must_use]
     pub fn new(capacity: usize) -> Fingerprinter {
         Fingerprinter {
@@ -70,6 +120,7 @@ impl Fingerprinter {
         }
     }
 
+    /// Construct a fingerprinter sized at [`DEFAULT_CAPACITY`] per dimension.
     #[must_use]
     pub fn with_defaults() -> Fingerprinter {
         Fingerprinter::new(DEFAULT_CAPACITY)
@@ -185,6 +236,7 @@ impl Fingerprinter {
         })
     }
 
+    /// Per-dimension summary capacity this fingerprinter was built with.
     #[must_use]
     pub fn capacity(&self) -> usize {
         self.capacity

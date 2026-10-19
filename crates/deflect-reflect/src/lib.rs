@@ -19,8 +19,31 @@
 //! an inbound-only vantage point with no egress visibility, use
 //! [`ReflectionGuard::size_only`], which cannot tell solicited from unsolicited
 //! and instead drops amplifier-port replies at or above a size threshold.
+//!
+//! ## Example
+//! ```
+//! # use deflect_reflect::{ReflectConfig, ReflectionGuard};
+//! # use deflect_core::{DropReason, L4, Packet, Verdict};
+//! # use core::net::{IpAddr, Ipv4Addr};
+//! let guard = ReflectionGuard::new(ReflectConfig::default());
+//! let me = IpAddr::V4(Ipv4Addr::new(203, 0, 113, 5));
+//! let server = IpAddr::V4(Ipv4Addr::new(198, 51, 100, 9));
+//!
+//! // Record our outbound DNS query (dst port 53 is an amplifier port).
+//! let query = Packet::new(me, server, L4::Udp).with_ports(40000, 53).with_wire_len(60);
+//! guard.note_outbound(&query, 1_000);
+//!
+//! // The reply we asked for passes, however large the amplification.
+//! let reply = Packet::new(server, me, L4::Udp).with_ports(53, 40000).with_wire_len(4096);
+//! assert_eq!(guard.classify(&reply, 1_500), Verdict::Pass);
+//!
+//! // One request authorises one reply: a second, unsolicited reply is dropped.
+//! let flood = Packet::new(server, me, L4::Udp).with_ports(53, 40000).with_wire_len(4096);
+//! assert_eq!(guard.classify(&flood, 1_600), Verdict::Drop(DropReason::Reflection));
+//! ```
 #![cfg_attr(not(feature = "std"), no_std)]
 #![forbid(unsafe_code)]
+#![deny(missing_docs)]
 
 #[cfg(not(feature = "std"))]
 compile_error!("deflect-reflect currently requires the `std` feature");
@@ -37,6 +60,7 @@ pub use ports::AmplifierPorts;
 
 /// Configuration for a [`ReflectionGuard`].
 pub struct ReflectConfig {
+    /// UDP ports treated as amplifiers; replies from these ports are candidates to drop.
     pub ports: AmplifierPorts,
     /// How long an outbound request keeps an inbound reply "solicited".
     pub solicit_ttl_nanos: u64,
@@ -69,8 +93,11 @@ struct Expect {
 /// Running counters, read via [`ReflectionGuard::stats`].
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub struct ReflectStats {
+    /// Inbound amplifier-port replies passed because a live request matched.
     pub solicited_passed: u64,
+    /// Inbound amplifier-port replies dropped as unsolicited.
     pub unsolicited_dropped: u64,
+    /// Total wire bytes of the dropped unsolicited replies.
     pub bytes_dropped: u64,
     /// Largest solicited reply-to-request ratio seen, in percent (e.g. 4200 =
     /// 42x). Zero until a solicited reply with a known request size arrives.
@@ -91,6 +118,8 @@ pub struct ReflectionGuard {
 }
 
 impl ReflectionGuard {
+    /// Builds a guard from `config`; the request table is `config.slots` rounded
+    /// up to a power of two (minimum one) and fixed for the guard's lifetime.
     #[must_use]
     pub fn new(config: ReflectConfig) -> ReflectionGuard {
         let n = config.slots.max(1).next_power_of_two();
@@ -194,6 +223,7 @@ impl ReflectionGuard {
         true
     }
 
+    /// Snapshot of the running counters.
     #[must_use]
     pub fn stats(&self) -> ReflectStats {
         ReflectStats {

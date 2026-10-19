@@ -40,11 +40,13 @@ impl Cidr {
         Cidr::new(addr, len)
     }
 
+    /// The masked base address of the prefix.
     #[must_use]
     pub fn net(&self) -> IpAddr {
         self.net
     }
 
+    /// The prefix length in bits.
     #[must_use]
     pub fn prefix_len(&self) -> u8 {
         self.len
@@ -60,6 +62,7 @@ impl Cidr {
         }
     }
 
+    /// Whether the prefix is a single host (`/32` or `/128`).
     #[must_use]
     pub fn is_host(&self) -> bool {
         self.len == self.max_len()

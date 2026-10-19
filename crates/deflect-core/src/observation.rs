@@ -6,14 +6,20 @@ use core::net::IpAddr;
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum L4 {
+    /// TCP (IP protocol 6).
     Tcp,
+    /// UDP (IP protocol 17).
     Udp,
+    /// ICMP (IP protocol 1).
     Icmp,
+    /// `ICMPv6` (IP protocol 58).
     IcmpV6,
+    /// Any other protocol, carrying its IANA protocol number.
     Other(u8),
 }
 
 impl L4 {
+    /// Classifies an IANA IP protocol number, mapping unknowns to `Other`.
     #[must_use]
     pub const fn from_ip_proto(proto: u8) -> L4 {
         match proto {
@@ -25,6 +31,7 @@ impl L4 {
         }
     }
 
+    /// Returns the IANA IP protocol number; inverse of [`L4::from_ip_proto`].
     #[must_use]
     pub const fn ip_proto(self) -> u8 {
         match self {
@@ -40,23 +47,36 @@ impl L4 {
 /// TCP control bits, packed into one byte in the usual wire order.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct TcpFlags(pub u8);
+pub struct TcpFlags(
+    /// The raw flag byte in wire bit order.
+    pub u8,
+);
 
 impl TcpFlags {
+    /// FIN: no more data from the sender.
     pub const FIN: TcpFlags = TcpFlags(0x01);
+    /// SYN: synchronize sequence numbers.
     pub const SYN: TcpFlags = TcpFlags(0x02);
+    /// RST: reset the connection.
     pub const RST: TcpFlags = TcpFlags(0x04);
+    /// PSH: push buffered data to the application.
     pub const PSH: TcpFlags = TcpFlags(0x08);
+    /// ACK: the acknowledgment field is significant.
     pub const ACK: TcpFlags = TcpFlags(0x10);
+    /// URG: the urgent pointer field is significant.
     pub const URG: TcpFlags = TcpFlags(0x20);
+    /// ECE: ECN-Echo.
     pub const ECE: TcpFlags = TcpFlags(0x40);
+    /// CWR: Congestion Window Reduced.
     pub const CWR: TcpFlags = TcpFlags(0x80);
 
+    /// Returns a flag set with no bits set.
     #[must_use]
     pub const fn empty() -> TcpFlags {
         TcpFlags(0)
     }
 
+    /// Returns the raw flag byte.
     #[must_use]
     pub const fn bits(self) -> u8 {
         self.0
@@ -74,6 +94,7 @@ impl TcpFlags {
         self.0 & mask.0 != 0
     }
 
+    /// True when no flag bits are set.
     #[must_use]
     pub const fn is_empty(self) -> bool {
         self.0 == 0
@@ -91,18 +112,27 @@ impl core::ops::BitOr for TcpFlags {
 /// owning it so a stage can inspect bytes without a copy.
 #[derive(Debug, Clone, Copy)]
 pub struct Packet<'a> {
+    /// Source IP address.
     pub src: IpAddr,
+    /// Destination IP address.
     pub dst: IpAddr,
+    /// Layer-4 protocol.
     pub l4: L4,
+    /// Source transport port, or 0 when the protocol has none.
     pub src_port: u16,
+    /// Destination transport port, or 0 when the protocol has none.
     pub dst_port: u16,
+    /// TCP control bits; empty for non-TCP packets.
     pub tcp_flags: TcpFlags,
     /// Total wire length of the packet in bytes (L3 onward).
     pub wire_len: u32,
+    /// Borrowed transport payload bytes.
     pub payload: &'a [u8],
 }
 
 impl<'a> Packet<'a> {
+    /// Builds a packet with the given addresses and protocol; ports, flags,
+    /// wire length, and payload start empty and are set with the `with_*` methods.
     #[must_use]
     pub fn new(src: IpAddr, dst: IpAddr, l4: L4) -> Packet<'a> {
         Packet {
@@ -117,6 +147,7 @@ impl<'a> Packet<'a> {
         }
     }
 
+    /// Sets the source and destination ports.
     #[must_use]
     pub fn with_ports(mut self, src_port: u16, dst_port: u16) -> Self {
         self.src_port = src_port;
@@ -124,18 +155,21 @@ impl<'a> Packet<'a> {
         self
     }
 
+    /// Sets the TCP control bits.
     #[must_use]
     pub fn with_flags(mut self, flags: TcpFlags) -> Self {
         self.tcp_flags = flags;
         self
     }
 
+    /// Sets the total wire length in bytes.
     #[must_use]
     pub fn with_wire_len(mut self, len: u32) -> Self {
         self.wire_len = len;
         self
     }
 
+    /// Borrows `payload` as the packet's transport payload.
     #[must_use]
     pub fn with_payload(mut self, payload: &'a [u8]) -> Self {
         self.payload = payload;

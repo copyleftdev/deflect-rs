@@ -14,7 +14,36 @@
 //!
 //! A netlink (rustables) fast path and an XDP driver-level drop set are planned
 //! alongside this backend, behind the same [`Enforcer`] trait.
+//!
+//! ```
+//! # use core::net::{IpAddr, Ipv4Addr};
+//! # use core::time::Duration;
+//! # use std::sync::{Arc, Mutex};
+//! use deflect_enforce::{EnforceError, Enforcer, NftEnforcer, NftRunner};
+//!
+//! // A recording runner captures the scripts instead of shelling out to `nft`.
+//! struct Recorder(Arc<Mutex<Vec<String>>>);
+//! impl NftRunner for Recorder {
+//!     fn run(&self, script: &str) -> Result<(), EnforceError> {
+//!         self.0.lock().unwrap().push(script.to_string());
+//!         Ok(())
+//!     }
+//! }
+//!
+//! # fn main() -> Result<(), EnforceError> {
+//! let log = Arc::new(Mutex::new(Vec::new()));
+//! let enforcer = NftEnforcer::with_runner("deflect", Recorder(log.clone()))?;
+//!
+//! // Ban a /24, letting the kernel expire it after 60 seconds.
+//! enforcer.ban(IpAddr::V4(Ipv4Addr::new(203, 0, 113, 0)), 24, Some(Duration::from_secs(60)))?;
+//!
+//! let scripts = log.lock().unwrap();
+//! assert!(scripts.iter().any(|s| s.contains("banned4 { 203.0.113.0/24 timeout 60s }")));
+//! # Ok(())
+//! # }
+//! ```
 #![forbid(unsafe_code)]
+#![deny(missing_docs)]
 
 extern crate alloc;
 
@@ -33,7 +62,12 @@ pub enum EnforceError {
     /// The enforcement tool could not be launched.
     Spawn(std::io::Error),
     /// The tool ran but rejected the script.
-    Rejected { code: Option<i32>, stderr: String },
+    Rejected {
+        /// Process exit code, absent if the tool was killed by a signal.
+        code: Option<i32>,
+        /// Captured standard error explaining the rejection.
+        stderr: String,
+    },
 }
 
 impl core::fmt::Display for EnforceError {
@@ -92,6 +126,7 @@ pub struct NullEnforcer {
 }
 
 impl NullEnforcer {
+    /// Create an enforcer with no recorded bans.
     #[must_use]
     pub fn new() -> NullEnforcer {
         NullEnforcer::default()
@@ -152,6 +187,7 @@ pub struct ShellNftRunner {
 }
 
 impl ShellNftRunner {
+    /// Build a runner that invokes `nft` at `nft_path`.
     #[must_use]
     pub fn new(nft_path: impl Into<std::path::PathBuf>) -> ShellNftRunner {
         ShellNftRunner {
@@ -233,6 +269,7 @@ impl<R: NftRunner> NftEnforcer<R> {
         })
     }
 
+    /// Name of the nftables table this enforcer programs.
     #[must_use]
     pub fn table(&self) -> &str {
         &self.table

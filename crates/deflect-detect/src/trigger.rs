@@ -14,9 +14,13 @@ pub enum Phase {
 /// hysteresis that stops a detector from flapping around a single threshold.
 #[derive(Debug, Clone, Copy)]
 pub struct Watermarks {
+    /// Packets-per-second rate at or above which mitigation engages.
     pub pps_high: u64,
+    /// Packets-per-second rate the window must fall below to disengage.
     pub pps_low: u64,
+    /// Bytes-per-second rate at or above which mitigation engages.
     pub bps_high: u64,
+    /// Bytes-per-second rate the window must fall below to disengage.
     pub bps_low: u64,
 }
 
@@ -49,6 +53,8 @@ pub struct Trigger {
 }
 
 impl Trigger {
+    /// Build a trigger whose packet and byte windows each span `window_nanos`
+    /// divided into `slots` buckets, judged against `marks`. Starts [`Phase::Calm`].
     #[must_use]
     pub fn new(window_nanos: u64, slots: usize, marks: Watermarks) -> Trigger {
         Trigger {
@@ -93,16 +99,20 @@ impl Trigger {
         self.phase
     }
 
+    /// Current phase, as of the most recent [`observe`](Self::observe) or
+    /// [`reassess`](Self::reassess) call.
     #[must_use]
     pub fn phase(&self) -> Phase {
         self.phase
     }
 
+    /// Packets-per-second rate measured at the most recent assessment.
     #[must_use]
     pub fn last_pps(&self) -> u64 {
         self.last_pps
     }
 
+    /// Bytes-per-second rate measured at the most recent assessment.
     #[must_use]
     pub fn last_bps(&self) -> u64 {
         self.last_bps

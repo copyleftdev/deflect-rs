@@ -16,9 +16,13 @@ pub enum CostMode {
 /// Configuration for a [`SourceGovernor`].
 #[derive(Debug, Clone, Copy)]
 pub struct GovernorConfig {
+    /// Sustained refill rate of every bucket, in tokens per second.
     pub rate_per_sec: u64,
+    /// Maximum tokens a bucket holds, so the largest burst absorbed at once.
     pub burst: u64,
+    /// Granularity at which a source is keyed to a bucket (host or subnet).
     pub aggregation: Aggregation,
+    /// How one observation's cost is measured against its bucket.
     pub cost: CostMode,
     /// Number of bucket slots; rounded up to a power of two, minimum 1.
     pub slots: usize,
@@ -43,6 +47,9 @@ impl Default for GovernorConfig {
 /// collision maps two sources onto one bucket: they then share a budget, which
 /// can only throttle a bystander, never grant an attacker more than one
 /// source's allowance. Limits are therefore conservative under collision.
+///
+/// Implements [`deflect_core::Stage`], charging one observation per evaluation
+/// and reporting [`Verdict::RateLimit`] when the source's bucket is empty.
 pub struct SourceGovernor {
     config: GovernorConfig,
     mask: u64,
@@ -50,6 +57,8 @@ pub struct SourceGovernor {
 }
 
 impl SourceGovernor {
+    /// Build a governor whose table holds `config.slots` buckets, each rounded
+    /// up to the next power of two so the source hash maps with a bit mask.
     #[must_use]
     pub fn new(config: GovernorConfig) -> SourceGovernor {
         let n = config.slots.max(1).next_power_of_two();

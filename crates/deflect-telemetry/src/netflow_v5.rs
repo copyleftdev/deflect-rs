@@ -69,7 +69,9 @@ fn parse_record(r: &mut Reader<'_>) -> Result<FlowRecord, Truncated> {
 /// Why a NetFlow v5 datagram could not be parsed.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ParseV5Error {
+    /// The 24-byte header was incomplete.
     Truncated,
+    /// The version field was not 5; carries the value found.
     NotV5(u16),
 }
 

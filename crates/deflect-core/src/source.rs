@@ -7,20 +7,25 @@ use core::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 /// within one allocation still collapses to a single key.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Aggregation {
+    /// Prefix length kept for IPv4 addresses.
     pub v4_bits: u8,
+    /// Prefix length kept for IPv6 addresses.
     pub v6_bits: u8,
 }
 
 impl Aggregation {
+    /// No aggregation: every host is its own key (`/32` and `/128`).
     pub const HOST: Aggregation = Aggregation {
         v4_bits: 32,
         v6_bits: 128,
     };
+    /// Default subnet aggregation (`/24` and `/64`).
     pub const SUBNET: Aggregation = Aggregation {
         v4_bits: 24,
         v6_bits: 64,
     };
 
+    /// Builds an aggregation, clamping each prefix length to its address width.
     #[must_use]
     pub const fn new(v4_bits: u8, v6_bits: u8) -> Aggregation {
         Aggregation {
@@ -42,11 +47,14 @@ impl Default for Aggregation {
 /// two hosts in the same keyed prefix produce an equal `SourceKey`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum SourceKey {
+    /// A masked IPv4 address.
     V4([u8; 4]),
+    /// A masked IPv6 address.
     V6([u8; 16]),
 }
 
 impl SourceKey {
+    /// Builds a key by masking `addr` to `agg`'s prefix length.
     #[must_use]
     pub fn new(addr: IpAddr, agg: Aggregation) -> SourceKey {
         match addr {
@@ -55,16 +63,19 @@ impl SourceKey {
         }
     }
 
+    /// Builds an unaggregated per-host key for `addr`.
     #[must_use]
     pub fn host(addr: IpAddr) -> SourceKey {
         SourceKey::new(addr, Aggregation::HOST)
     }
 
+    /// True when the key holds an IPv4 address.
     #[must_use]
     pub fn is_v4(&self) -> bool {
         matches!(self, SourceKey::V4(_))
     }
 
+    /// Returns the masked address this key represents.
     #[must_use]
     pub fn addr(&self) -> IpAddr {
         match self {

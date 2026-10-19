@@ -4,11 +4,14 @@ use core::fmt;
 /// match to decide how to treat a route. Rendered on the wire as `asn:value`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Community {
+    /// The 16-bit autonomous-system number (the high half of the pair).
     pub asn: u16,
+    /// The 16-bit value the ASN assigns meaning to (the low half of the pair).
     pub value: u16,
 }
 
 impl Community {
+    /// A community from an ASN and value.
     #[must_use]
     pub const fn new(asn: u16, value: u16) -> Community {
         Community { asn, value }

@@ -10,20 +10,25 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum PortMatch {
+    /// Matches any port.
     #[default]
     Any,
+    /// Matches exactly this port.
     Exact(u16),
     /// Inclusive range `[lo, hi]`; constructed normalised so `lo <= hi`.
     Range(u16, u16),
+    /// Matches any port in the list.
     OneOf(Vec<u16>),
 }
 
 impl PortMatch {
+    /// A [`PortMatch::Range`] with the bounds normalised so the smaller is `lo`.
     #[must_use]
     pub fn range(a: u16, b: u16) -> PortMatch {
         PortMatch::Range(a.min(b), a.max(b))
     }
 
+    /// True if `port` satisfies this constraint.
     #[must_use]
     pub fn matches(&self, port: u16) -> bool {
         match self {
@@ -41,11 +46,14 @@ impl PortMatch {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct FlagMatch {
+    /// Bitmask of control bits that must all be set.
     pub required: u8,
+    /// Bitmask of control bits that must all be clear.
     pub forbidden: u8,
 }
 
 impl FlagMatch {
+    /// A match that accepts any flags (no bits required or forbidden).
     #[must_use]
     pub const fn any() -> FlagMatch {
         FlagMatch {
@@ -54,6 +62,7 @@ impl FlagMatch {
         }
     }
 
+    /// A match requiring every bit in `flags` to be set.
     #[must_use]
     pub const fn require(flags: TcpFlags) -> FlagMatch {
         FlagMatch {
@@ -62,18 +71,21 @@ impl FlagMatch {
         }
     }
 
+    /// Adds `flags` to the forbidden set and returns `self`.
     #[must_use]
     pub const fn forbid(mut self, flags: TcpFlags) -> FlagMatch {
         self.forbidden |= flags.bits();
         self
     }
 
+    /// Adds `flags` to the required set and returns `self`.
     #[must_use]
     pub const fn and_require(mut self, flags: TcpFlags) -> FlagMatch {
         self.required |= flags.bits();
         self
     }
 
+    /// True if every required bit is set in `flags` and no forbidden bit is.
     #[must_use]
     pub fn matches(&self, flags: TcpFlags) -> bool {
         let bits = flags.bits();
@@ -86,6 +98,7 @@ impl FlagMatch {
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum PayloadMatch {
+    /// Matches any payload, including empty.
     #[default]
     Any,
     /// Payload length is at least `n`.
@@ -93,12 +106,19 @@ pub enum PayloadMatch {
     /// Payload length is at most `n`.
     MaxLen(u32),
     /// The payload begins, at `offset`, with exactly `bytes`.
-    PrefixAt { offset: u32, bytes: Vec<u8> },
+    PrefixAt {
+        /// Byte offset into the payload at which to compare.
+        offset: u32,
+        /// Exact bytes expected starting at `offset`.
+        bytes: Vec<u8>,
+    },
     /// `bytes` occurs anywhere in the payload.
     Contains(Vec<u8>),
 }
 
 impl PayloadMatch {
+    /// True if `payload` satisfies this constraint; an out-of-range offset or
+    /// empty `Contains` needle never panics.
     #[must_use]
     pub fn matches(&self, payload: &[u8]) -> bool {
         match self {

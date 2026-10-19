@@ -1,3 +1,8 @@
+//! Checked big-endian cursor over attacker-controlled datagram bytes.
+//!
+//! Every read is bounds-checked and returns [`Truncated`] rather than
+//! panicking, so a malformed or truncated datagram can never fault the decoder.
+
 use core::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 
 /// A read past the end of the buffer, i.e. truncated or malformed input.
@@ -14,21 +19,25 @@ pub struct Reader<'a> {
 }
 
 impl<'a> Reader<'a> {
+    /// Create a reader positioned at the start of `buf`.
     #[must_use]
     pub fn new(buf: &'a [u8]) -> Reader<'a> {
         Reader { buf, pos: 0 }
     }
 
+    /// Number of bytes not yet read.
     #[must_use]
     pub fn remaining(&self) -> usize {
         self.buf.len().saturating_sub(self.pos)
     }
 
+    /// Whether no bytes remain.
     #[must_use]
     pub fn is_empty(&self) -> bool {
         self.remaining() == 0
     }
 
+    /// Byte offset of the cursor from the start of the buffer.
     #[must_use]
     pub fn position(&self) -> usize {
         self.pos
@@ -62,12 +71,16 @@ impl<'a> Reader<'a> {
         Ok(Reader::new(self.bytes(n)?))
     }
 
+    /// Read one byte and advance.
+    ///
     /// # Errors
     /// Returns [`Truncated`] if no byte remains.
     pub fn u8(&mut self) -> Result<u8, Truncated> {
         Ok(self.bytes(1)?[0])
     }
 
+    /// Read a big-endian `u16` and advance.
+    ///
     /// # Errors
     /// Returns [`Truncated`] if fewer than two bytes remain.
     pub fn u16(&mut self) -> Result<u16, Truncated> {
@@ -75,6 +88,8 @@ impl<'a> Reader<'a> {
         Ok(u16::from_be_bytes([b[0], b[1]]))
     }
 
+    /// Read a big-endian `u32` and advance.
+    ///
     /// # Errors
     /// Returns [`Truncated`] if fewer than four bytes remain.
     pub fn u32(&mut self) -> Result<u32, Truncated> {
@@ -101,6 +116,8 @@ impl<'a> Reader<'a> {
         Ok(u64::from_be_bytes(buf))
     }
 
+    /// Read four bytes as an IPv4 address and advance.
+    ///
     /// # Errors
     /// Returns [`Truncated`] if fewer than four bytes remain.
     pub fn ipv4(&mut self) -> Result<IpAddr, Truncated> {
@@ -108,6 +125,8 @@ impl<'a> Reader<'a> {
         Ok(IpAddr::V4(Ipv4Addr::new(b[0], b[1], b[2], b[3])))
     }
 
+    /// Read sixteen bytes as an IPv6 address and advance.
+    ///
     /// # Errors
     /// Returns [`Truncated`] if fewer than sixteen bytes remain.
     pub fn ipv6(&mut self) -> Result<IpAddr, Truncated> {

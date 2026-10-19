@@ -15,22 +15,27 @@ pub struct SignatureSet {
 }
 
 impl SignatureSet {
+    /// A set from `signatures`, sorted by ascending `priority` so evaluation
+    /// order is fixed regardless of insertion order.
     #[must_use]
     pub fn new(mut signatures: Vec<Signature>) -> SignatureSet {
         signatures.sort_by_key(|s| s.priority);
         SignatureSet { signatures }
     }
 
+    /// Number of signatures in the set.
     #[must_use]
     pub fn len(&self) -> usize {
         self.signatures.len()
     }
 
+    /// True if the set holds no signatures.
     #[must_use]
     pub fn is_empty(&self) -> bool {
         self.signatures.is_empty()
     }
 
+    /// Inserts `sig` at its priority position, preserving ascending order.
     pub fn push(&mut self, sig: Signature) {
         let at = self
             .signatures

@@ -43,11 +43,13 @@ const DEFAULT_PORTS: &[u16] = &[
 ];
 
 impl AmplifierPorts {
+    /// An empty set; no port is an amplifier.
     #[must_use]
     pub const fn empty() -> AmplifierPorts {
         AmplifierPorts { bits: [0; 1024] }
     }
 
+    /// The published default amplifier-port set (US-CERT TA14-017A and later).
     #[must_use]
     pub fn with_defaults() -> AmplifierPorts {
         let mut p = AmplifierPorts::empty();
@@ -57,16 +59,19 @@ impl AmplifierPorts {
         p
     }
 
+    /// Adds `port` to the set; idempotent.
     pub fn insert(&mut self, port: u16) {
         let (word, bit) = Self::index(port);
         self.bits[word] |= 1u64 << bit;
     }
 
+    /// Removes `port` from the set; idempotent.
     pub fn remove(&mut self, port: u16) {
         let (word, bit) = Self::index(port);
         self.bits[word] &= !(1u64 << bit);
     }
 
+    /// Whether `port` is in the set; O(1) bitmap lookup.
     #[must_use]
     pub fn contains(&self, port: u16) -> bool {
         let (word, bit) = Self::index(port);

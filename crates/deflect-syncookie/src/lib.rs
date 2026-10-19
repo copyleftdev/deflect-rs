@@ -14,10 +14,35 @@
 //! Forging a cookie means guessing that 24-bit MAC.
 //!
 //! This crate is the stateless engine. Deciding *when* to answer a bare SYN
-//! with a cookie — typically only once a [`deflect_detect::Trigger`] reports an
+//! with a cookie — typically only once a `deflect_detect::Trigger` reports an
 //! attack — belongs to the pipeline that assembles these primitives.
+//!
+//! ```
+//! # use core::net::{IpAddr, Ipv4Addr};
+//! use deflect_syncookie::{CookieKey, FourTuple, SynCookie};
+//!
+//! // Seed the secret with real entropy (e.g. `getrandom`) in production.
+//! let engine = SynCookie::with_defaults(CookieKey::from_u64s(0xdead_beef, 0x0bad_f00d));
+//! let tuple = FourTuple::new(
+//!     IpAddr::V4(Ipv4Addr::new(203, 0, 113, 7)),
+//!     IpAddr::V4(Ipv4Addr::new(198, 51, 100, 1)),
+//!     51_000,
+//!     443,
+//! );
+//! let client_isn = 0x1234_5678;
+//! let now_nanos = 1_000;
+//!
+//! // Issue: this becomes the SYN-ACK initial sequence number. No state is kept.
+//! let cookie = engine.issue(&tuple, client_isn, 1460, now_nanos);
+//!
+//! // Validate the returning ACK and recover the connection's MSS.
+//! let recovered = engine.validate(&tuple, client_isn, cookie, now_nanos).unwrap();
+//! assert_eq!(recovered.mss, 1460);
+//! assert_eq!(recovered.age_epochs, 0);
+//! ```
 #![cfg_attr(not(feature = "std"), no_std)]
 #![forbid(unsafe_code)]
+#![deny(missing_docs)]
 
 use core::net::IpAddr;
 
@@ -34,13 +59,18 @@ const EPOCH_SHIFT: u32 = 24;
 /// tuple; a packet for any other tuple cannot reuse it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct FourTuple {
+    /// Source (client) IP address.
     pub src: IpAddr,
+    /// Destination (server) IP address.
     pub dst: IpAddr,
+    /// Source (client) TCP port.
     pub src_port: u16,
+    /// Destination (server) TCP port.
     pub dst_port: u16,
 }
 
 impl FourTuple {
+    /// Construct a tuple from its source and destination addresses and ports.
     #[must_use]
     pub fn new(src: IpAddr, dst: IpAddr, src_port: u16, dst_port: u16) -> FourTuple {
         FourTuple {
