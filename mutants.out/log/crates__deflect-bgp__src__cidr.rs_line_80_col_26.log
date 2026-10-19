@@ -1,0 +1,214 @@
+
+*** crates/deflect-bgp/src/cidr.rs:80:26: replace <= with > in Cidr::contains
+
+*** mutation diff:
+--- crates/deflect-bgp/src/cidr.rs
++++ replace <= with > in Cidr::contains
+@@ -72,17 +72,17 @@
+     }
+ 
+     /// Whether this prefix contains `other`: same family, this prefix is no
+     /// more specific, and `other`'s base re-masked to this length matches.
+     #[must_use]
+     pub fn contains(&self, other: &Cidr) -> bool {
+         match (self.net, other.net) {
+             (IpAddr::V4(_), IpAddr::V4(_)) | (IpAddr::V6(_), IpAddr::V6(_)) => {
+-                self.len <= other.len && Cidr::new(other.net, self.len).net == self.net
++                self.len > /* ~ changed by cargo-mutants ~ */ other.len && Cidr::new(other.net, self.len).net == self.net
+             }
+             _ => false,
+         }
+     }
+ }
+ 
+ impl fmt::Display for Cidr {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=deflect-bgp@0.1.0
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh bitflags v2.13.2
+       Fresh linux-raw-sys v0.12.1
+       Fresh autocfg v1.5.1
+       Fresh once_cell v1.21.4
+       Fresh getrandom v0.4.3
+       Fresh rustix v1.1.5
+       Fresh fastrand v2.5.0
+       Fresh wait-timeout v0.2.1
+       Fresh tempfile v3.27.0
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+       Fresh cpufeatures v0.3.1
+       Fresh bit-vec v0.10.1
+       Fresh num-traits v0.2.19
+       Fresh chacha20 v0.10.2
+       Fresh rusty-fork v0.3.1
+       Fresh rand v0.10.3
+       Fresh bit-set v0.11.1
+       Fresh rand_xorshift v0.5.0
+       Fresh core_detect v1.0.0
+       Fresh unarray v0.1.4
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/crates/deflect-core)
+       Fresh regex-syntax v0.8.11
+       Dirty deflect-bgp v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/crates/deflect-bgp): the file `crates/deflect-bgp/src/cidr.rs` has changed (1792415069.239719360s, 31s after last build at 1792415038.999124786s)
+   Compiling deflect-bgp v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/crates/deflect-bgp)
+       Fresh proptest v1.12.0
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_bgp --edition=2021 crates/deflect-bgp/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=55fd5073b2d2091d -C extra-filename=-92c4c3f5ecda205a --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_bgp --edition=2021 crates/deflect-bgp/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=ecee96ac73d8de14 -C extra-filename=-76c3e17ff94da60d --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rmeta`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name properties --edition=2021 crates/deflect-bgp/tests/properties.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=a5bc1b8face25205 -C extra-filename=-759b63e6862e51a0 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/target/debug/deps --extern deflect_bgp=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/target/debug/deps/libdeflect_bgp-76c3e17ff94da60d.rlib --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.88s
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/target/debug/deps/deflect_bgp-92c4c3f5ecda205a`
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/target/debug/deps/properties-759b63e6862e51a0`
+
+*** result: Success
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=deflect-bgp@0.1.0
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh getrandom v0.4.3
+       Fresh autocfg v1.5.1
+       Fresh bitflags v2.13.2
+       Fresh linux-raw-sys v0.12.1
+       Fresh rustix v1.1.5
+       Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
+       Fresh tempfile v3.27.0
+       Fresh wait-timeout v0.2.1
+       Fresh cpufeatures v0.3.1
+       Fresh bit-vec v0.10.1
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+       Fresh rusty-fork v0.3.1
+       Fresh bit-set v0.11.1
+       Fresh chacha20 v0.10.2
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh unarray v0.1.4
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/crates/deflect-core)
+       Fresh regex-syntax v0.8.11
+       Fresh core_detect v1.0.0
+       Fresh proptest v1.12.0
+       Fresh deflect-bgp v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/crates/deflect-bgp)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.49s
+     Running `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-GrSqLl.tmp/target/debug/deps/deflect_bgp-92c4c3f5ecda205a`
+
+running 35 tests
+test cidr::tests::construction_masks_host_bits ... ok
+test cidr::tests::contains_more_specific ... FAILED
+test cidr::tests::default_route_detected_and_contains_everything ... FAILED
+test cidr::tests::different_families_never_contain ... ok
+test cidr::tests::does_not_contain_outside_or_broader ... ok
+test cidr::tests::host_is_full_length ... ok
+test cidr::tests::length_clamped_to_family_width ... ok
+test cidr::tests::subnet_is_not_a_host ... ok
+test cidr::tests::v6_masks_and_contains ... FAILED
+test community::tests::renders_as_asn_value ... ok
+test community::tests::well_known_values ... ok
+test exabgp::tests::community_announce_uses_self_next_hop ... ok
+test exabgp::tests::explicit_next_hop_rendered ... ok
+test exabgp::tests::multiple_communities_space_separated ... ok
+test exabgp::tests::withdraw_matches_prefix_and_next_hop ... ok
+test route::tests::builders_compose ... ok
+test route::tests::destination_defaults_to_contained_community_signalling ... ok
+test route::tests::source_sets_kind_source ... ok
+test scope::tests::default_route_always_refused ... ok
+test scope::tests::loosened_floor_permits_subnet ... FAILED
+test scope::tests::owned_host_destination_is_authorized ... FAILED
+test scope::tests::owned_returns_the_configured_prefixes ... ok
+test scope::tests::scope_error_messages_name_the_cause ... ok
+test scope::tests::too_broad_is_refused_even_if_owned ... ok
+test scope::tests::unowned_destination_is_refused ... ok
+test scope::tests::unowned_source_is_allowed_within_floor ... ok
+test tests::capacity_is_bounded ... FAILED
+test tests::error_messages_are_descriptive ... ok
+test tests::null_session_is_a_dry_run ... FAILED
+test tests::owned_destination_announces_and_withdraws ... FAILED
+test tests::source_blackhole_needs_no_ownership ... ok
+test tests::sweep_lifts_only_expired_blackholes ... FAILED
+test tests::transport_failure_leaves_route_untracked ... FAILED
+test tests::unowned_destination_is_refused_and_sends_nothing ... ok
+test tests::writer_session_emits_the_command ... ok
+
+failures:
+
+---- cidr::tests::contains_more_specific stdout ----
+
+thread 'cidr::tests::contains_more_specific' (3635266) panicked at crates/deflect-bgp/src/cidr.rs:147:9:
+assertion failed: block.contains(&Cidr::host(v4("203.0.113.9")))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- cidr::tests::default_route_detected_and_contains_everything stdout ----
+
+thread 'cidr::tests::default_route_detected_and_contains_everything' (3635267) panicked at crates/deflect-bgp/src/cidr.rs:171:9:
+assertion failed: any.contains(&Cidr::host(v4("8.8.8.8")))
+
+---- cidr::tests::v6_masks_and_contains stdout ----
+
+thread 'cidr::tests::v6_masks_and_contains' (3635273) panicked at crates/deflect-bgp/src/cidr.rs:178:9:
+assertion failed: block.contains(&host)
+
+---- scope::tests::loosened_floor_permits_subnet stdout ----
+
+thread 'scope::tests::loosened_floor_permits_subnet' (3635291) panicked at crates/deflect-bgp/src/scope.rs:184:9:
+assertion failed: s.authorize(RtbhKind::Destination, Cidr::new(v4("203.0.0.0"), 16)).is_ok()
+
+---- scope::tests::owned_host_destination_is_authorized stdout ----
+
+thread 'scope::tests::owned_host_destination_is_authorized' (3635294) panicked at crates/deflect-bgp/src/scope.rs:135:9:
+assertion failed: s.authorize(RtbhKind::Destination, Cidr::host(v4("203.0.113.9"))).is_ok()
+
+---- tests::capacity_is_bounded stdout ----
+
+thread 'tests::capacity_is_bounded' (3635307) panicked at crates/deflect-bgp/src/lib.rs:344:14:
+called `Result::unwrap()` on an `Err` value: Scope(Unowned(Cidr { net: 203.0.113.1, len: 32 }))
+
+---- tests::null_session_is_a_dry_run stdout ----
+
+thread 'tests::null_session_is_a_dry_run' (3635313) panicked at crates/deflect-bgp/src/lib.rs:413:14:
+called `Result::unwrap()` on an `Err` value: Scope(Unowned(Cidr { net: 203.0.113.9, len: 32 }))
+
+---- tests::owned_destination_announces_and_withdraws stdout ----
+
+thread 'tests::owned_destination_announces_and_withdraws' (3635315) panicked at crates/deflect-bgp/src/lib.rs:316:42:
+called `Result::unwrap()` on an `Err` value: Scope(Unowned(Cidr { net: 203.0.113.9, len: 32 }))
+
+---- tests::sweep_lifts_only_expired_blackholes stdout ----
+
+thread 'tests::sweep_lifts_only_expired_blackholes' (3635320) panicked at crates/deflect-bgp/src/lib.rs:372:14:
+called `Result::unwrap()` on an `Err` value: Scope(Unowned(Cidr { net: 203.0.113.9, len: 32 }))
+
+---- tests::transport_failure_leaves_route_untracked stdout ----
+
+thread 'tests::transport_failure_leaves_route_untracked' (3635322) panicked at crates/deflect-bgp/src/lib.rs:363:9:
+assertion failed: matches!(r, Err(BgpError::Transport(_)))
+
+
+failures:
+    cidr::tests::contains_more_specific
+    cidr::tests::default_route_detected_and_contains_everything
+    cidr::tests::v6_masks_and_contains
+    scope::tests::loosened_floor_permits_subnet
+    scope::tests::owned_host_destination_is_authorized
+    tests::capacity_is_bounded
+    tests::null_session_is_a_dry_run
+    tests::owned_destination_announces_and_withdraws
+    tests::sweep_lifts_only_expired_blackholes
+    tests::transport_failure_leaves_route_untracked
+
+test result: FAILED. 25 passed; 10 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p deflect-bgp --lib`
+
+*** result: Failure(101)

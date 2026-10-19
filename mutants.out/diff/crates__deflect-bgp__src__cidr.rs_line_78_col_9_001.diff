@@ -1,0 +1,26 @@
+--- crates/deflect-bgp/src/cidr.rs
++++ replace Cidr::contains -> bool with false
+@@ -70,22 +70,17 @@
+     pub fn is_default_route(&self) -> bool {
+         self.len == 0
+     }
+ 
+     /// Whether this prefix contains `other`: same family, this prefix is no
+     /// more specific, and `other`'s base re-masked to this length matches.
+     #[must_use]
+     pub fn contains(&self, other: &Cidr) -> bool {
+-        match (self.net, other.net) {
+-            (IpAddr::V4(_), IpAddr::V4(_)) | (IpAddr::V6(_), IpAddr::V6(_)) => {
+-                self.len <= other.len && Cidr::new(other.net, self.len).net == self.net
+-            }
+-            _ => false,
+-        }
++        false /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl fmt::Display for Cidr {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+         write!(f, "{}/{}", self.net, self.len)
+     }
+ }

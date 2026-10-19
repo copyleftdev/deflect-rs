@@ -1,0 +1,31 @@
+--- crates/deflect-bgp/src/scope.rs
++++ replace Scope::authorize -> Result<(), ScopeError> with Ok(())
+@@ -96,27 +96,17 @@
+     }
+ 
+     /// Decide whether a blackhole of `kind` for `prefix` may be announced.
+     ///
+     /// # Errors
+     /// Returns a [`ScopeError`] if the prefix is the default route, broader than
+     /// the floor, or (for a destination blackhole) not within owned space.
+     pub fn authorize(&self, kind: RtbhKind, prefix: Cidr) -> Result<(), ScopeError> {
+-        if prefix.is_default_route() {
+-            return Err(ScopeError::DefaultRoute);
+-        }
+-        let floor = self.floor_for(&prefix);
+-        if prefix.prefix_len() < floor {
+-            return Err(ScopeError::TooBroad { prefix, floor });
+-        }
+-        if kind == RtbhKind::Destination && !self.owns(&prefix) {
+-            return Err(ScopeError::Unowned(prefix));
+-        }
+-        Ok(())
++        Ok(()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+     use alloc::vec;
+     use core::net::IpAddr;

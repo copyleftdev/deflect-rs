@@ -1,0 +1,28 @@
+--- crates/deflect-bgp/src/lib.rs
++++ replace RtbhController<S, C>::withdraw -> Result<(), BgpError> with Ok(())
+@@ -217,24 +217,17 @@
+     ///
+     /// # Errors
+     /// Returns [`BgpError::Transport`] if the withdrawal could not be sent; the
+     /// route stays tracked in that case.
+     ///
+     /// # Panics
+     /// Panics only if the internal table mutex was poisoned by a prior panic.
+     pub fn withdraw(&self, prefix: Cidr) -> Result<(), BgpError> {
+-        let route = {
+-            let active = self.active.lock().expect("table poisoned");
+-            active.get(&prefix).map(|t| t.route.clone())
+-        };
+-        let Some(route) = route else { return Ok(()) };
+-        self.session.send(&exabgp::withdraw_command(&route))?;
+-        self.active.lock().expect("table poisoned").remove(&prefix);
+-        Ok(())
++        Ok(()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Withdraw every blackhole whose deadline has passed, returning how many
+     /// were lifted. Stops at the first transport error, having withdrawn the
+     /// routes up to it.
+     ///
+     /// # Errors
+     /// Returns [`BgpError::Transport`] if withdrawing an expired route failed.

@@ -134,6 +134,14 @@ mod tests {
     }
 
     #[test]
+    fn subnet_is_not_a_host() {
+        assert!(!cidr("203.0.113.0", 24).is_host());
+        assert!(!cidr("0.0.0.0", 0).is_host());
+        assert!(Cidr::new("2001:db8::1".parse().unwrap(), 128).is_host());
+        assert!(!Cidr::new("2001:db8::".parse().unwrap(), 64).is_host());
+    }
+
+    #[test]
     fn contains_more_specific() {
         let block = cidr("203.0.113.0", 24);
         assert!(block.contains(&Cidr::host(v4("203.0.113.9"))));

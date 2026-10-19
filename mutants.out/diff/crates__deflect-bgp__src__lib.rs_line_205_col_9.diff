@@ -1,0 +1,21 @@
+--- crates/deflect-bgp/src/lib.rs
++++ replace RtbhController<S, C>::blackhole_destination -> Result<(), BgpError> with Ok(())
+@@ -197,17 +197,17 @@
+     ///
+     /// # Errors
+     /// See [`announce`](Self::announce).
+     pub fn blackhole_destination(
+         &self,
+         prefix: Cidr,
+         ttl: Option<Duration>,
+     ) -> Result<(), BgpError> {
+-        self.announce(Blackhole::destination(prefix), ttl)
++        Ok(()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Announce a source blackhole for `prefix` (attacker space).
+     ///
+     /// # Errors
+     /// See [`announce`](Self::announce).
+     pub fn blackhole_source(&self, prefix: Cidr, ttl: Option<Duration>) -> Result<(), BgpError> {
+         self.announce(Blackhole::source(prefix), ttl)

@@ -185,4 +185,31 @@ mod tests {
             .authorize(RtbhKind::Destination, Cidr::new(v4("203.0.0.0"), 16))
             .is_ok());
     }
+
+    #[test]
+    fn owned_returns_the_configured_prefixes() {
+        let owned = vec![
+            Cidr::new(v4("203.0.113.0"), 24),
+            Cidr::new(v4("198.18.0.0"), 15),
+        ];
+        let s = Scope::new(owned.clone());
+        assert_eq!(s.owned(), owned.as_slice());
+    }
+
+    #[test]
+    fn scope_error_messages_name_the_cause() {
+        let p = Cidr::host(v4("198.51.100.9"));
+        assert!(ScopeError::Unowned(p)
+            .to_string()
+            .contains("owned address space"));
+        assert!(ScopeError::TooBroad {
+            prefix: p,
+            floor: 24
+        }
+        .to_string()
+        .contains("broader than"));
+        assert!(ScopeError::DefaultRoute
+            .to_string()
+            .contains("default route"));
+    }
 }

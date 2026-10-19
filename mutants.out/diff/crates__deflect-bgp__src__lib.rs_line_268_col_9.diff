@@ -1,0 +1,21 @@
+--- crates/deflect-bgp/src/lib.rs
++++ replace RtbhController<S, C>::active_count -> usize with 0
+@@ -260,17 +260,17 @@
+     }
+ 
+     /// Number of blackholes currently announced.
+     ///
+     /// # Panics
+     /// Panics only if the internal table mutex was poisoned by a prior panic.
+     #[must_use]
+     pub fn active_count(&self) -> usize {
+-        self.active.lock().expect("table poisoned").len()
++        0 /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+     use alloc::vec;
+     use core::net::IpAddr;

@@ -1,0 +1,25 @@
+--- crates/deflect-bgp/src/cidr.rs
++++ replace Cidr::max_len -> u8 with 0
+@@ -48,21 +48,17 @@
+     #[must_use]
+     pub fn prefix_len(&self) -> u8 {
+         self.len
+     }
+ 
+     /// The prefix length of a full host address in this prefix's family.
+     #[must_use]
+     pub fn max_len(&self) -> u8 {
+-        if self.net.is_ipv4() {
+-            32
+-        } else {
+-            128
+-        }
++        0 /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     #[must_use]
+     pub fn is_host(&self) -> bool {
+         self.len == self.max_len()
+     }
+ 
+     /// The default route (`0.0.0.0/0` or `::/0`) — the whole address space.

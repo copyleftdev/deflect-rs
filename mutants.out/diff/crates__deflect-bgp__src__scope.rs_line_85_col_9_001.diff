@@ -1,0 +1,25 @@
+--- crates/deflect-bgp/src/scope.rs
++++ replace Scope::floor_for -> u8 with 1
+@@ -77,21 +77,17 @@
+     }
+ 
+     #[must_use]
+     pub fn owned(&self) -> &[Cidr] {
+         &self.owned
+     }
+ 
+     fn floor_for(&self, prefix: &Cidr) -> u8 {
+-        if prefix.net().is_ipv4() {
+-            self.floor_v4
+-        } else {
+-            self.floor_v6
+-        }
++        1 /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Whether some owned prefix contains `prefix`.
+     #[must_use]
+     pub fn owns(&self, prefix: &Cidr) -> bool {
+         self.owned.iter().any(|o| o.contains(prefix))
+     }
+ 

@@ -1,0 +1,21 @@
+--- crates/deflect-bgp/src/exabgp.rs
++++ replace > with < in announce_command
+@@ -23,17 +23,17 @@
+         s,
+         "announce route {} next-hop {}",
+         route.prefix,
+         next_hop_token(route)
+     );
+     if !route.communities.is_empty() {
+         let _ = write!(s, " community [");
+         for (i, c) in route.communities.iter().enumerate() {
+-            if i > 0 {
++            if i < /* ~ changed by cargo-mutants ~ */ 0 {
+                 s.push(' ');
+             }
+             let _ = write!(s, "{c}");
+         }
+         s.push(']');
+     }
+     s.push('\n');
+     s

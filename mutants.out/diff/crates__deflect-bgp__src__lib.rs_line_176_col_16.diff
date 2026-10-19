@@ -1,0 +1,21 @@
+--- crates/deflect-bgp/src/lib.rs
++++ delete ! in RtbhController<S, C>::announce
+@@ -168,17 +168,17 @@
+     ///
+     /// # Panics
+     /// Panics only if the internal table mutex was poisoned by a prior panic.
+     pub fn announce(&self, route: Blackhole, ttl: Option<Duration>) -> Result<(), BgpError> {
+         self.scope.authorize(route.kind, route.prefix)?;
+ 
+         {
+             let active = self.active.lock().expect("table poisoned");
+-            if !active.contains_key(&route.prefix) && active.len() >= self.max_routes {
++            if  /* ~ changed by cargo-mutants ~ */active.contains_key(&route.prefix) && active.len() >= self.max_routes {
+                 return Err(BgpError::CapacityExceeded {
+                     max: self.max_routes,
+                 });
+             }
+         }
+ 
+         self.session.send(&exabgp::announce_command(&route))?;
+ 

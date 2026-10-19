@@ -1,0 +1,21 @@
+--- crates/deflect-bgp/src/lib.rs
++++ replace <= with > in RtbhController<S, C>::sweep
+@@ -242,17 +242,17 @@
+     /// # Panics
+     /// Panics only if the internal table mutex was poisoned by a prior panic.
+     pub fn sweep(&self) -> Result<usize, BgpError> {
+         let now = self.clock.now_nanos();
+         let expired: alloc::vec::Vec<Cidr> = {
+             let active = self.active.lock().expect("table poisoned");
+             active
+                 .iter()
+-                .filter(|(_, t)| t.deadline.is_some_and(|d| d <= now))
++                .filter(|(_, t)| t.deadline.is_some_and(|d| d > /* ~ changed by cargo-mutants ~ */ now))
+                 .map(|(p, _)| *p)
+                 .collect()
+         };
+         let mut n = 0;
+         for prefix in expired {
+             self.withdraw(prefix)?;
+             n += 1;
+         }

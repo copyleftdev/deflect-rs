@@ -396,6 +396,17 @@ mod tests {
     }
 
     #[test]
+    fn error_messages_are_descriptive() {
+        let scope = BgpError::Scope(ScopeError::DefaultRoute);
+        assert!(scope.to_string().contains("default route"));
+        let cap = BgpError::CapacityExceeded { max: 2 };
+        assert!(cap.to_string().contains('2'));
+        assert!(cap.to_string().contains("full"));
+        let io = BgpError::Transport(std::io::Error::other("pipe closed"));
+        assert!(io.to_string().contains("pipe closed"));
+    }
+
+    #[test]
     fn null_session_is_a_dry_run() {
         let c = RtbhController::new(scope(), NullSession, ManualClock::new(0), 4);
         c.blackhole_destination(Cidr::host(v4("203.0.113.9")), None)

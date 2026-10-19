@@ -1,0 +1,25 @@
+--- crates/deflect-bgp/src/cidr.rs
++++ replace mask_v4 -> u32 with 0
+@@ -86,21 +86,17 @@
+ 
+ impl fmt::Display for Cidr {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+         write!(f, "{}/{}", self.net, self.len)
+     }
+ }
+ 
+ fn mask_v4(bits: u32, len: u8) -> u32 {
+-    if len == 0 {
+-        0
+-    } else {
+-        bits & (u32::MAX << (32 - u32::from(len)))
+-    }
++    0 /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ fn mask_v6(bits: u128, len: u8) -> u128 {
+     if len == 0 {
+         0
+     } else {
+         bits & (u128::MAX << (128 - u32::from(len)))
+     }

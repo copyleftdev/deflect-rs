@@ -1,0 +1,22 @@
+--- crates/deflect-bgp/src/route.rs
++++ replace Blackhole::with_next_hop -> Blackhole with Default::default()
+@@ -55,18 +55,17 @@
+         }
+     }
+ 
+     /// Use legacy next-hop-based RTBH: advertise the route with a next hop the
+     /// upstream has pre-routed to its discard interface, instead of (or in
+     /// addition to) the blackhole community.
+     #[must_use]
+     pub fn with_next_hop(mut self, next_hop: IpAddr) -> Blackhole {
+-        self.next_hop = Some(next_hop);
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Replace the community set wholesale.
+     #[must_use]
+     pub fn with_communities(mut self, communities: Vec<Community>) -> Blackhole {
+         self.communities = communities;
+         self
+     }

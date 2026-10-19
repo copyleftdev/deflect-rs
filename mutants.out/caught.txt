@@ -1,60 +1,73 @@
-crates/deflect-core/src/clock.rs:61:9: replace <impl Clock for &C>::now_nanos -> u64 with 0
-crates/deflect-core/src/clock.rs:61:9: replace <impl Clock for &C>::now_nanos -> u64 with 1
-crates/deflect-core/src/observation.rs:30:9: replace L4::ip_proto -> u8 with 0
-crates/deflect-core/src/observation.rs:30:9: replace L4::ip_proto -> u8 with 1
-crates/deflect-core/src/observation.rs:62:9: replace TcpFlags::bits -> u8 with 0
-crates/deflect-core/src/observation.rs:62:9: replace TcpFlags::bits -> u8 with 1
-crates/deflect-core/src/observation.rs:68:9: replace TcpFlags::contains -> bool with true
-crates/deflect-core/src/observation.rs:68:9: replace TcpFlags::contains -> bool with false
-crates/deflect-core/src/observation.rs:68:25: replace == with != in TcpFlags::contains
-crates/deflect-core/src/observation.rs:68:16: replace & with | in TcpFlags::contains
-crates/deflect-core/src/clock.rs:40:9: replace ManualClock::advance_nanos with ()
-crates/deflect-core/src/clock.rs:45:9: replace ManualClock::advance_millis with ()
-crates/deflect-core/src/observation.rs:68:16: replace & with ^ in TcpFlags::contains
-crates/deflect-core/src/clock.rs:17:9: replace <impl Clock for MonotonicClock>::now_nanos -> u64 with 1
-crates/deflect-core/src/observation.rs:74:9: replace TcpFlags::intersects -> bool with true
-crates/deflect-core/src/observation.rs:74:9: replace TcpFlags::intersects -> bool with false
-crates/deflect-core/src/observation.rs:74:25: replace != with == in TcpFlags::intersects
-crates/deflect-core/src/clock.rs:17:9: replace <impl Clock for MonotonicClock>::now_nanos -> u64 with 0
-crates/deflect-core/src/observation.rs:74:16: replace & with | in TcpFlags::intersects
-crates/deflect-core/src/observation.rs:74:16: replace & with ^ in TcpFlags::intersects
-crates/deflect-core/src/clock.rs:55:9: replace <impl Clock for ManualClock>::now_nanos -> u64 with 1
-crates/deflect-core/src/observation.rs:79:9: replace TcpFlags::is_empty -> bool with true
-crates/deflect-core/src/observation.rs:79:9: replace TcpFlags::is_empty -> bool with false
-crates/deflect-core/src/observation.rs:79:16: replace == with != in TcpFlags::is_empty
-crates/deflect-core/src/clock.rs:55:9: replace <impl Clock for ManualClock>::now_nanos -> u64 with 0
-crates/deflect-core/src/clock.rs:49:9: replace ManualClock::advance_secs with ()
-crates/deflect-core/src/observation.rs:86:25: replace | with & in <impl core::ops::BitOr for TcpFlags>::bitor
-crates/deflect-core/src/observation.rs:86:25: replace | with ^ in <impl core::ops::BitOr for TcpFlags>::bitor
-crates/deflect-core/src/source.rs:65:9: replace SourceKey::is_v4 -> bool with false
-crates/deflect-core/src/source.rs:65:9: replace SourceKey::is_v4 -> bool with true
-crates/deflect-core/src/source.rs:78:38: replace * with + in mask_octets
-crates/deflect-core/src/source.rs:78:38: replace * with / in mask_octets
-crates/deflect-core/src/source.rs:79:21: replace / with % in mask_octets
-crates/deflect-core/src/source.rs:79:21: replace / with * in mask_octets
-crates/deflect-core/src/source.rs:78:5: replace mask_octets -> [u8; N] with [0; N]
-crates/deflect-core/src/source.rs:80:20: replace % with / in mask_octets
-crates/deflect-core/src/source.rs:78:5: replace mask_octets -> [u8; N] with [1; N]
-crates/deflect-core/src/source.rs:80:20: replace % with + in mask_octets
-crates/deflect-core/src/source.rs:83:22: replace &= with |= in mask_octets
-crates/deflect-core/src/source.rs:81:12: replace != with == in mask_octets
-crates/deflect-core/src/source.rs:83:38: replace - with + in mask_octets
-crates/deflect-core/src/source.rs:83:32: replace << with >> in mask_octets
-crates/deflect-core/src/source.rs:85:42: replace + with - in mask_octets
-crates/deflect-core/src/source.rs:85:60: replace != with == in mask_octets
-crates/deflect-core/src/source.rs:92:5: replace mask_v4 -> [u8; 4] with [0; 4]
-crates/deflect-core/src/source.rs:92:5: replace mask_v4 -> [u8; 4] with [1; 4]
-crates/deflect-core/src/source.rs:85:42: replace + with * in mask_octets
-crates/deflect-core/src/source.rs:83:38: replace - with / in mask_octets
-crates/deflect-core/src/source.rs:96:5: replace mask_v6 -> [u8; 16] with [0; 16]
-crates/deflect-core/src/source.rs:96:5: replace mask_v6 -> [u8; 16] with [1; 16]
-crates/deflect-core/src/verdict.rs:45:9: replace Verdict::severity -> u8 with 0
-crates/deflect-core/src/verdict.rs:45:9: replace Verdict::severity -> u8 with 1
-crates/deflect-core/src/verdict.rs:55:9: replace Verdict::is_pass -> bool with true
-crates/deflect-core/src/verdict.rs:55:9: replace Verdict::is_pass -> bool with false
-crates/deflect-core/src/verdict.rs:60:9: replace Verdict::blocks -> bool with false
-crates/deflect-core/src/verdict.rs:60:9: replace Verdict::blocks -> bool with true
-crates/deflect-core/src/verdict.rs:67:29: replace > with == in Verdict::worst
-crates/deflect-core/src/verdict.rs:67:9: replace Verdict::worst -> Verdict with Default::default()
-crates/deflect-core/src/verdict.rs:67:29: replace > with < in Verdict::worst
-crates/deflect-core/src/verdict.rs:67:29: replace > with >= in Verdict::worst
+crates/deflect-bgp/src/lib.rs:63:9: replace <impl core::fmt::Display for BgpError>::fmt -> core::fmt::Result with Ok(Default::default())
+crates/deflect-bgp/src/lib.rs:125:9: replace <impl BgpSession for WriterSession<W>>::send -> Result<(), BgpError> with Ok(())
+crates/deflect-bgp/src/lib.rs:172:9: replace RtbhController<S, C>::announce -> Result<(), BgpError> with Ok(())
+crates/deflect-bgp/src/lib.rs:176:52: replace && with || in RtbhController<S, C>::announce
+crates/deflect-bgp/src/lib.rs:176:68: replace >= with < in RtbhController<S, C>::announce
+crates/deflect-bgp/src/lib.rs:205:9: replace RtbhController<S, C>::blackhole_destination -> Result<(), BgpError> with Ok(())
+crates/deflect-bgp/src/lib.rs:225:9: replace RtbhController<S, C>::withdraw -> Result<(), BgpError> with Ok(())
+crates/deflect-bgp/src/lib.rs:245:9: replace RtbhController<S, C>::sweep -> Result<usize, BgpError> with Ok(1)
+crates/deflect-bgp/src/lib.rs:257:15: replace += with *= in RtbhController<S, C>::sweep
+crates/deflect-bgp/src/lib.rs:268:9: replace RtbhController<S, C>::active_count -> usize with 0
+crates/deflect-bgp/src/lib.rs:268:9: replace RtbhController<S, C>::active_count -> usize with 1
+crates/deflect-bgp/src/lib.rs:176:16: delete ! in RtbhController<S, C>::announce
+crates/deflect-bgp/src/lib.rs:213:9: replace RtbhController<S, C>::blackhole_source -> Result<(), BgpError> with Ok(())
+crates/deflect-bgp/src/cidr.rs:50:9: replace Cidr::prefix_len -> u8 with 0
+crates/deflect-bgp/src/cidr.rs:50:9: replace Cidr::prefix_len -> u8 with 1
+crates/deflect-bgp/src/cidr.rs:56:9: replace Cidr::max_len -> u8 with 0
+crates/deflect-bgp/src/cidr.rs:56:9: replace Cidr::max_len -> u8 with 1
+crates/deflect-bgp/src/cidr.rs:65:9: replace Cidr::is_host -> bool with true
+crates/deflect-bgp/src/lib.rs:245:9: replace RtbhController<S, C>::sweep -> Result<usize, BgpError> with Ok(0)
+crates/deflect-bgp/src/cidr.rs:65:9: replace Cidr::is_host -> bool with false
+crates/deflect-bgp/src/cidr.rs:65:18: replace == with != in Cidr::is_host
+crates/deflect-bgp/src/cidr.rs:71:9: replace Cidr::is_default_route -> bool with true
+crates/deflect-bgp/src/cidr.rs:71:9: replace Cidr::is_default_route -> bool with false
+crates/deflect-bgp/src/lib.rs:250:63: replace <= with > in RtbhController<S, C>::sweep
+crates/deflect-bgp/src/lib.rs:257:15: replace += with -= in RtbhController<S, C>::sweep
+crates/deflect-bgp/src/cidr.rs:71:18: replace == with != in Cidr::is_default_route
+crates/deflect-bgp/src/cidr.rs:78:9: replace Cidr::contains -> bool with true
+crates/deflect-bgp/src/cidr.rs:78:9: replace Cidr::contains -> bool with false
+crates/deflect-bgp/src/cidr.rs:79:13: delete match arm (IpAddr::V4(_), IpAddr::V4(_)) |(IpAddr::V6(_), IpAddr::V6(_)) in Cidr::contains
+crates/deflect-bgp/src/cidr.rs:80:77: replace == with != in Cidr::contains
+crates/deflect-bgp/src/cidr.rs:80:39: replace && with || in Cidr::contains
+crates/deflect-bgp/src/cidr.rs:80:26: replace <= with > in Cidr::contains
+crates/deflect-bgp/src/cidr.rs:94:5: replace mask_v4 -> u32 with 0
+crates/deflect-bgp/src/cidr.rs:89:9: replace <impl fmt::Display for Cidr>::fmt -> fmt::Result with Ok(Default::default())
+crates/deflect-bgp/src/cidr.rs:94:5: replace mask_v4 -> u32 with 1
+crates/deflect-bgp/src/cidr.rs:97:14: replace & with | in mask_v4
+crates/deflect-bgp/src/cidr.rs:94:12: replace == with != in mask_v4
+crates/deflect-bgp/src/cidr.rs:97:14: replace & with ^ in mask_v4
+crates/deflect-bgp/src/cidr.rs:97:26: replace << with >> in mask_v4
+crates/deflect-bgp/src/cidr.rs:97:33: replace - with + in mask_v4
+crates/deflect-bgp/src/cidr.rs:97:33: replace - with / in mask_v4
+crates/deflect-bgp/src/cidr.rs:102:12: replace == with != in mask_v6
+crates/deflect-bgp/src/cidr.rs:102:5: replace mask_v6 -> u128 with 0
+crates/deflect-bgp/src/cidr.rs:102:5: replace mask_v6 -> u128 with 1
+crates/deflect-bgp/src/cidr.rs:105:14: replace & with | in mask_v6
+crates/deflect-bgp/src/cidr.rs:105:14: replace & with ^ in mask_v6
+crates/deflect-bgp/src/cidr.rs:105:27: replace << with >> in mask_v6
+crates/deflect-bgp/src/cidr.rs:105:35: replace - with + in mask_v6
+crates/deflect-bgp/src/cidr.rs:105:35: replace - with / in mask_v6
+crates/deflect-bgp/src/community.rs:34:9: replace <impl fmt::Display for Community>::fmt -> fmt::Result with Ok(Default::default())
+crates/deflect-bgp/src/exabgp.rs:10:5: replace next_hop_token -> String with String::new()
+crates/deflect-bgp/src/exabgp.rs:10:5: replace next_hop_token -> String with "xyzzy".into()
+crates/deflect-bgp/src/exabgp.rs:21:5: replace announce_command -> String with String::new()
+crates/deflect-bgp/src/exabgp.rs:28:8: delete ! in announce_command
+crates/deflect-bgp/src/exabgp.rs:21:5: replace announce_command -> String with "xyzzy".into()
+crates/deflect-bgp/src/exabgp.rs:31:18: replace > with == in announce_command
+crates/deflect-bgp/src/exabgp.rs:31:18: replace > with < in announce_command
+crates/deflect-bgp/src/exabgp.rs:31:18: replace > with >= in announce_command
+crates/deflect-bgp/src/exabgp.rs:46:5: replace withdraw_command -> String with String::new()
+crates/deflect-bgp/src/exabgp.rs:46:5: replace withdraw_command -> String with "xyzzy".into()
+crates/deflect-bgp/src/scope.rs:22:9: replace <impl fmt::Display for ScopeError>::fmt -> fmt::Result with Ok(Default::default())
+crates/deflect-bgp/src/scope.rs:85:9: replace Scope::floor_for -> u8 with 1
+crates/deflect-bgp/src/scope.rs:81:9: replace Scope::owned -> &[Cidr] with Vec::leak(Vec::new())
+crates/deflect-bgp/src/scope.rs:95:9: replace Scope::owns -> bool with true
+crates/deflect-bgp/src/scope.rs:85:9: replace Scope::floor_for -> u8 with 0
+crates/deflect-bgp/src/scope.rs:95:9: replace Scope::owns -> bool with false
+crates/deflect-bgp/src/scope.rs:108:32: replace < with == in Scope::authorize
+crates/deflect-bgp/src/scope.rs:104:9: replace Scope::authorize -> Result<(), ScopeError> with Ok(())
+crates/deflect-bgp/src/scope.rs:111:42: replace && with || in Scope::authorize
+crates/deflect-bgp/src/scope.rs:108:32: replace < with <= in Scope::authorize
+crates/deflect-bgp/src/scope.rs:111:17: replace == with != in Scope::authorize
+crates/deflect-bgp/src/scope.rs:108:32: replace < with > in Scope::authorize
+crates/deflect-bgp/src/scope.rs:111:45: delete ! in Scope::authorize

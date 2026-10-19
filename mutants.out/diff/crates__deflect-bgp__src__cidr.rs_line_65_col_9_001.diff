@@ -1,0 +1,21 @@
+--- crates/deflect-bgp/src/cidr.rs
++++ replace Cidr::is_host -> bool with false
+@@ -57,17 +57,17 @@
+             32
+         } else {
+             128
+         }
+     }
+ 
+     #[must_use]
+     pub fn is_host(&self) -> bool {
+-        self.len == self.max_len()
++        false /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The default route (`0.0.0.0/0` or `::/0`) — the whole address space.
+     #[must_use]
+     pub fn is_default_route(&self) -> bool {
+         self.len == 0
+     }
+ 

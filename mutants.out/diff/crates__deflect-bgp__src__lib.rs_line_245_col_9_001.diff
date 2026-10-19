@@ -1,0 +1,35 @@
+--- crates/deflect-bgp/src/lib.rs
++++ replace RtbhController<S, C>::sweep -> Result<usize, BgpError> with Ok(1)
+@@ -237,31 +237,17 @@
+     /// routes up to it.
+     ///
+     /// # Errors
+     /// Returns [`BgpError::Transport`] if withdrawing an expired route failed.
+     ///
+     /// # Panics
+     /// Panics only if the internal table mutex was poisoned by a prior panic.
+     pub fn sweep(&self) -> Result<usize, BgpError> {
+-        let now = self.clock.now_nanos();
+-        let expired: alloc::vec::Vec<Cidr> = {
+-            let active = self.active.lock().expect("table poisoned");
+-            active
+-                .iter()
+-                .filter(|(_, t)| t.deadline.is_some_and(|d| d <= now))
+-                .map(|(p, _)| *p)
+-                .collect()
+-        };
+-        let mut n = 0;
+-        for prefix in expired {
+-            self.withdraw(prefix)?;
+-            n += 1;
+-        }
+-        Ok(n)
++        Ok(1) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Number of blackholes currently announced.
+     ///
+     /// # Panics
+     /// Panics only if the internal table mutex was poisoned by a prior panic.
+     #[must_use]
+     pub fn active_count(&self) -> usize {

@@ -1,0 +1,27 @@
+--- crates/deflect-bgp/src/lib.rs
++++ replace <impl core::fmt::Display for BgpError>::fmt -> core::fmt::Result with Ok(Default::default())
+@@ -55,23 +55,17 @@
+     /// upstream's max-prefix limit and tearing down the session.
+     CapacityExceeded { max: usize },
+     /// The session could not transmit the command.
+     Transport(std::io::Error),
+ }
+ 
+ impl core::fmt::Display for BgpError {
+     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+-        match self {
+-            BgpError::Scope(e) => write!(f, "{e}"),
+-            BgpError::CapacityExceeded { max } => {
+-                write!(f, "blackhole table full ({max} routes)")
+-            }
+-            BgpError::Transport(e) => write!(f, "failed to transmit BGP command: {e}"),
+-        }
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl std::error::Error for BgpError {}
+ 
+ impl From<ScopeError> for BgpError {
+     fn from(e: ScopeError) -> BgpError {
+         BgpError::Scope(e)

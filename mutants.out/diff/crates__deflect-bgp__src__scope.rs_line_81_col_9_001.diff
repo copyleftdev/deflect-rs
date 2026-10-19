@@ -1,0 +1,21 @@
+--- crates/deflect-bgp/src/scope.rs
++++ replace Scope::owned -> &[Cidr] with Vec::leak(vec![Default::default()])
+@@ -73,17 +73,17 @@
+     pub fn with_floor(mut self, floor_v4: u8, floor_v6: u8) -> Scope {
+         self.floor_v4 = floor_v4.min(32);
+         self.floor_v6 = floor_v6.min(128);
+         self
+     }
+ 
+     #[must_use]
+     pub fn owned(&self) -> &[Cidr] {
+-        &self.owned
++        Vec::leak(vec![Default::default()]) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn floor_for(&self, prefix: &Cidr) -> u8 {
+         if prefix.net().is_ipv4() {
+             self.floor_v4
+         } else {
+             self.floor_v6
+         }

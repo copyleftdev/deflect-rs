@@ -1,0 +1,33 @@
+--- crates/deflect-bgp/src/scope.rs
++++ replace <impl fmt::Display for ScopeError>::fmt -> fmt::Result with Ok(Default::default())
+@@ -14,29 +14,17 @@
+     /// so it would blackhole far more than the target.
+     TooBroad { prefix: Cidr, floor: u8 },
+     /// The default route (`/0`) — never blackhole-able; it is a total outage.
+     DefaultRoute,
+ }
+ 
+ impl fmt::Display for ScopeError {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-        match self {
+-            ScopeError::Unowned(c) => {
+-                write!(
+-                    f,
+-                    "refusing to blackhole {c}: not within owned address space"
+-                )
+-            }
+-            ScopeError::TooBroad { prefix, floor } => write!(
+-                f,
+-                "refusing to blackhole {prefix}: broader than the /{floor} floor"
+-            ),
+-            ScopeError::DefaultRoute => write!(f, "refusing to blackhole the default route"),
+-        }
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// The authorization boundary for blackhole announcements.
+ ///
+ /// Blackholing is an act of self-harm by design: a destination blackhole asks
+ /// the upstream to drop *all* traffic to a prefix. Two mistakes turn it into an
+ /// outage or an attack of your own — advertising a prefix that is not yours (a

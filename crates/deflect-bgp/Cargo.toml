@@ -11,6 +11,9 @@ description = "Upstream RTBH (remote-triggered blackhole) announcement for defle
 [dependencies]
 deflect-core = { workspace = true }
 
+[dev-dependencies]
+proptest = "1.6.0"
+
 [features]
 default = ["std"]
 std = ["deflect-core/std"]

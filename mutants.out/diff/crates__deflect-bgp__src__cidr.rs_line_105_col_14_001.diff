@@ -1,0 +1,21 @@
+--- crates/deflect-bgp/src/cidr.rs
++++ replace & with ^ in mask_v6
+@@ -97,17 +97,17 @@
+         bits & (u32::MAX << (32 - u32::from(len)))
+     }
+ }
+ 
+ fn mask_v6(bits: u128, len: u8) -> u128 {
+     if len == 0 {
+         0
+     } else {
+-        bits & (u128::MAX << (128 - u32::from(len)))
++        bits ^ /* ~ changed by cargo-mutants ~ */ (u128::MAX << (128 - u32::from(len)))
+     }
+ }
+ 
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+ 
+     fn v4(s: &str) -> IpAddr {

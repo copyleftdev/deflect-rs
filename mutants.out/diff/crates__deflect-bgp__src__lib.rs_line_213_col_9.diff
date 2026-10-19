@@ -1,0 +1,21 @@
+--- crates/deflect-bgp/src/lib.rs
++++ replace RtbhController<S, C>::blackhole_source -> Result<(), BgpError> with Ok(())
+@@ -205,17 +205,17 @@
+         self.announce(Blackhole::destination(prefix), ttl)
+     }
+ 
+     /// Announce a source blackhole for `prefix` (attacker space).
+     ///
+     /// # Errors
+     /// See [`announce`](Self::announce).
+     pub fn blackhole_source(&self, prefix: Cidr, ttl: Option<Duration>) -> Result<(), BgpError> {
+-        self.announce(Blackhole::source(prefix), ttl)
++        Ok(()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Withdraw a tracked blackhole. Withdrawing an untracked prefix is a no-op.
+     ///
+     /// # Errors
+     /// Returns [`BgpError::Transport`] if the withdrawal could not be sent; the
+     /// route stays tracked in that case.
+     ///

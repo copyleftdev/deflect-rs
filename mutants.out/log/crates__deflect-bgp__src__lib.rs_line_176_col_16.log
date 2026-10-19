@@ -1,0 +1,160 @@
+
+*** crates/deflect-bgp/src/lib.rs:176:16: delete ! in RtbhController<S, C>::announce
+
+*** mutation diff:
+--- crates/deflect-bgp/src/lib.rs
++++ delete ! in RtbhController<S, C>::announce
+@@ -168,17 +168,17 @@
+     ///
+     /// # Panics
+     /// Panics only if the internal table mutex was poisoned by a prior panic.
+     pub fn announce(&self, route: Blackhole, ttl: Option<Duration>) -> Result<(), BgpError> {
+         self.scope.authorize(route.kind, route.prefix)?;
+ 
+         {
+             let active = self.active.lock().expect("table poisoned");
+-            if !active.contains_key(&route.prefix) && active.len() >= self.max_routes {
++            if  /* ~ changed by cargo-mutants ~ */active.contains_key(&route.prefix) && active.len() >= self.max_routes {
+                 return Err(BgpError::CapacityExceeded {
+                     max: self.max_routes,
+                 });
+             }
+         }
+ 
+         self.session.send(&exabgp::announce_command(&route))?;
+ 
+
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=deflect-bgp@0.1.0
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+   Compiling getrandom v0.4.3
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name getrandom --edition=2024 /home/ops/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/getrandom-0.4.3/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --cfg 'feature="std"' --cfg 'feature="sys_rng"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("std", "sys_rng", "wasm_js"))' -C metadata=3121b85d4bb62df3 -C extra-filename=-256e1f1efc0f1f9a --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps --extern cfg_if=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libcfg_if-1e9c5a118a245144.rmeta --extern libc=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/liblibc-627987c539c1b649.rmeta --extern rand_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/librand_core-a2dbb9d7a0b29734.rmeta --cap-lints allow`
+       Fresh bitflags v2.13.2
+       Fresh linux-raw-sys v0.12.1
+       Fresh autocfg v1.5.1
+       Fresh rustix v1.1.5
+       Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
+   Compiling tempfile v3.27.0
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name tempfile --edition=2021 /home/ops/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tempfile-3.27.0/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --cfg 'feature="default"' --cfg 'feature="getrandom"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "getrandom", "nightly"))' -C metadata=5926808ccffcc5d3 -C extra-filename=-c2e222b8f7e1f1ed --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps --extern fastrand=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libfastrand-c3dd370172903a25.rmeta --extern getrandom=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libgetrandom-256e1f1efc0f1f9a.rmeta --extern once_cell=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libonce_cell-e0cacd25ac9ca48d.rmeta --extern rustix=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/librustix-883c95bbfdf4c9c9.rmeta --cap-lints allow`
+   Compiling wait-timeout v0.2.1
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name wait_timeout --edition=2015 /home/ops/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/wait-timeout-0.2.1/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=f09d63934e27f89e -C extra-filename=-0f1cf21e546ea4d7 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps --extern libc=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/liblibc-627987c539c1b649.rmeta --cap-lints allow`
+       Fresh cpufeatures v0.3.1
+       Fresh bit-vec v0.10.1
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+   Compiling rusty-fork v0.3.1
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name rusty_fork --edition=2018 /home/ops/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rusty-fork-0.3.1/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --cfg 'feature="timeout"' --cfg 'feature="wait-timeout"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "timeout", "wait-timeout"))' -C metadata=ccca37dc5c1c4d29 -C extra-filename=-df6214f805bf85ca --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps --extern fnv=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libfnv-9a0d97e12f9f81f0.rmeta --extern quick_error=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libquick_error-e543ea71c979e604.rmeta --extern tempfile=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libtempfile-c2e222b8f7e1f1ed.rmeta --extern wait_timeout=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libwait_timeout-0f1cf21e546ea4d7.rmeta --cap-lints allow`
+       Fresh bit-set v0.11.1
+       Fresh chacha20 v0.10.2
+       Fresh num-traits v0.2.19
+   Compiling rand v0.10.3
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name rand --edition=2024 /home/ops/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rand-0.10.3/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --cfg 'feature="alloc"' --cfg 'feature="std"' --cfg 'feature="sys_rng"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("alloc", "chacha", "default", "log", "serde", "simd_support", "std", "std_rng", "sys_rng", "thread_rng", "unbiased"))' -C metadata=cdbd880cb9e8a7be -C extra-filename=-f27a54fd0c2e1042 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps --extern getrandom=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libgetrandom-256e1f1efc0f1f9a.rmeta --extern rand_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/librand_core-a2dbb9d7a0b29734.rmeta --cap-lints allow`
+       Fresh rand_xorshift v0.5.0
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/crates/deflect-core)
+       Fresh regex-syntax v0.8.11
+       Fresh core_detect v1.0.0
+       Fresh unarray v0.1.4
+   Compiling deflect-bgp v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/crates/deflect-bgp)
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_bgp --edition=2021 crates/deflect-bgp/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=ecee96ac73d8de14 -C extra-filename=-76c3e17ff94da60d --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rmeta`
+   Compiling proptest v1.12.0
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name proptest --edition=2021 /home/ops/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/proptest-1.12.0/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --cfg 'feature="bit-set"' --cfg 'feature="default"' --cfg 'feature="fork"' --cfg 'feature="regex-syntax"' --cfg 'feature="rusty-fork"' --cfg 'feature="std"' --cfg 'feature="tempfile"' --cfg 'feature="timeout"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("alloc", "atomic64bit", "attr-macro", "bit-set", "default", "default-code-coverage", "f16", "fork", "handle-panics", "hardware-rng", "no_std", "proptest-macro", "regex-syntax", "rusty-fork", "std", "tempfile", "timeout", "unstable", "x86"))' -C metadata=e2952557fd5851f7 -C extra-filename=-d75920e6a8eacbc4 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps --extern bit_set=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libbit_set-2ce54f06d7822308.rmeta --extern bit_vec=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libbit_vec-28b9a567427d7df8.rmeta --extern bitflags=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libbitflags-3a99da603c7fdadf.rmeta --extern chacha20=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libchacha20-3c34eb5db14af5f9.rmeta --extern core_detect=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libcore_detect-c7d36ded3531232e.rmeta --extern num_traits=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libnum_traits-cd5c57d522269dfc.rmeta --extern rand=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/librand-f27a54fd0c2e1042.rmeta --extern rand_xorshift=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/librand_xorshift-0b44f4dc20dee93f.rmeta --extern regex_syntax=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libregex_syntax-1e55c064ae9af1da.rmeta --extern rusty_fork=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/librusty_fork-df6214f805bf85ca.rmeta --extern tempfile=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libtempfile-c2e222b8f7e1f1ed.rmeta --extern unarray=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libunarray-ac7a5f301cb1e73f.rmeta --cap-lints allow`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_bgp --edition=2021 crates/deflect-bgp/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=55fd5073b2d2091d -C extra-filename=-92c4c3f5ecda205a --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name properties --edition=2021 crates/deflect-bgp/tests/properties.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=a5bc1b8face25205 -C extra-filename=-759b63e6862e51a0 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps --extern deflect_bgp=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libdeflect_bgp-76c3e17ff94da60d.rlib --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 27.62s
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/deflect_bgp-92c4c3f5ecda205a`
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/properties-759b63e6862e51a0`
+
+*** result: Success
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=deflect-bgp@0.1.0
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh getrandom v0.4.3
+       Fresh autocfg v1.5.1
+       Fresh bitflags v2.13.2
+       Fresh linux-raw-sys v0.12.1
+       Fresh rustix v1.1.5
+       Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
+       Fresh tempfile v3.27.0
+       Fresh wait-timeout v0.2.1
+       Fresh cpufeatures v0.3.1
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+       Fresh bit-vec v0.10.1
+       Fresh bit-set v0.11.1
+       Fresh rusty-fork v0.3.1
+       Fresh chacha20 v0.10.2
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh core_detect v1.0.0
+       Fresh regex-syntax v0.8.11
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/crates/deflect-core)
+       Fresh unarray v0.1.4
+       Fresh proptest v1.12.0
+       Fresh deflect-bgp v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/crates/deflect-bgp)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.50s
+     Running `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-HxN7Aj.tmp/target/debug/deps/deflect_bgp-92c4c3f5ecda205a`
+
+running 35 tests
+test cidr::tests::construction_masks_host_bits ... ok
+test cidr::tests::contains_more_specific ... ok
+test cidr::tests::default_route_detected_and_contains_everything ... ok
+test cidr::tests::different_families_never_contain ... ok
+test cidr::tests::does_not_contain_outside_or_broader ... ok
+test cidr::tests::host_is_full_length ... ok
+test cidr::tests::length_clamped_to_family_width ... ok
+test cidr::tests::subnet_is_not_a_host ... ok
+test cidr::tests::v6_masks_and_contains ... ok
+test community::tests::renders_as_asn_value ... ok
+test community::tests::well_known_values ... ok
+test exabgp::tests::community_announce_uses_self_next_hop ... ok
+test exabgp::tests::explicit_next_hop_rendered ... ok
+test exabgp::tests::multiple_communities_space_separated ... ok
+test exabgp::tests::withdraw_matches_prefix_and_next_hop ... ok
+test route::tests::builders_compose ... ok
+test route::tests::destination_defaults_to_contained_community_signalling ... ok
+test route::tests::source_sets_kind_source ... ok
+test scope::tests::default_route_always_refused ... ok
+test scope::tests::loosened_floor_permits_subnet ... ok
+test scope::tests::owned_host_destination_is_authorized ... ok
+test scope::tests::owned_returns_the_configured_prefixes ... ok
+test scope::tests::scope_error_messages_name_the_cause ... ok
+test scope::tests::too_broad_is_refused_even_if_owned ... ok
+test scope::tests::unowned_destination_is_refused ... ok
+test scope::tests::unowned_source_is_allowed_within_floor ... ok
+test tests::capacity_is_bounded ... FAILED
+test tests::error_messages_are_descriptive ... ok
+test tests::null_session_is_a_dry_run ... ok
+test tests::owned_destination_announces_and_withdraws ... ok
+test tests::source_blackhole_needs_no_ownership ... ok
+test tests::sweep_lifts_only_expired_blackholes ... ok
+test tests::transport_failure_leaves_route_untracked ... ok
+test tests::unowned_destination_is_refused_and_sends_nothing ... ok
+test tests::writer_session_emits_the_command ... ok
+
+failures:
+
+---- tests::capacity_is_bounded stdout ----
+
+thread 'tests::capacity_is_bounded' (3626139) panicked at crates/deflect-bgp/src/lib.rs:348:9:
+assertion failed: matches!(r, Err(BgpError::CapacityExceeded { max: 2 }))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    tests::capacity_is_bounded
+
+test result: FAILED. 34 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+error: test failed, to rerun pass `-p deflect-bgp --lib`
+
+*** result: Failure(101)

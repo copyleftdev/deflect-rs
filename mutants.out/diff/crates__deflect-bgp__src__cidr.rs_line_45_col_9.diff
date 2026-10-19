@@ -1,0 +1,21 @@
+--- crates/deflect-bgp/src/cidr.rs
++++ replace Cidr::net -> IpAddr with Default::default()
+@@ -37,17 +37,17 @@
+     #[must_use]
+     pub fn host(addr: IpAddr) -> Cidr {
+         let len = if addr.is_ipv4() { 32 } else { 128 };
+         Cidr::new(addr, len)
+     }
+ 
+     #[must_use]
+     pub fn net(&self) -> IpAddr {
+-        self.net
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     #[must_use]
+     pub fn prefix_len(&self) -> u8 {
+         self.len
+     }
+ 
+     /// The prefix length of a full host address in this prefix's family.
