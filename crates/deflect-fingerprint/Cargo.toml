@@ -1,0 +1,20 @@
+[package]
+name = "deflect-fingerprint"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+description = "Adaptive attack-fingerprint learning for deflect-rs via bounded heavy-hitter counting."
+
+[dependencies]
+deflect-core = { workspace = true }
+
+[features]
+default = ["std"]
+std = ["deflect-core/std"]
+
+[lints.clippy]
+all = "warn"
+pedantic = "warn"

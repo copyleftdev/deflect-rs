@@ -37,7 +37,7 @@ time-dependent primitive is driven deterministically in tests.
 | `deflect-syncookie` | ✅ | Stateless SYN-cookie issuance and validation (SipHash-2-4 keyed) |
 | `deflect-signature` | ✅ | Protocol/port/flag/payload signature engine; `methods.json`-style rules load via `serde` |
 | `deflect-reflect` | ✅ | Reflection/amplification defense via request/response correlation |
-| `deflect-fingerprint` | ⏳ | Learning fingerprints of unknown attacks |
+| `deflect-fingerprint` | ✅ | Learning fingerprints of unknown attacks (bounded heavy-hitter counting) |
 | `deflect-enforce` | ⏳ | nftables / XDP enforcement backends behind a trait |
 | `deflect-telemetry` | ⏳ | sFlow / NetFlow v5·v9 / IPFIX ingestion |
 | `deflect-bgp` | ⏳ | Upstream RTBH / ExaBGP announcement |
@@ -80,10 +80,18 @@ time-dependent primitive is driven deterministically in tests.
   amplifier-port set is an 8 KiB bitmap and the request table is fixed-size. An
   inbound-only `size_only` mode falls back to a reply-size threshold when egress
   isn't visible.
+- **Fingerprints are learned, not guessed — and conservatively.** When traffic
+  is unrecognized but under attack, `deflect-fingerprint` finds what the flood
+  has in common. Each feature dimension uses a Misra–Gries heavy-hitter summary
+  whose error is one-sided (it never *overstates* a value's share), so a
+  synthesized fingerprint reflects traffic that genuinely dominated the sample.
+  It refuses to emit a fingerprint unless a *specific* dimension (port, length,
+  or payload prefix) dominates, so it can never generate a rule as broad as
+  "drop all UDP."
 
 ## Status
 
-Early. Six crates are implemented and tested (75 tests default, 77 with
+Early. Seven crates are implemented and tested (85 tests default, 87 with
 `serde`; `clippy -W pedantic` clean; core primitives build `no_std`). The
 remaining crates are scaffolded as roadmap.
 
