@@ -60,12 +60,11 @@ impl<V: Copy + PartialEq> TopValues<V> {
     /// The leader's count as a percentage of the total stream, `0` when empty.
     #[must_use]
     pub fn leader_share_pct(&self) -> u8 {
-        match (self.leader(), self.total) {
-            (Some((_, count)), total) if total > 0 => {
-                u8::try_from(count * 100 / total).unwrap_or(100)
-            }
-            _ => 0,
+        let count = self.leader().map_or(0, |(_, c)| c);
+        if self.total == 0 {
+            return 0;
         }
+        u8::try_from(count * 100 / self.total).unwrap_or(100)
     }
 
     pub fn clear(&mut self) {
@@ -123,6 +122,42 @@ mod tests {
         t.observe(1u8);
         t.clear();
         assert_eq!(t.total(), 0);
+        assert!(t.leader().is_none());
+    }
+
+    #[test]
+    fn leader_share_is_exact() {
+        // 90 of 100 observations are the leader: share is exactly 90%. Capacity
+        // holds all 11 distinct values so no eviction perturbs the leader count.
+        let mut t = TopValues::new(16);
+        for _ in 0..90 {
+            t.observe(5u16);
+        }
+        for i in 0..10u16 {
+            t.observe(100 + i);
+        }
+        assert_eq!(t.total(), 100);
+        assert_eq!(t.leader().unwrap(), (5, 90));
+        assert_eq!(t.leader_share_pct(), 90);
+    }
+
+    #[test]
+    fn empty_share_is_zero_without_dividing() {
+        // No observations: share is 0 and the division is never reached.
+        let t: TopValues<u16> = TopValues::new(4);
+        assert_eq!(t.total(), 0);
+        assert_eq!(t.leader_share_pct(), 0);
+    }
+
+    #[test]
+    fn full_capacity_evicts_to_empty() {
+        // Capacity 1: two distinct values cancel each other out via the
+        // Misra–Gries decrement, leaving no leader. A `<=` bound (push past
+        // capacity) or a `/=` eviction (no real decrement) would keep one.
+        let mut t = TopValues::new(1);
+        t.observe(1u8);
+        t.observe(2u8);
+        assert_eq!(t.total(), 2);
         assert!(t.leader().is_none());
     }
 }

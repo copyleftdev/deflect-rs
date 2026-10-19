@@ -1,0 +1,180 @@
+
+*** crates/deflect-fingerprint/src/fingerprint.rs:98:9: replace <impl Stage for Fingerprint>::evaluate -> Verdict with Default::default()
+
+*** mutation diff:
+--- crates/deflect-fingerprint/src/fingerprint.rs
++++ replace <impl Stage for Fingerprint>::evaluate -> Verdict with Default::default()
+@@ -90,21 +90,17 @@
+             }
+         }
+         true
+     }
+ }
+ 
+ impl Stage for Fingerprint {
+     fn evaluate(&self, obs: &Observation<'_>) -> Verdict {
+-        if self.matches(&obs.packet) {
+-            Verdict::Drop(DropReason::Fingerprint)
+-        } else {
+-            Verdict::Pass
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn name(&self) -> &'static str {
+         "fingerprint"
+     }
+ }
+ 
+ #[cfg(test)]
+
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=deflect-fingerprint@0.1.0
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh bitflags v2.13.2
+       Fresh autocfg v1.5.1
+       Fresh getrandom v0.4.3
+       Fresh linux-raw-sys v0.12.1
+       Fresh fastrand v2.5.0
+       Fresh rustix v1.1.5
+       Fresh once_cell v1.21.4
+       Fresh wait-timeout v0.2.1
+       Fresh tempfile v3.27.0
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+       Fresh cpufeatures v0.3.1
+       Fresh bit-vec v0.10.1
+       Fresh rusty-fork v0.3.1
+       Fresh chacha20 v0.10.2
+       Fresh num-traits v0.2.19
+       Fresh bit-set v0.11.1
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/crates/deflect-core)
+       Fresh regex-syntax v0.8.11
+       Fresh core_detect v1.0.0
+       Fresh unarray v0.1.4
+       Dirty deflect-fingerprint v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/crates/deflect-fingerprint): the file `crates/deflect-fingerprint/src/fingerprint.rs` has changed (1792417676.718566039s, 3s after last build at 1792417673.652410864s)
+   Compiling deflect-fingerprint v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/crates/deflect-fingerprint)
+       Fresh proptest v1.12.0
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_fingerprint --edition=2021 crates/deflect-fingerprint/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=baf7640bfd70cc57 -C extra-filename=-1254cbd62b1b3a1f --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_fingerprint --edition=2021 crates/deflect-fingerprint/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=d5ca4a898a7ba6dd -C extra-filename=-446992446774b6e4 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rmeta`
+warning: unused import: `DropReason`
+ --> crates/deflect-fingerprint/src/fingerprint.rs:1:20
+  |
+1 | use deflect_core::{DropReason, Observation, Packet, Stage, TcpFlags, Verdict, L4};
+  |                    ^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `obs`
+  --> crates/deflect-fingerprint/src/fingerprint.rs:97:24
+   |
+97 |     fn evaluate(&self, obs: &Observation<'_>) -> Verdict {
+   |                        ^^^ help: if this is intentional, prefix it with an underscore: `_obs`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `deflect-fingerprint` (lib) generated 2 warnings (run `cargo fix --lib -p deflect-fingerprint` to apply 2 suggestions)
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name properties --edition=2021 crates/deflect-fingerprint/tests/properties.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=361ee3b4af2a14c7 -C extra-filename=-99f9a04f94180d81 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern deflect_fingerprint=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/target/debug/deps/libdeflect_fingerprint-446992446774b6e4.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+warning: `deflect-fingerprint` (lib test) generated 2 warnings (2 duplicates)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.48s
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/target/debug/deps/deflect_fingerprint-1254cbd62b1b3a1f`
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/target/debug/deps/properties-99f9a04f94180d81`
+
+*** result: Success
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=deflect-fingerprint@0.1.0
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh bitflags v2.13.2
+       Fresh autocfg v1.5.1
+       Fresh linux-raw-sys v0.12.1
+       Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
+       Fresh getrandom v0.4.3
+       Fresh rustix v1.1.5
+       Fresh wait-timeout v0.2.1
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+       Fresh tempfile v3.27.0
+       Fresh cpufeatures v0.3.1
+       Fresh bit-vec v0.10.1
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh rusty-fork v0.3.1
+       Fresh chacha20 v0.10.2
+       Fresh bit-set v0.11.1
+       Fresh core_detect v1.0.0
+       Fresh unarray v0.1.4
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/crates/deflect-core)
+       Fresh regex-syntax v0.8.11
+warning: unused import: `DropReason`
+ --> crates/deflect-fingerprint/src/fingerprint.rs:1:20
+  |
+1 | use deflect_core::{DropReason, Observation, Packet, Stage, TcpFlags, Verdict, L4};
+  |                    ^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `obs`
+  --> crates/deflect-fingerprint/src/fingerprint.rs:97:24
+   |
+97 |     fn evaluate(&self, obs: &Observation<'_>) -> Verdict {
+   |                        ^^^ help: if this is intentional, prefix it with an underscore: `_obs`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `deflect-fingerprint` (lib) generated 2 warnings (run `cargo fix --lib -p deflect-fingerprint` to apply 2 suggestions)
+       Fresh proptest v1.12.0
+       Fresh deflect-fingerprint v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/crates/deflect-fingerprint)
+warning: `deflect-fingerprint` (lib test) generated 2 warnings (2 duplicates)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.27s
+     Running `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-7iZXVp.tmp/target/debug/deps/deflect_fingerprint-1254cbd62b1b3a1f`
+
+running 21 tests
+test counter::tests::clear_resets ... ok
+test counter::tests::diffuse_stream_has_low_share ... ok
+test counter::tests::empty_share_is_zero_without_dividing ... ok
+test counter::tests::full_capacity_evicts_to_empty ... ok
+test counter::tests::leader_share_is_exact ... ok
+test counter::tests::share_is_never_overstated ... ok
+test counter::tests::single_dominant_value_wins ... ok
+test fingerprint::tests::flags_dimension_gates_matching ... ok
+test fingerprint::tests::prefix_matches_only_its_own_bytes ... ok
+test fingerprint::tests::specificity_counts_constrained_dimensions ... ok
+test fingerprint::tests::stage_name_is_stable ... ok
+test tests::a_single_dominant_specific_dimension_is_enough ... ok
+test tests::capacity_reports_configured_value ... ok
+test tests::diffuse_traffic_yields_no_fingerprint ... ok
+test tests::dominant_nonzero_flags_are_captured ... ok
+test tests::empty_payload_is_not_captured_as_a_prefix ... ok
+test tests::empty_sampler_synthesizes_nothing ... ok
+test tests::learns_homogeneous_udp_flood ... ok
+test tests::requires_a_specific_dimension ... ok
+test tests::reset_clears_learning ... ok
+test tests::synthesized_fingerprint_matches_the_flood_not_the_legit ... FAILED
+
+failures:
+
+---- tests::synthesized_fingerprint_matches_the_flood_not_the_legit stdout ----
+
+thread 'tests::synthesized_fingerprint_matches_the_flood_not_the_legit' (3986547) panicked at crates/deflect-fingerprint/src/lib.rs:250:9:
+assertion `left == right` failed
+  left: Pass
+ right: Drop(Fingerprint)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    tests::synthesized_fingerprint_matches_the_flood_not_the_legit
+
+test result: FAILED. 20 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p deflect-fingerprint --lib`
+
+*** result: Failure(101)

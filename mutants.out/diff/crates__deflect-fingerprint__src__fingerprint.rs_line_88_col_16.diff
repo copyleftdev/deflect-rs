@@ -1,0 +1,21 @@
+--- crates/deflect-fingerprint/src/fingerprint.rs
++++ delete ! in Fingerprint::matches
+@@ -80,17 +80,17 @@
+             }
+         }
+         if let Some(flags) = self.flags {
+             if flags != packet.tcp_flags {
+                 return false;
+             }
+         }
+         if let Some(prefix) = self.prefix {
+-            if !prefix.matches(packet.payload) {
++            if  /* ~ changed by cargo-mutants ~ */prefix.matches(packet.payload) {
+                 return false;
+             }
+         }
+         true
+     }
+ }
+ 
+ impl Stage for Fingerprint {

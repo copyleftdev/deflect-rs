@@ -1,0 +1,21 @@
+--- crates/deflect-fingerprint/src/lib.rs
++++ replace Fingerprinter::capacity -> usize with 0
+@@ -182,17 +182,17 @@
+             flags,
+             prefix,
+             coverage_pct,
+         })
+     }
+ 
+     #[must_use]
+     pub fn capacity(&self) -> usize {
+-        self.capacity
++        0 /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+     use core::net::{IpAddr, Ipv4Addr};
+     use deflect_core::DropReason;

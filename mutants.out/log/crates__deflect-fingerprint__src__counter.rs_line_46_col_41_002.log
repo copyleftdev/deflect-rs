@@ -1,0 +1,200 @@
+
+*** crates/deflect-fingerprint/src/counter.rs:46:41: replace > with >= in TopValues<V>::observe
+
+*** mutation diff:
+--- crates/deflect-fingerprint/src/counter.rs
++++ replace > with >= in TopValues<V>::observe
+@@ -38,17 +38,17 @@
+             self.entries.push((value, 1));
+             return;
+         }
+         // All counters occupied by other values: decrement every counter and
+         // drop any that reach zero, the Misra–Gries eviction step.
+         for entry in &mut self.entries {
+             entry.1 -= 1;
+         }
+-        self.entries.retain(|(_, c)| *c > 0);
++        self.entries.retain(|(_, c)| *c >= /* ~ changed by cargo-mutants ~ */ 0);
+     }
+ 
+     #[must_use]
+     pub fn total(&self) -> u64 {
+         self.total
+     }
+ 
+     /// The tracked value with the highest (lower-bound) count.
+
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=deflect-fingerprint@0.1.0
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh bitflags v2.13.2
+       Fresh linux-raw-sys v0.12.1
+       Fresh autocfg v1.5.1
+       Fresh once_cell v1.21.4
+       Fresh fastrand v2.5.0
+       Fresh wait-timeout v0.2.1
+       Fresh fnv v1.0.7
+       Fresh getrandom v0.4.3
+       Fresh rustix v1.1.5
+       Fresh cpufeatures v0.3.1
+       Fresh bit-vec v0.10.1
+       Fresh quick-error v1.2.3
+       Fresh rand_xorshift v0.5.0
+       Fresh tempfile v3.27.0
+       Fresh rand v0.10.3
+       Fresh chacha20 v0.10.2
+       Fresh bit-set v0.11.1
+       Fresh core_detect v1.0.0
+       Fresh unarray v0.1.4
+       Fresh num-traits v0.2.19
+       Fresh rusty-fork v0.3.1
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/crates/deflect-core)
+       Fresh regex-syntax v0.8.11
+       Fresh proptest v1.12.0
+       Dirty deflect-fingerprint v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/crates/deflect-fingerprint): the file `crates/deflect-fingerprint/src/counter.rs` has changed (1792417646.916057760s, 6s after last build at 1792417640.722744322s)
+   Compiling deflect-fingerprint v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/crates/deflect-fingerprint)
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_fingerprint --edition=2021 crates/deflect-fingerprint/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=baf7640bfd70cc57 -C extra-filename=-1254cbd62b1b3a1f --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_fingerprint --edition=2021 crates/deflect-fingerprint/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=d5ca4a898a7ba6dd -C extra-filename=-446992446774b6e4 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rmeta`
+warning: comparison is useless due to type limits
+  --> crates/deflect-fingerprint/src/counter.rs:46:38
+   |
+46 |         self.entries.retain(|(_, c)| *c >= /* ~ changed by cargo-mutants ~ */ 0);
+   |                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_comparisons)]` on by default
+
+warning: `deflect-fingerprint` (lib) generated 1 warning
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name properties --edition=2021 crates/deflect-fingerprint/tests/properties.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=361ee3b4af2a14c7 -C extra-filename=-99f9a04f94180d81 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern deflect_fingerprint=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/target/debug/deps/libdeflect_fingerprint-446992446774b6e4.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+warning: `deflect-fingerprint` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.13s
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/target/debug/deps/deflect_fingerprint-1254cbd62b1b3a1f`
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/target/debug/deps/properties-99f9a04f94180d81`
+
+*** result: Success
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=deflect-fingerprint@0.1.0
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh bitflags v2.13.2
+       Fresh autocfg v1.5.1
+       Fresh linux-raw-sys v0.12.1
+       Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
+       Fresh wait-timeout v0.2.1
+       Fresh cpufeatures v0.3.1
+       Fresh getrandom v0.4.3
+       Fresh rustix v1.1.5
+       Fresh quick-error v1.2.3
+       Fresh bit-vec v0.10.1
+       Fresh fnv v1.0.7
+       Fresh chacha20 v0.10.2
+       Fresh tempfile v3.27.0
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh bit-set v0.11.1
+       Fresh rand_xorshift v0.5.0
+       Fresh regex-syntax v0.8.11
+       Fresh core_detect v1.0.0
+       Fresh rusty-fork v0.3.1
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/crates/deflect-core)
+       Fresh unarray v0.1.4
+       Fresh proptest v1.12.0
+warning: comparison is useless due to type limits
+  --> crates/deflect-fingerprint/src/counter.rs:46:38
+   |
+46 |         self.entries.retain(|(_, c)| *c >= /* ~ changed by cargo-mutants ~ */ 0);
+   |                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_comparisons)]` on by default
+
+warning: `deflect-fingerprint` (lib) generated 1 warning
+       Fresh deflect-fingerprint v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/crates/deflect-fingerprint)
+warning: `deflect-fingerprint` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.72s
+     Running `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-1vk2tz.tmp/target/debug/deps/deflect_fingerprint-1254cbd62b1b3a1f`
+
+running 21 tests
+test counter::tests::clear_resets ... ok
+test counter::tests::diffuse_stream_has_low_share ... FAILED
+test counter::tests::empty_share_is_zero_without_dividing ... ok
+test counter::tests::full_capacity_evicts_to_empty ... FAILED
+test counter::tests::leader_share_is_exact ... ok
+test counter::tests::share_is_never_overstated ... FAILED
+test counter::tests::single_dominant_value_wins ... FAILED
+test fingerprint::tests::flags_dimension_gates_matching ... ok
+test fingerprint::tests::prefix_matches_only_its_own_bytes ... ok
+test fingerprint::tests::specificity_counts_constrained_dimensions ... ok
+test fingerprint::tests::stage_name_is_stable ... ok
+test tests::a_single_dominant_specific_dimension_is_enough ... FAILED
+test tests::capacity_reports_configured_value ... ok
+test tests::diffuse_traffic_yields_no_fingerprint ... FAILED
+test tests::dominant_nonzero_flags_are_captured ... ok
+test tests::empty_payload_is_not_captured_as_a_prefix ... ok
+test tests::empty_sampler_synthesizes_nothing ... ok
+test tests::learns_homogeneous_udp_flood ... ok
+test tests::requires_a_specific_dimension ... FAILED
+test tests::reset_clears_learning ... ok
+test tests::synthesized_fingerprint_matches_the_flood_not_the_legit ... ok
+
+failures:
+
+---- counter::tests::diffuse_stream_has_low_share stdout ----
+
+thread 'counter::tests::diffuse_stream_has_low_share' (3975334) panicked at crates/deflect-fingerprint/src/counter.rs:44:13:
+attempt to subtract with overflow
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- counter::tests::full_capacity_evicts_to_empty stdout ----
+
+thread 'counter::tests::full_capacity_evicts_to_empty' (3975338) panicked at crates/deflect-fingerprint/src/counter.rs:161:9:
+assertion failed: t.leader().is_none()
+
+---- counter::tests::share_is_never_overstated stdout ----
+
+thread 'counter::tests::share_is_never_overstated' (3975343) panicked at crates/deflect-fingerprint/src/counter.rs:44:13:
+attempt to subtract with overflow
+
+---- counter::tests::single_dominant_value_wins stdout ----
+
+thread 'counter::tests::single_dominant_value_wins' (3975345) panicked at crates/deflect-fingerprint/src/counter.rs:44:13:
+attempt to subtract with overflow
+
+---- tests::a_single_dominant_specific_dimension_is_enough stdout ----
+
+thread 'tests::a_single_dominant_specific_dimension_is_enough' (3975356) panicked at crates/deflect-fingerprint/src/counter.rs:44:13:
+attempt to subtract with overflow
+
+---- tests::diffuse_traffic_yields_no_fingerprint stdout ----
+
+thread 'tests::diffuse_traffic_yields_no_fingerprint' (3975361) panicked at crates/deflect-fingerprint/src/counter.rs:44:13:
+attempt to subtract with overflow
+
+---- tests::requires_a_specific_dimension stdout ----
+
+thread 'tests::requires_a_specific_dimension' (3975371) panicked at crates/deflect-fingerprint/src/counter.rs:44:13:
+attempt to subtract with overflow
+
+
+failures:
+    counter::tests::diffuse_stream_has_low_share
+    counter::tests::full_capacity_evicts_to_empty
+    counter::tests::share_is_never_overstated
+    counter::tests::single_dominant_value_wins
+    tests::a_single_dominant_specific_dimension_is_enough
+    tests::diffuse_traffic_yields_no_fingerprint
+    tests::requires_a_specific_dimension
+
+test result: FAILED. 14 passed; 7 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+error: test failed, to rerun pass `-p deflect-fingerprint --lib`
+
+*** result: Failure(101)

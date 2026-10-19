@@ -1,2 +1,5 @@
-crates/deflect-reflect/src/lib.rs:124:9: replace ReflectionGuard::size_only -> ReflectionGuard with Default::default()
-crates/deflect-reflect/src/ports.rs:48:9: replace AmplifierPorts::empty -> AmplifierPorts with Default::default()
+crates/deflect-fingerprint/src/lib.rs:75:9: replace Fingerprinter::with_defaults -> Fingerprinter with Default::default()
+crates/deflect-fingerprint/src/lib.rs:129:9: replace Fingerprinter::synthesize -> Option<Fingerprint> with Some(Default::default())
+crates/deflect-fingerprint/src/counter.rs:57:9: replace TopValues<V>::leader -> Option<(V, u64)> with Some((Default::default(), 0))
+crates/deflect-fingerprint/src/counter.rs:57:9: replace TopValues<V>::leader -> Option<(V, u64)> with Some((Default::default(), 1))
+crates/deflect-fingerprint/src/fingerprint.rs:18:9: replace Prefix::from_payload -> Prefix with Default::default()

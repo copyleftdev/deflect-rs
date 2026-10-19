@@ -298,6 +298,73 @@ mod tests {
     }
 
     #[test]
+    fn capacity_reports_configured_value() {
+        assert_eq!(Fingerprinter::new(32).capacity(), 32);
+        assert_eq!(Fingerprinter::with_defaults().capacity(), DEFAULT_CAPACITY);
+    }
+
+    #[test]
+    fn a_single_dominant_specific_dimension_is_enough() {
+        // Only dst_port is constant; wire length and payload are all different,
+        // so only one specific dimension dominates. That must still synthesize
+        // (the specific-dimension guard is an AND of "all none", not an OR).
+        let fp = Fingerprinter::with_defaults();
+        for i in 0..100u32 {
+            let payload = i.to_be_bytes();
+            let p = Packet::new(
+                IpAddr::V4(Ipv4Addr::new(10, 0, 0, 1)),
+                IpAddr::V4(Ipv4Addr::new(203, 0, 113, 5)),
+                L4::Udp,
+            )
+            .with_ports(10000, 80) // dst_port constant
+            .with_wire_len(100 + i) // all different
+            .with_payload(&payload); // all different
+            fp.observe(&p);
+        }
+        let f = fp.synthesize(80).expect("dst_port alone dominates");
+        assert_eq!(f.dst_port, Some(80));
+        assert_eq!(f.wire_len, None);
+        assert_eq!(f.prefix, None);
+    }
+
+    #[test]
+    fn empty_payload_is_not_captured_as_a_prefix() {
+        // A flood with empty payloads dominates on an all-zero-length prefix, but
+        // an empty prefix must never be captured (the `len > 0` guard).
+        let fp = Fingerprinter::with_defaults();
+        let src = IpAddr::V4(Ipv4Addr::new(198, 51, 100, 1));
+        let dst = IpAddr::V4(Ipv4Addr::new(203, 0, 113, 5));
+        for _ in 0..90 {
+            let p = Packet::new(src, dst, L4::Udp)
+                .with_ports(12345, 80)
+                .with_wire_len(1400);
+            fp.observe(&p);
+        }
+        let f = fp.synthesize(80).expect("dst_port/wire_len dominate");
+        assert_eq!(f.dst_port, Some(80));
+        assert_eq!(f.wire_len, Some(1400));
+        assert_eq!(f.prefix, None, "empty payload must not become a prefix");
+    }
+
+    #[test]
+    fn dominant_nonzero_flags_are_captured() {
+        // A TCP SYN flood: non-zero flags dominate and must be captured as a
+        // refining constraint (the `bits != 0` guard keeps real flags).
+        let fp = Fingerprinter::with_defaults();
+        let src = IpAddr::V4(Ipv4Addr::new(198, 51, 100, 1));
+        let dst = IpAddr::V4(Ipv4Addr::new(203, 0, 113, 5));
+        for _ in 0..90 {
+            let p = Packet::new(src, dst, L4::Tcp)
+                .with_ports(12345, 80)
+                .with_wire_len(40)
+                .with_flags(TcpFlags::SYN);
+            fp.observe(&p);
+        }
+        let f = fp.synthesize(80).expect("flood dominates");
+        assert_eq!(f.flags, Some(TcpFlags::SYN));
+    }
+
+    #[test]
     fn requires_a_specific_dimension() {
         // Protocol dominates (all UDP) but ports/lengths/payloads are diffuse:
         // no fingerprint, because "all UDP" is too broad to act on.

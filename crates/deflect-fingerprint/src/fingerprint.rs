@@ -106,3 +106,86 @@ impl Stage for Fingerprint {
         "fingerprint"
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use core::net::{IpAddr, Ipv4Addr};
+    use deflect_core::Observation;
+
+    fn pkt(l4: L4, dst_port: u16, wire_len: u32, flags: TcpFlags, payload: &[u8]) -> Packet<'_> {
+        let ip = IpAddr::V4(Ipv4Addr::new(203, 0, 113, 1));
+        Packet::new(ip, ip, l4)
+            .with_ports(1234, dst_port)
+            .with_wire_len(wire_len)
+            .with_flags(flags)
+            .with_payload(payload)
+    }
+
+    #[test]
+    fn specificity_counts_constrained_dimensions() {
+        let none = Fingerprint {
+            l4: None,
+            dst_port: None,
+            wire_len: None,
+            flags: None,
+            prefix: None,
+            coverage_pct: 0,
+        };
+        assert_eq!(none.specificity(), 0);
+
+        let all = Fingerprint {
+            l4: Some(L4::Udp),
+            dst_port: Some(53),
+            wire_len: Some(100),
+            flags: Some(TcpFlags::SYN),
+            prefix: Some(Prefix::from_payload(b"ab")),
+            coverage_pct: 90,
+        };
+        assert_eq!(all.specificity(), 5);
+    }
+
+    #[test]
+    fn prefix_matches_only_its_own_bytes() {
+        let p = Prefix::from_payload(b"abc");
+        assert!(p.matches(b"abcdef"));
+        assert!(!p.matches(b"xyz"));
+        assert_eq!(p.as_slice(), b"abc");
+    }
+
+    #[test]
+    fn flags_dimension_gates_matching() {
+        let f = Fingerprint {
+            l4: Some(L4::Tcp),
+            dst_port: None,
+            wire_len: None,
+            flags: Some(TcpFlags::SYN),
+            prefix: None,
+            coverage_pct: 90,
+        };
+        assert!(f.matches(&pkt(L4::Tcp, 80, 40, TcpFlags::SYN, b"")));
+        // Same packet but different flags must not match.
+        assert!(!f.matches(&pkt(L4::Tcp, 80, 40, TcpFlags::ACK, b"")));
+    }
+
+    #[test]
+    fn stage_name_is_stable() {
+        let f = Fingerprint {
+            l4: Some(L4::Udp),
+            dst_port: Some(53),
+            wire_len: None,
+            flags: None,
+            prefix: None,
+            coverage_pct: 90,
+        };
+        assert_eq!(Stage::name(&f), "fingerprint");
+        // And a non-match passes rather than drops.
+        assert_eq!(
+            Stage::evaluate(
+                &f,
+                &Observation::new(pkt(L4::Tcp, 53, 40, TcpFlags::empty(), b""), 0)
+            ),
+            Verdict::Pass
+        );
+    }
+}

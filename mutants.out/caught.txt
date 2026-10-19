@@ -1,63 +1,65 @@
-crates/deflect-reflect/src/lib.rs:142:33: replace || with && in ReflectionGuard::note_outbound
-crates/deflect-reflect/src/lib.rs:142:22: replace != with == in ReflectionGuard::note_outbound
-crates/deflect-reflect/src/lib.rs:142:36: delete ! in ReflectionGuard::note_outbound
-crates/deflect-reflect/src/lib.rs:159:9: replace ReflectionGuard::classify -> Verdict with Default::default()
-crates/deflect-reflect/src/lib.rs:159:33: replace || with && in ReflectionGuard::classify
-crates/deflect-reflect/src/lib.rs:159:22: replace != with == in ReflectionGuard::classify
-crates/deflect-reflect/src/lib.rs:159:36: delete ! in ReflectionGuard::classify
-crates/deflect-reflect/src/lib.rs:167:28: replace < with == in ReflectionGuard::classify
-crates/deflect-reflect/src/lib.rs:167:28: replace < with > in ReflectionGuard::classify
-crates/deflect-reflect/src/lib.rs:167:28: replace < with <= in ReflectionGuard::classify
-crates/deflect-reflect/src/lib.rs:133:28: replace & with | in ReflectionGuard::slot
-crates/deflect-reflect/src/lib.rs:179:9: replace ReflectionGuard::consume_expectation -> bool with true
-crates/deflect-reflect/src/lib.rs:179:9: replace ReflectionGuard::consume_expectation -> bool with false
-crates/deflect-reflect/src/lib.rs:182:23: replace || with && in ReflectionGuard::consume_expectation
-crates/deflect-reflect/src/lib.rs:182:17: replace != with == in ReflectionGuard::consume_expectation
-crates/deflect-reflect/src/lib.rs:182:31: replace == with != in ReflectionGuard::consume_expectation
-crates/deflect-reflect/src/lib.rs:185:58: replace <= with > in ReflectionGuard::consume_expectation
-crates/deflect-reflect/src/lib.rs:186:12: delete ! in ReflectionGuard::consume_expectation
-crates/deflect-reflect/src/lib.rs:133:28: replace & with ^ in ReflectionGuard::slot
-crates/deflect-reflect/src/lib.rs:189:22: replace > with == in ReflectionGuard::consume_expectation
-crates/deflect-reflect/src/lib.rs:189:22: replace > with < in ReflectionGuard::consume_expectation
-crates/deflect-reflect/src/lib.rs:189:22: replace > with >= in ReflectionGuard::consume_expectation
-crates/deflect-reflect/src/lib.rs:190:50: replace / with % in ReflectionGuard::consume_expectation
-crates/deflect-reflect/src/lib.rs:133:9: replace ReflectionGuard::slot -> usize with 1
-crates/deflect-reflect/src/lib.rs:133:9: replace ReflectionGuard::slot -> usize with 0
-crates/deflect-reflect/src/lib.rs:190:50: replace / with * in ReflectionGuard::consume_expectation
-crates/deflect-reflect/src/lib.rs:142:9: replace ReflectionGuard::note_outbound with ()
-crates/deflect-reflect/src/lib.rs:190:44: replace * with + in ReflectionGuard::consume_expectation
-crates/deflect-reflect/src/lib.rs:190:44: replace * with / in ReflectionGuard::consume_expectation
-crates/deflect-reflect/src/lib.rs:199:9: replace ReflectionGuard::stats -> ReflectStats with Default::default()
-crates/deflect-reflect/src/lib.rs:210:9: replace <impl Stage for ReflectionGuard>::evaluate -> Verdict with Default::default()
-crates/deflect-reflect/src/lib.rs:214:9: replace <impl Stage for ReflectionGuard>::name -> &'static str with ""
-crates/deflect-reflect/src/lib.rs:214:9: replace <impl Stage for ReflectionGuard>::name -> &'static str with "xyzzy"
-crates/deflect-reflect/src/lib.rs:219:5: replace fingerprint -> u64 with 1
-crates/deflect-reflect/src/lib.rs:223:11: replace ^= with |= in fingerprint
-crates/deflect-reflect/src/lib.rs:219:5: replace fingerprint -> u64 with 0
-crates/deflect-reflect/src/lib.rs:223:11: replace ^= with &= in fingerprint
-crates/deflect-reflect/src/lib.rs:240:15: replace >> with << in fingerprint
-crates/deflect-reflect/src/lib.rs:241:15: replace & with | in fingerprint
-crates/deflect-reflect/src/lib.rs:243:10: replace == with != in fingerprint
-crates/deflect-reflect/src/lib.rs:241:15: replace & with ^ in fingerprint
-crates/deflect-reflect/src/ports.rs:61:9: replace AmplifierPorts::insert with ()
-crates/deflect-reflect/src/ports.rs:62:25: replace |= with &= in AmplifierPorts::insert
-crates/deflect-reflect/src/ports.rs:62:33: replace << with >> in AmplifierPorts::insert
-crates/deflect-reflect/src/ports.rs:53:9: replace AmplifierPorts::with_defaults -> AmplifierPorts with Default::default()
-crates/deflect-reflect/src/ports.rs:67:28: delete ! in AmplifierPorts::remove
-crates/deflect-reflect/src/ports.rs:66:9: replace AmplifierPorts::remove with ()
-crates/deflect-reflect/src/ports.rs:67:25: replace &= with |= in AmplifierPorts::remove
-crates/deflect-reflect/src/ports.rs:67:35: replace << with >> in AmplifierPorts::remove
-crates/deflect-reflect/src/ports.rs:72:9: replace AmplifierPorts::contains -> bool with true
-crates/deflect-reflect/src/ports.rs:72:9: replace AmplifierPorts::contains -> bool with false
-crates/deflect-reflect/src/ports.rs:73:41: replace != with == in AmplifierPorts::contains
-crates/deflect-reflect/src/ports.rs:73:25: replace & with | in AmplifierPorts::contains
-crates/deflect-reflect/src/ports.rs:73:25: replace & with ^ in AmplifierPorts::contains
-crates/deflect-reflect/src/ports.rs:73:33: replace << with >> in AmplifierPorts::contains
-crates/deflect-reflect/src/ports.rs:77:9: replace AmplifierPorts::index -> (usize, usize) with (0, 1)
-crates/deflect-reflect/src/ports.rs:77:9: replace AmplifierPorts::index -> (usize, usize) with (0, 0)
-crates/deflect-reflect/src/ports.rs:77:9: replace AmplifierPorts::index -> (usize, usize) with (1, 0)
-crates/deflect-reflect/src/ports.rs:78:12: replace / with * in AmplifierPorts::index
-crates/deflect-reflect/src/ports.rs:77:9: replace AmplifierPorts::index -> (usize, usize) with (1, 1)
-crates/deflect-reflect/src/ports.rs:78:20: replace % with / in AmplifierPorts::index
-crates/deflect-reflect/src/ports.rs:78:12: replace / with % in AmplifierPorts::index
-crates/deflect-reflect/src/ports.rs:78:20: replace % with + in AmplifierPorts::index
+crates/deflect-fingerprint/src/lib.rs:130:25: replace == with != in Fingerprinter::synthesize
+crates/deflect-fingerprint/src/lib.rs:136:22: replace >= with < in Fingerprinter::synthesize
+crates/deflect-fingerprint/src/lib.rs:157:36: replace > with == in Fingerprinter::synthesize
+crates/deflect-fingerprint/src/lib.rs:157:36: replace > with < in Fingerprinter::synthesize
+crates/deflect-fingerprint/src/lib.rs:157:36: replace > with >= in Fingerprinter::synthesize
+crates/deflect-fingerprint/src/lib.rs:162:53: replace && with || in Fingerprinter::synthesize
+crates/deflect-fingerprint/src/lib.rs:162:31: replace && with || in Fingerprinter::synthesize
+crates/deflect-fingerprint/src/lib.rs:173:39: replace != with == in Fingerprinter::synthesize
+crates/deflect-fingerprint/src/lib.rs:109:9: replace Fingerprinter::reset with ()
+crates/deflect-fingerprint/src/lib.rs:190:9: replace Fingerprinter::capacity -> usize with 0
+crates/deflect-fingerprint/src/lib.rs:190:9: replace Fingerprinter::capacity -> usize with 1
+crates/deflect-fingerprint/src/counter.rs:32:9: replace TopValues<V>::observe with ()
+crates/deflect-fingerprint/src/counter.rs:32:20: replace += with -= in TopValues<V>::observe
+crates/deflect-fingerprint/src/counter.rs:32:20: replace += with *= in TopValues<V>::observe
+crates/deflect-fingerprint/src/counter.rs:33:71: replace == with != in TopValues<V>::observe
+crates/deflect-fingerprint/src/counter.rs:34:21: replace += with -= in TopValues<V>::observe
+crates/deflect-fingerprint/src/counter.rs:34:21: replace += with *= in TopValues<V>::observe
+crates/deflect-fingerprint/src/counter.rs:37:31: replace < with == in TopValues<V>::observe
+crates/deflect-fingerprint/src/lib.rs:97:9: replace Fingerprinter::sampled -> u64 with 0
+crates/deflect-fingerprint/src/counter.rs:37:31: replace < with > in TopValues<V>::observe
+crates/deflect-fingerprint/src/lib.rs:129:9: replace Fingerprinter::synthesize -> Option<Fingerprint> with None
+crates/deflect-fingerprint/src/counter.rs:37:31: replace < with <= in TopValues<V>::observe
+crates/deflect-fingerprint/src/counter.rs:44:21: replace -= with += in TopValues<V>::observe
+crates/deflect-fingerprint/src/counter.rs:44:21: replace -= with /= in TopValues<V>::observe
+crates/deflect-fingerprint/src/lib.rs:97:9: replace Fingerprinter::sampled -> u64 with 1
+crates/deflect-fingerprint/src/lib.rs:83:9: replace Fingerprinter::observe with ()
+crates/deflect-fingerprint/src/counter.rs:46:41: replace > with == in TopValues<V>::observe
+crates/deflect-fingerprint/src/counter.rs:46:41: replace > with < in TopValues<V>::observe
+crates/deflect-fingerprint/src/counter.rs:51:9: replace TopValues<V>::total -> u64 with 0
+crates/deflect-fingerprint/src/counter.rs:46:41: replace > with >= in TopValues<V>::observe
+crates/deflect-fingerprint/src/counter.rs:51:9: replace TopValues<V>::total -> u64 with 1
+crates/deflect-fingerprint/src/counter.rs:57:9: replace TopValues<V>::leader -> Option<(V, u64)> with None
+crates/deflect-fingerprint/src/counter.rs:63:9: replace TopValues<V>::leader_share_pct -> u8 with 0
+crates/deflect-fingerprint/src/counter.rs:67:34: replace / with % in TopValues<V>::leader_share_pct
+crates/deflect-fingerprint/src/counter.rs:67:34: replace / with * in TopValues<V>::leader_share_pct
+crates/deflect-fingerprint/src/counter.rs:64:23: replace == with != in TopValues<V>::leader_share_pct
+crates/deflect-fingerprint/src/counter.rs:63:9: replace TopValues<V>::leader_share_pct -> u8 with 1
+crates/deflect-fingerprint/src/counter.rs:67:28: replace * with + in TopValues<V>::leader_share_pct
+crates/deflect-fingerprint/src/fingerprint.rs:30:9: replace Prefix::as_slice -> &[u8] with Vec::leak(Vec::new())
+crates/deflect-fingerprint/src/counter.rs:71:9: replace TopValues<V>::clear with ()
+crates/deflect-fingerprint/src/fingerprint.rs:30:9: replace Prefix::as_slice -> &[u8] with Vec::leak(vec![0])
+crates/deflect-fingerprint/src/counter.rs:67:28: replace * with / in TopValues<V>::leader_share_pct
+crates/deflect-fingerprint/src/fingerprint.rs:30:9: replace Prefix::as_slice -> &[u8] with Vec::leak(vec![1])
+crates/deflect-fingerprint/src/fingerprint.rs:35:9: replace Prefix::matches -> bool with true
+crates/deflect-fingerprint/src/fingerprint.rs:35:9: replace Prefix::matches -> bool with false
+crates/deflect-fingerprint/src/fingerprint.rs:58:9: replace Fingerprint::specificity -> u8 with 0
+crates/deflect-fingerprint/src/fingerprint.rs:62:13: replace + with - in Fingerprint::specificity
+crates/deflect-fingerprint/src/fingerprint.rs:61:13: replace + with - in Fingerprint::specificity
+crates/deflect-fingerprint/src/fingerprint.rs:62:13: replace + with * in Fingerprint::specificity
+crates/deflect-fingerprint/src/fingerprint.rs:58:9: replace Fingerprint::specificity -> u8 with 1
+crates/deflect-fingerprint/src/fingerprint.rs:61:13: replace + with * in Fingerprint::specificity
+crates/deflect-fingerprint/src/fingerprint.rs:60:13: replace + with - in Fingerprint::specificity
+crates/deflect-fingerprint/src/fingerprint.rs:60:13: replace + with * in Fingerprint::specificity
+crates/deflect-fingerprint/src/fingerprint.rs:59:13: replace + with * in Fingerprint::specificity
+crates/deflect-fingerprint/src/fingerprint.rs:67:9: replace Fingerprint::matches -> bool with true
+crates/deflect-fingerprint/src/fingerprint.rs:59:13: replace + with - in Fingerprint::specificity
+crates/deflect-fingerprint/src/fingerprint.rs:67:9: replace Fingerprint::matches -> bool with false
+crates/deflect-fingerprint/src/fingerprint.rs:68:19: replace != with == in Fingerprint::matches
+crates/deflect-fingerprint/src/fingerprint.rs:73:21: replace != with == in Fingerprint::matches
+crates/deflect-fingerprint/src/fingerprint.rs:88:16: delete ! in Fingerprint::matches
+crates/deflect-fingerprint/src/fingerprint.rs:83:22: replace != with == in Fingerprint::matches
+crates/deflect-fingerprint/src/fingerprint.rs:78:20: replace != with == in Fingerprint::matches
+crates/deflect-fingerprint/src/fingerprint.rs:98:9: replace <impl Stage for Fingerprint>::evaluate -> Verdict with Default::default()
+crates/deflect-fingerprint/src/fingerprint.rs:106:9: replace <impl Stage for Fingerprint>::name -> &'static str with ""
+crates/deflect-fingerprint/src/fingerprint.rs:106:9: replace <impl Stage for Fingerprint>::name -> &'static str with "xyzzy"

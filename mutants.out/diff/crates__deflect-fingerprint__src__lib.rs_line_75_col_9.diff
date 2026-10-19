@@ -1,0 +1,21 @@
+--- crates/deflect-fingerprint/src/lib.rs
++++ replace Fingerprinter::with_defaults -> Fingerprinter with Default::default()
+@@ -67,17 +67,17 @@
+         Fingerprinter {
+             capacity: capacity.max(1),
+             inner: Mutex::new(Counters::new(capacity.max(1))),
+         }
+     }
+ 
+     #[must_use]
+     pub fn with_defaults() -> Fingerprinter {
+-        Fingerprinter::new(DEFAULT_CAPACITY)
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Fold one sampled packet into the feature summaries.
+     ///
+     /// # Panics
+     /// Panics only if the internal mutex was poisoned by a prior panic.
+     pub fn observe(&self, packet: &Packet<'_>) {
+         let mut c = self.inner.lock().expect("counters mutex poisoned");

@@ -1,0 +1,21 @@
+--- crates/deflect-fingerprint/src/fingerprint.rs
++++ replace + with - in Fingerprint::specificity
+@@ -51,17 +51,17 @@
+     pub coverage_pct: u8,
+ }
+ 
+ impl Fingerprint {
+     /// Count of constrained feature dimensions.
+     #[must_use]
+     pub fn specificity(&self) -> u8 {
+         u8::from(self.l4.is_some())
+-            + u8::from(self.dst_port.is_some())
++            - /* ~ changed by cargo-mutants ~ */ u8::from(self.dst_port.is_some())
+             + u8::from(self.wire_len.is_some())
+             + u8::from(self.flags.is_some())
+             + u8::from(self.prefix.is_some())
+     }
+ 
+     #[must_use]
+     pub fn matches(&self, packet: &Packet<'_>) -> bool {
+         if let Some(l4) = self.l4 {

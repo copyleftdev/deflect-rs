@@ -11,6 +11,9 @@ description = "Adaptive attack-fingerprint learning for deflect-rs via bounded h
 [dependencies]
 deflect-core = { workspace = true }
 
+[dev-dependencies]
+proptest = "1.6.0"
+
 [features]
 default = ["std"]
 std = ["deflect-core/std"]

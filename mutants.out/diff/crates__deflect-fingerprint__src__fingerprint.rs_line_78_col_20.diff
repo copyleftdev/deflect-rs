@@ -1,0 +1,21 @@
+--- crates/deflect-fingerprint/src/fingerprint.rs
++++ replace != with == in Fingerprint::matches
+@@ -70,17 +70,17 @@
+             }
+         }
+         if let Some(port) = self.dst_port {
+             if port != packet.dst_port {
+                 return false;
+             }
+         }
+         if let Some(len) = self.wire_len {
+-            if len != packet.wire_len {
++            if len == /* ~ changed by cargo-mutants ~ */ packet.wire_len {
+                 return false;
+             }
+         }
+         if let Some(flags) = self.flags {
+             if flags != packet.tcp_flags {
+                 return false;
+             }
+         }
