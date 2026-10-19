@@ -6,7 +6,7 @@
 //! version byte, set lengths or field widths are chosen. A well-formed NetFlow
 //! v5 datagram also round-trips to the record count it declares.
 
-use deflect_telemetry::{parse_netflow_v5, Decoder};
+use deflect_telemetry::{parse_netflow_v5, parse_sflow, Decoder};
 use proptest::prelude::*;
 
 proptest! {
@@ -17,6 +17,56 @@ proptest! {
         let _ = d.ingest_ipfix(&bytes);
         let _ = d.ingest_netflow_v9(&bytes);
         let _ = parse_netflow_v5(&bytes);
+        let _ = parse_sflow(&bytes);
+    }
+
+    #[test]
+    fn truncating_a_valid_sflow_datagram_never_panics(
+        rate in any::<u32>(),
+        frame_len in any::<u32>(),
+        body in prop::collection::vec(any::<u8>(), 0..200),
+        cut in 0usize..320,
+    ) {
+        // A real sFlow v5 header and one flow sample wrapping an arbitrary raw
+        // header, cut at every offset.
+        let mut header = Vec::new();
+        header.extend(1u32.to_be_bytes()); // header protocol (Ethernet)
+        header.extend(frame_len.to_be_bytes());
+        header.extend(0u32.to_be_bytes()); // stripped
+        header.extend((u32::try_from(body.len()).unwrap_or(u32::MAX)).to_be_bytes());
+        header.extend(&body);
+        while header.len() % 4 != 0 {
+            header.push(0);
+        }
+        let mut record = Vec::new();
+        record.extend(1u32.to_be_bytes()); // raw packet header format
+        record.extend((u32::try_from(header.len()).unwrap_or(u32::MAX)).to_be_bytes());
+        record.extend(&header);
+
+        let mut sample_body = Vec::new();
+        sample_body.extend(0u32.to_be_bytes()); // sequence
+        sample_body.extend(0u32.to_be_bytes()); // source id
+        sample_body.extend(rate.to_be_bytes());
+        sample_body.extend(0u32.to_be_bytes()); // pool
+        sample_body.extend(0u32.to_be_bytes()); // drops
+        sample_body.extend([0u8; 8]); // interfaces
+        sample_body.extend(1u32.to_be_bytes()); // one record
+        sample_body.extend(&record);
+
+        let mut dg = Vec::new();
+        dg.extend(5u32.to_be_bytes()); // version
+        dg.extend(1u32.to_be_bytes()); // agent family IPv4
+        dg.extend([10, 0, 0, 1]);
+        dg.extend(0u32.to_be_bytes()); // sub-agent
+        dg.extend(0u32.to_be_bytes()); // sequence
+        dg.extend(0u32.to_be_bytes()); // uptime
+        dg.extend(1u32.to_be_bytes()); // one sample
+        dg.extend(1u32.to_be_bytes()); // sample type: flow sample
+        dg.extend((u32::try_from(sample_body.len()).unwrap_or(u32::MAX)).to_be_bytes());
+        dg.extend(&sample_body);
+
+        let end = cut.min(dg.len());
+        let _ = parse_sflow(&dg[..end]);
     }
 
     #[test]
