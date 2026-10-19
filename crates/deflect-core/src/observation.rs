@@ -3,6 +3,8 @@ use core::net::IpAddr;
 /// Layer-4 protocol of an observation, carrying the IANA protocol number for
 /// anything not called out explicitly.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum L4 {
     Tcp,
     Udp,
@@ -37,6 +39,7 @@ impl L4 {
 
 /// TCP control bits, packed into one byte in the usual wire order.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct TcpFlags(pub u8);
 
 impl TcpFlags {

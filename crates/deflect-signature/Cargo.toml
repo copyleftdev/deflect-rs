@@ -1,0 +1,26 @@
+[package]
+name = "deflect-signature"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+description = "Protocol/port/flag/payload signature matching engine for deflect-rs."
+
+[dependencies]
+deflect-core = { workspace = true }
+memchr = { version = "2.8.3", default-features = false }
+serde = { version = "1.0.217", default-features = false, features = ["alloc", "derive"], optional = true }
+
+[features]
+default = ["std"]
+std = ["deflect-core/std", "memchr/std", "serde?/std"]
+serde = ["dep:serde", "deflect-core/serde"]
+
+[dev-dependencies]
+serde_json = "1.0.143"
+
+[lints.clippy]
+all = "warn"
+pedantic = "warn"

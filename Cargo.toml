@@ -5,6 +5,7 @@ members = [
     "crates/deflect-ratelimit",
     "crates/deflect-detect",
     "crates/deflect-syncookie",
+    "crates/deflect-signature",
 ]
 
 [workspace.package]

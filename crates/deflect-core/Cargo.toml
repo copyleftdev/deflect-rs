@@ -8,9 +8,13 @@ repository.workspace = true
 authors.workspace = true
 description = "Core contract for deflect-rs: verdicts, source keys, observations, and clocks."
 
+[dependencies]
+serde = { version = "1.0.217", default-features = false, features = ["derive"], optional = true }
+
 [features]
 default = ["std"]
-std = []
+std = ["serde?/std"]
+serde = ["dep:serde"]
 
 [lints.clippy]
 all = "warn"

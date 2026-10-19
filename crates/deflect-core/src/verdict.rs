@@ -2,6 +2,8 @@ use core::time::Duration;
 
 /// Why a stage decided to drop traffic.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum DropReason {
     RateExceeded,
     Signature,
@@ -14,6 +16,8 @@ pub enum DropReason {
 
 /// A challenge a source must satisfy before it is trusted.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum ChallengeKind {
     SynCookie,
 }
@@ -23,6 +27,8 @@ pub enum ChallengeKind {
 /// Verdicts form a total order of severity so a pipeline can keep the most
 /// severe decision across its stages: `Pass < Challenge < RateLimit < Drop`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Verdict {
     #[default]
     Pass,

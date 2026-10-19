@@ -35,7 +35,7 @@ time-dependent primitive is driven deterministically in tests.
 | `deflect-ratelimit` | ✅ | Exact integer `TokenBucket`; `SourceGovernor`, a fixed-size per-source/per-subnet limiter with bounded memory |
 | `deflect-detect` | ✅ | `SlidingWindow` exact rate counter; `Trigger`, dual-watermark attack detection with hysteresis |
 | `deflect-syncookie` | ✅ | Stateless SYN-cookie issuance and validation (SipHash-2-4 keyed) |
-| `deflect-signature` | ⏳ | Protocol/port/flag/payload signature engine |
+| `deflect-signature` | ✅ | Protocol/port/flag/payload signature engine; `methods.json`-style rules load via `serde` |
 | `deflect-reflect` | ⏳ | Reflection/amplification defense |
 | `deflect-fingerprint` | ⏳ | Learning fingerprints of unknown attacks |
 | `deflect-enforce` | ⏳ | nftables / XDP enforcement backends behind a trait |
@@ -65,11 +65,20 @@ time-dependent primitive is driven deterministically in tests.
   keyed MAC, so the cookie authenticates `(tuple, client_isn, epoch)` rather
   than binding the ISN only linearly. The secret is caller-supplied (seed it
   with `getrandom`) and rotates with a one-generation grace window.
+- **Signatures ship conservative, extend freely.** The built-in `baseline()`
+  set contains only *unambiguously* malicious patterns (illegal TCP flag
+  combinations — NULL/XMAS/SYN+FIN/SYN+RST), which are safe to drop at any load.
+  Port- and size-based amplifier heuristics can catch legitimate traffic (a
+  source port of 53 is also a real DNS reply), so those live in the stateful
+  `deflect-reflect` and rate-limiting primitives, not a blind signature. Payload
+  search uses `memchr` (SIMD) because scanning bytes per-packet during a flood is
+  a hot path; rules load from JSON via the optional `serde` feature.
 
 ## Status
 
-Early. Four crates are implemented and tested (47 tests, `clippy -W pedantic`
-clean, builds `no_std`). The remaining crates are scaffolded as roadmap.
+Early. Five crates are implemented and tested (63 tests default, 65 with
+`serde`; `clippy -W pedantic` clean; core primitives build `no_std`). The
+remaining crates are scaffolded as roadmap.
 
 ## License
 
