@@ -6,6 +6,8 @@ rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 authors.workspace = true
+keywords.workspace = true
+categories.workspace = true
 description = "Enforcement backends for deflect-rs: program bans into nftables (XDP fast path planned)."
 
 [dependencies]

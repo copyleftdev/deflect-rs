@@ -6,6 +6,8 @@ rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 authors.workspace = true
+keywords.workspace = true
+categories.workspace = true
 description = "Exact integer token-bucket and per-source rate-limiting governors for deflect-rs."
 
 [dependencies]

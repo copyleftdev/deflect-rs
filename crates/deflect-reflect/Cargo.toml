@@ -6,6 +6,8 @@ rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 authors.workspace = true
+keywords.workspace = true
+categories.workspace = true
 description = "Stateful reflection/amplification defense for deflect-rs: unsolicited amplifier replies."
 
 [dependencies]

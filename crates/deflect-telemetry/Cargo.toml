@@ -6,7 +6,9 @@ rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 authors.workspace = true
-description = "Flow-telemetry ingestion for deflect-rs: NetFlow v5/v9 and IPFIX into unified flow records."
+keywords.workspace = true
+categories.workspace = true
+description = "Flow-telemetry ingestion for deflect-rs: NetFlow v5/v9, IPFIX, and sFlow v5 into unified flow records."
 
 [dependencies]
 deflect-core = { workspace = true }

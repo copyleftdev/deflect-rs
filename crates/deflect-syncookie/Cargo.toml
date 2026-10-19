@@ -6,6 +6,8 @@ rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 authors.workspace = true
+keywords.workspace = true
+categories.workspace = true
 description = "Stateless SYN-cookie issuance and validation for deflect-rs, keyed with SipHash-2-4."
 
 [dependencies]

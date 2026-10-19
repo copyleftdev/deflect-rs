@@ -6,6 +6,8 @@ rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 authors.workspace = true
+keywords.workspace = true
+categories.workspace = true
 description = "Upstream RTBH (remote-triggered blackhole) announcement for deflect-rs, driven over the ExaBGP text API."
 
 [dependencies]

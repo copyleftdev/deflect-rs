@@ -6,6 +6,8 @@ rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 authors.workspace = true
+keywords.workspace = true
+categories.workspace = true
 description = "Traffic-rate monitoring and attack triggers with hysteresis for deflect-rs."
 
 [dependencies]
