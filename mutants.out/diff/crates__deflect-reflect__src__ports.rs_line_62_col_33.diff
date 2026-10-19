@@ -1,0 +1,21 @@
+--- crates/deflect-reflect/src/ports.rs
++++ replace << with >> in AmplifierPorts::insert
+@@ -54,17 +54,17 @@
+         for &port in DEFAULT_PORTS {
+             p.insert(port);
+         }
+         p
+     }
+ 
+     pub fn insert(&mut self, port: u16) {
+         let (word, bit) = Self::index(port);
+-        self.bits[word] |= 1u64 << bit;
++        self.bits[word] |= 1u64 >> /* ~ changed by cargo-mutants ~ */ bit;
+     }
+ 
+     pub fn remove(&mut self, port: u16) {
+         let (word, bit) = Self::index(port);
+         self.bits[word] &= !(1u64 << bit);
+     }
+ 
+     #[must_use]

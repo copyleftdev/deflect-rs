@@ -1,0 +1,141 @@
+
+*** crates/deflect-reflect/src/ports.rs:53:9: replace AmplifierPorts::with_defaults -> AmplifierPorts with Default::default()
+
+*** mutation diff:
+--- crates/deflect-reflect/src/ports.rs
++++ replace AmplifierPorts::with_defaults -> AmplifierPorts with Default::default()
+@@ -45,21 +45,17 @@
+ impl AmplifierPorts {
+     #[must_use]
+     pub const fn empty() -> AmplifierPorts {
+         AmplifierPorts { bits: [0; 1024] }
+     }
+ 
+     #[must_use]
+     pub fn with_defaults() -> AmplifierPorts {
+-        let mut p = AmplifierPorts::empty();
+-        for &port in DEFAULT_PORTS {
+-            p.insert(port);
+-        }
+-        p
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     pub fn insert(&mut self, port: u16) {
+         let (word, bit) = Self::index(port);
+         self.bits[word] |= 1u64 << bit;
+     }
+ 
+     pub fn remove(&mut self, port: u16) {
+
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=deflect-reflect@0.1.0
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh autocfg v1.5.1
+       Fresh bitflags v2.13.2
+       Fresh getrandom v0.4.3
+       Fresh linux-raw-sys v0.12.1
+       Fresh rustix v1.1.5
+       Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
+       Fresh tempfile v3.27.0
+       Fresh wait-timeout v0.2.1
+       Fresh bit-vec v0.10.1
+       Fresh cpufeatures v0.3.1
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+       Fresh bit-set v0.11.1
+       Fresh chacha20 v0.10.2
+       Fresh rusty-fork v0.3.1
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/crates/deflect-core)
+       Fresh regex-syntax v0.8.11
+       Fresh core_detect v1.0.0
+       Fresh unarray v0.1.4
+       Fresh proptest v1.12.0
+       Dirty deflect-reflect v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/crates/deflect-reflect): the file `crates/deflect-reflect/src/lib.rs` has changed (1792417196.942284912s, 3s after last build at 1792417193.011085957s)
+   Compiling deflect-reflect v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/crates/deflect-reflect)
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_reflect --edition=2021 crates/deflect-reflect/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=7fe7f33b1f392db0 -C extra-filename=-464c7b3a9da94672 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_reflect --edition=2021 crates/deflect-reflect/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=b7fe68b5d52c2563 -C extra-filename=-8df17f1741652d8e --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rmeta`
+warning: constant `DEFAULT_PORTS` is never used
+  --> crates/deflect-reflect/src/ports.rs:14:7
+   |
+14 | const DEFAULT_PORTS: &[u16] = &[
+   |       ^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `deflect-reflect` (lib) generated 1 warning
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name properties --edition=2021 crates/deflect-reflect/tests/properties.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=555774f3a9fa1194 -C extra-filename=-9ffd5c383e2c9540 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern deflect_reflect=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/target/debug/deps/libdeflect_reflect-8df17f1741652d8e.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+warning: `deflect-reflect` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.73s
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/target/debug/deps/deflect_reflect-464c7b3a9da94672`
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/target/debug/deps/properties-9ffd5c383e2c9540`
+
+*** result: Success
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=deflect-reflect@0.1.0
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh getrandom v0.4.3
+       Fresh linux-raw-sys v0.12.1
+       Fresh autocfg v1.5.1
+       Fresh bitflags v2.13.2
+       Fresh once_cell v1.21.4
+       Fresh fastrand v2.5.0
+       Fresh rustix v1.1.5
+       Fresh wait-timeout v0.2.1
+       Fresh fnv v1.0.7
+       Fresh bit-vec v0.10.1
+       Fresh cpufeatures v0.3.1
+       Fresh quick-error v1.2.3
+       Fresh tempfile v3.27.0
+       Fresh bit-set v0.11.1
+       Fresh chacha20 v0.10.2
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh unarray v0.1.4
+       Fresh num-traits v0.2.19
+       Fresh rusty-fork v0.3.1
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/crates/deflect-core)
+       Fresh regex-syntax v0.8.11
+       Fresh core_detect v1.0.0
+       Fresh proptest v1.12.0
+warning: constant `DEFAULT_PORTS` is never used
+  --> crates/deflect-reflect/src/ports.rs:14:7
+   |
+14 | const DEFAULT_PORTS: &[u16] = &[
+   |       ^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `deflect-reflect` (lib) generated 1 warning
+       Fresh deflect-reflect v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/crates/deflect-reflect)
+warning: `deflect-reflect` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.70s
+     Running `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/target/debug/deps/deflect_reflect-464c7b3a9da94672`
+
+running 20 tests
+test ports::tests::boundary_ports ... ok
+test ports::tests::defaults_contain_known_amplifiers ... 
+thread 'ports::tests::defaults_contain_known_amplifiers' (3916952) has overflowed its stack
+fatal runtime error: stack overflow, aborting
+error: test failed, to rerun pass `-p deflect-reflect --lib`
+
+Caused by:
+  process didn't exit successfully: `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-vPWlbb.tmp/target/debug/deps/deflect_reflect-464c7b3a9da94672` (signal: 6, SIGABRT: process abort signal)
+
+*** result: Failure(101)

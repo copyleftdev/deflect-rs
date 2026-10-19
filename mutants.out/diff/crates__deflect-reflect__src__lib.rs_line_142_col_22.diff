@@ -1,0 +1,21 @@
+--- crates/deflect-reflect/src/lib.rs
++++ replace != with == in ReflectionGuard::note_outbound
+@@ -134,17 +134,17 @@
+     }
+ 
+     /// Record an outbound packet. If it targets an amplifier port, a matching
+     /// inbound reply within the TTL is treated as solicited.
+     ///
+     /// # Panics
+     /// Panics only if a slot mutex was poisoned by a prior panic while held.
+     pub fn note_outbound(&self, packet: &Packet<'_>, now_nanos: u64) {
+-        if packet.l4 != L4::Udp || !self.ports.contains(packet.dst_port) {
++        if packet.l4 == /* ~ changed by cargo-mutants ~ */ L4::Udp || !self.ports.contains(packet.dst_port) {
+             return;
+         }
+         let fp = fingerprint(packet.dst, packet.dst_port);
+         let mut e = self.table[self.slot(fp)]
+             .lock()
+             .expect("expect mutex poisoned");
+         *e = Expect {
+             fp,

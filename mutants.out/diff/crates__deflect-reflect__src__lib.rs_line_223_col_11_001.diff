@@ -1,0 +1,21 @@
+--- crates/deflect-reflect/src/lib.rs
++++ replace ^= with &= in fingerprint
+@@ -215,17 +215,17 @@
+     }
+ }
+ 
+ fn fingerprint(addr: IpAddr, port: u16) -> u64 {
+     const OFFSET: u64 = 0xcbf2_9ce4_8422_2325;
+     const PRIME: u64 = 0x1000_0000_01b3;
+     let mut h = OFFSET;
+     let mut mix = |b: u8| {
+-        h ^= u64::from(b);
++        h &= /* ~ changed by cargo-mutants ~ */ u64::from(b);
+         h = h.wrapping_mul(PRIME);
+     };
+     match addr {
+         IpAddr::V4(v4) => {
+             mix(4);
+             for b in v4.octets() {
+                 mix(b);
+             }

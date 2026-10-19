@@ -364,4 +364,112 @@ mod tests {
             Verdict::Drop(DropReason::Reflection)
         );
     }
+
+    #[test]
+    fn tcp_to_an_amplifier_port_is_not_recorded() {
+        // note_outbound must record only UDP to amplifier ports. A TCP packet to
+        // port 53 must not create an expectation, so a later UDP reply from 53
+        // is still unsolicited and dropped.
+        let g = guard();
+        let server = IpAddr::V4(Ipv4Addr::new(198, 51, 100, 9));
+        let me = IpAddr::V4(Ipv4Addr::new(203, 0, 113, 5));
+        let tcp_q = Packet::new(me, server, L4::Tcp)
+            .with_ports(40000, 53)
+            .with_wire_len(60);
+        g.note_outbound(&tcp_q, 1_000);
+        assert_eq!(
+            g.classify(&amp_reply(53, 4096), 1_500),
+            Verdict::Drop(DropReason::Reflection)
+        );
+    }
+
+    #[test]
+    fn concurrent_requests_keep_distinct_slots() {
+        // Two live requests to different servers must not share a slot; both
+        // replies stay solicited. (A constant slot index would let the second
+        // overwrite the first.)
+        let g = guard();
+        let local = IpAddr::V4(Ipv4Addr::new(203, 0, 113, 5));
+        let srv_a = IpAddr::V4(Ipv4Addr::new(198, 51, 100, 9));
+        let srv_b = IpAddr::V4(Ipv4Addr::new(192, 0, 2, 200));
+        let query = |dst: IpAddr, port: u16| {
+            Packet::new(local, dst, L4::Udp)
+                .with_ports(40000, port)
+                .with_wire_len(60)
+        };
+        let reply = |src: IpAddr, port: u16| {
+            Packet::new(src, local, L4::Udp)
+                .with_ports(port, 40000)
+                .with_wire_len(4096)
+        };
+        g.note_outbound(&query(srv_a, 53), 1_000);
+        g.note_outbound(&query(srv_b, 123), 1_000);
+        assert_eq!(g.classify(&reply(srv_a, 53), 1_500), Verdict::Pass);
+        assert_eq!(g.classify(&reply(srv_b, 123), 1_500), Verdict::Pass);
+    }
+
+    #[test]
+    fn size_only_drops_at_exactly_the_threshold() {
+        // min_reply_len is inclusive: a reply exactly at the threshold is dropped.
+        let g = ReflectionGuard::size_only(AmplifierPorts::with_defaults(), 512, 1 << 12);
+        assert_eq!(g.classify(&amp_reply(53, 511), 1_000), Verdict::Pass);
+        assert_eq!(
+            g.classify(&amp_reply(53, 512), 1_000),
+            Verdict::Drop(DropReason::Reflection)
+        );
+    }
+
+    #[test]
+    fn wrong_fingerprint_in_a_shared_slot_is_unsolicited() {
+        // One slot forces a collision. A reply whose fingerprint differs from the
+        // stored expectation must not be treated as solicited.
+        let g = ReflectionGuard::new(ReflectConfig {
+            slots: 1,
+            ..Default::default()
+        });
+        g.note_outbound(&my_query(53, 60), 1_000);
+        let other = IpAddr::V4(Ipv4Addr::new(192, 0, 2, 200));
+        let me = IpAddr::V4(Ipv4Addr::new(203, 0, 113, 5));
+        let reply = Packet::new(other, me, L4::Udp)
+            .with_ports(53, 40000)
+            .with_wire_len(4096);
+        assert_eq!(
+            g.classify(&reply, 1_500),
+            Verdict::Drop(DropReason::Reflection)
+        );
+    }
+
+    #[test]
+    fn zero_length_request_does_not_divide_by_zero() {
+        // A solicited reply whose request had zero recorded length must not
+        // attempt an amplification ratio (division by zero).
+        let g = guard();
+        g.note_outbound(&my_query(53, 0), 1_000);
+        assert_eq!(g.classify(&amp_reply(53, 4096), 1_500), Verdict::Pass);
+        assert_eq!(g.stats().peak_amplification_pct, 0);
+    }
+
+    #[test]
+    fn stage_evaluate_drops_unsolicited() {
+        let g = guard();
+        assert_eq!(
+            Stage::evaluate(&g, &Observation::new(amp_reply(53, 4096), 1_000)),
+            Verdict::Drop(DropReason::Reflection)
+        );
+    }
+
+    #[test]
+    fn stage_name_is_stable() {
+        assert_eq!(Stage::name(&guard()), "reflection_guard");
+    }
+
+    #[test]
+    fn fingerprint_is_pinned() {
+        // Golden values pin the fingerprint hash so the xor, the shift, and the
+        // low-byte mask cannot be altered unnoticed. A port >= 256 exercises
+        // both bytes.
+        let a = IpAddr::V4(Ipv4Addr::new(198, 51, 100, 9));
+        assert_eq!(fingerprint(a, 1900), 0xB64A_8930_8028_0108);
+        assert_eq!(fingerprint(a, 53), 0xB615_1930_8025_375C);
+    }
 }

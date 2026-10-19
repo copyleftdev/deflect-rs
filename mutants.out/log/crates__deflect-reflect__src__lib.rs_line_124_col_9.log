@@ -1,0 +1,88 @@
+
+*** crates/deflect-reflect/src/lib.rs:124:9: replace ReflectionGuard::size_only -> ReflectionGuard with Default::default()
+
+*** mutation diff:
+--- crates/deflect-reflect/src/lib.rs
++++ replace ReflectionGuard::size_only -> ReflectionGuard with Default::default()
+@@ -116,22 +116,17 @@
+         }
+     }
+ 
+     /// Inbound-only guard with no egress visibility: every amplifier-port reply
+     /// is treated as unsolicited, so one at or above `min_reply_len` is dropped.
+     /// Set `min_reply_len` high enough to clear ordinary small replies.
+     #[must_use]
+     pub fn size_only(ports: AmplifierPorts, min_reply_len: u32, slots: usize) -> ReflectionGuard {
+-        ReflectionGuard::new(ReflectConfig {
+-            ports,
+-            solicit_ttl_nanos: 0,
+-            min_reply_len,
+-            slots,
+-        })
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn slot(&self, fp: u64) -> usize {
+         usize::try_from(fp & self.mask).expect("masked slot fits usize")
+     }
+ 
+     /// Record an outbound packet. If it targets an amplifier port, a matching
+     /// inbound reply within the TTL is treated as solicited.
+
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=deflect-reflect@0.1.0
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh linux-raw-sys v0.12.1
+       Fresh autocfg v1.5.1
+       Fresh bitflags v2.13.2
+       Fresh once_cell v1.21.4
+       Fresh fastrand v2.5.0
+       Fresh wait-timeout v0.2.1
+       Fresh quick-error v1.2.3
+       Fresh getrandom v0.4.3
+       Fresh rustix v1.1.5
+       Fresh fnv v1.0.7
+       Fresh bit-vec v0.10.1
+       Fresh cpufeatures v0.3.1
+       Fresh rand_xorshift v0.5.0
+       Fresh tempfile v3.27.0
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh bit-set v0.11.1
+       Fresh chacha20 v0.10.2
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/crates/deflect-core)
+       Fresh unarray v0.1.4
+       Fresh rusty-fork v0.3.1
+       Fresh core_detect v1.0.0
+       Fresh regex-syntax v0.8.11
+       Dirty deflect-reflect v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/crates/deflect-reflect): the file `crates/deflect-reflect/src/lib.rs` has changed (1792417106.357700501s, 13s after last build at 1792417093.209035058s)
+   Compiling deflect-reflect v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/crates/deflect-reflect)
+       Fresh proptest v1.12.0
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_reflect --edition=2021 crates/deflect-reflect/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=7fe7f33b1f392db0 -C extra-filename=-464c7b3a9da94672 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_reflect --edition=2021 crates/deflect-reflect/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=b7fe68b5d52c2563 -C extra-filename=-8df17f1741652d8e --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rmeta`
+error[E0277]: the trait bound `ReflectionGuard: Default` is not satisfied
+   --> crates/deflect-reflect/src/lib.rs:124:9
+    |
+124 |         Default::default() /* ~ changed by cargo-mutants ~ */
+    |         ^^^^^^^^^^^^^^^^^^ the trait `Default` is not implemented for `ReflectionGuard`
+    |
+help: consider annotating `ReflectionGuard` with `#[derive(Default)]`
+    |
+ 81 + #[derive(Default)]
+ 82 | pub struct ReflectionGuard {
+    |
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `deflect-reflect` (lib) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_reflect --edition=2021 crates/deflect-reflect/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=b7fe68b5d52c2563 -C extra-filename=-8df17f1741652d8e --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rmeta` (exit status: 1)
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `deflect-reflect` (lib test) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_reflect --edition=2021 crates/deflect-reflect/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=7fe7f33b1f392db0 -C extra-filename=-464c7b3a9da94672 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib` (exit status: 1)
+
+*** result: Failure(101)

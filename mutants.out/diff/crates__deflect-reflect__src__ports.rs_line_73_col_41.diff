@@ -1,0 +1,21 @@
+--- crates/deflect-reflect/src/ports.rs
++++ replace != with == in AmplifierPorts::contains
+@@ -65,17 +65,17 @@
+     pub fn remove(&mut self, port: u16) {
+         let (word, bit) = Self::index(port);
+         self.bits[word] &= !(1u64 << bit);
+     }
+ 
+     #[must_use]
+     pub fn contains(&self, port: u16) -> bool {
+         let (word, bit) = Self::index(port);
+-        self.bits[word] & (1u64 << bit) != 0
++        self.bits[word] & (1u64 << bit) == /* ~ changed by cargo-mutants ~ */ 0
+     }
+ 
+     const fn index(port: u16) -> (usize, usize) {
+         let p = port as usize;
+         (p / 64, p % 64)
+     }
+ }
+ 

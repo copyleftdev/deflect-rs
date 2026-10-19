@@ -1,0 +1,343 @@
+
+*** crates/deflect-reflect/src/lib.rs:159:9: replace ReflectionGuard::classify -> Verdict with Default::default()
+
+*** mutation diff:
+--- crates/deflect-reflect/src/lib.rs
++++ replace ReflectionGuard::classify -> Verdict with Default::default()
+@@ -151,31 +151,17 @@
+             ts_nanos: now_nanos,
+             req_len: packet.wire_len,
+         };
+     }
+ 
+     /// Classify an inbound packet.
+     #[must_use]
+     pub fn classify(&self, packet: &Packet<'_>, now_nanos: u64) -> Verdict {
+-        if packet.l4 != L4::Udp || !self.ports.contains(packet.src_port) {
+-            return Verdict::Pass;
+-        }
+-        let fp = fingerprint(packet.src, packet.src_port);
+-        if self.consume_expectation(fp, packet.wire_len, now_nanos) {
+-            self.solicited.fetch_add(1, Ordering::Relaxed);
+-            return Verdict::Pass;
+-        }
+-        if packet.wire_len < self.min_reply_len {
+-            return Verdict::Pass;
+-        }
+-        self.dropped.fetch_add(1, Ordering::Relaxed);
+-        self.bytes_dropped
+-            .fetch_add(u64::from(packet.wire_len), Ordering::Relaxed);
+-        Verdict::Drop(DropReason::Reflection)
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Returns true if a live request matched `fp`; consumes it so a single
+     /// request authorises a single reply.
+     fn consume_expectation(&self, fp: u64, reply_len: u32, now_nanos: u64) -> bool {
+         let mut e = self.table[self.slot(fp)]
+             .lock()
+             .expect("expect mutex poisoned");
+
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=deflect-reflect@0.1.0
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh getrandom v0.4.3
+       Fresh bitflags v2.13.2
+       Fresh linux-raw-sys v0.12.1
+       Fresh autocfg v1.5.1
+       Fresh rustix v1.1.5
+       Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
+       Fresh tempfile v3.27.0
+       Fresh wait-timeout v0.2.1
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+       Fresh bit-vec v0.10.1
+       Fresh cpufeatures v0.3.1
+       Fresh chacha20 v0.10.2
+       Fresh bit-set v0.11.1
+       Fresh rusty-fork v0.3.1
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/crates/deflect-core)
+       Fresh unarray v0.1.4
+       Fresh core_detect v1.0.0
+       Fresh regex-syntax v0.8.11
+       Fresh proptest v1.12.0
+       Dirty deflect-reflect v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/crates/deflect-reflect): the file `crates/deflect-reflect/src/lib.rs` has changed (1792417129.191856118s, 8s after last build at 1792417121.704477189s)
+   Compiling deflect-reflect v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/crates/deflect-reflect)
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_reflect --edition=2021 crates/deflect-reflect/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=b7fe68b5d52c2563 -C extra-filename=-8df17f1741652d8e --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rmeta`
+warning: unused import: `DropReason`
+  --> crates/deflect-reflect/src/lib.rs:34:20
+   |
+34 | use deflect_core::{DropReason, Observation, Packet, Stage, Verdict, L4};
+   |                    ^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `packet`
+   --> crates/deflect-reflect/src/lib.rs:158:28
+    |
+158 |     pub fn classify(&self, packet: &Packet<'_>, now_nanos: u64) -> Verdict {
+    |                            ^^^^^^ help: if this is intentional, prefix it with an underscore: `_packet`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `now_nanos`
+   --> crates/deflect-reflect/src/lib.rs:158:49
+    |
+158 |     pub fn classify(&self, packet: &Packet<'_>, now_nanos: u64) -> Verdict {
+    |                                                 ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_now_nanos`
+
+warning: fields `fp`, `ts_nanos`, and `req_len` are never read
+  --> crates/deflect-reflect/src/lib.rs:64:5
+   |
+63 | struct Expect {
+   |        ------ fields in this struct
+64 |     fp: u64,
+   |     ^^
+65 |     ts_nanos: u64,
+   |     ^^^^^^^^
+66 |     req_len: u32,
+   |     ^^^^^^^
+   |
+   = note: `Expect` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: fields `ttl` and `min_reply_len` are never read
+  --> crates/deflect-reflect/src/lib.rs:83:5
+   |
+81 | pub struct ReflectionGuard {
+   |            --------------- fields in this struct
+82 |     ports: AmplifierPorts,
+83 |     ttl: u64,
+   |     ^^^
+84 |     min_reply_len: u32,
+   |     ^^^^^^^^^^^^^
+
+warning: method `consume_expectation` is never used
+   --> crates/deflect-reflect/src/lib.rs:164:8
+    |
+ 93 | impl ReflectionGuard {
+    | -------------------- method in this implementation
+...
+164 |     fn consume_expectation(&self, fp: u64, reply_len: u32, now_nanos: u64) -> bool {
+    |        ^^^^^^^^^^^^^^^^^^^
+
+warning: `deflect-reflect` (lib) generated 6 warnings (run `cargo fix --lib -p deflect-reflect` to apply 3 suggestions)
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name properties --edition=2021 crates/deflect-reflect/tests/properties.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=555774f3a9fa1194 -C extra-filename=-9ffd5c383e2c9540 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern deflect_reflect=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps/libdeflect_reflect-8df17f1741652d8e.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_reflect --edition=2021 crates/deflect-reflect/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=7fe7f33b1f392db0 -C extra-filename=-464c7b3a9da94672 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+warning: `deflect-reflect` (lib test) generated 5 warnings (5 duplicates)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.59s
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps/deflect_reflect-464c7b3a9da94672`
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps/properties-9ffd5c383e2c9540`
+
+*** result: Success
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=deflect-reflect@0.1.0
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh getrandom v0.4.3
+       Fresh linux-raw-sys v0.12.1
+       Fresh autocfg v1.5.1
+       Fresh bitflags v2.13.2
+       Fresh rustix v1.1.5
+       Fresh once_cell v1.21.4
+       Fresh fastrand v2.5.0
+       Fresh tempfile v3.27.0
+       Fresh wait-timeout v0.2.1
+       Fresh fnv v1.0.7
+       Fresh bit-vec v0.10.1
+       Fresh cpufeatures v0.3.1
+       Fresh quick-error v1.2.3
+       Fresh rusty-fork v0.3.1
+       Fresh chacha20 v0.10.2
+       Fresh bit-set v0.11.1
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/crates/deflect-core)
+       Fresh unarray v0.1.4
+       Fresh core_detect v1.0.0
+       Fresh regex-syntax v0.8.11
+       Fresh proptest v1.12.0
+warning: unused import: `DropReason`
+  --> crates/deflect-reflect/src/lib.rs:34:20
+   |
+34 | use deflect_core::{DropReason, Observation, Packet, Stage, Verdict, L4};
+   |                    ^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `packet`
+   --> crates/deflect-reflect/src/lib.rs:158:28
+    |
+158 |     pub fn classify(&self, packet: &Packet<'_>, now_nanos: u64) -> Verdict {
+    |                            ^^^^^^ help: if this is intentional, prefix it with an underscore: `_packet`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `now_nanos`
+   --> crates/deflect-reflect/src/lib.rs:158:49
+    |
+158 |     pub fn classify(&self, packet: &Packet<'_>, now_nanos: u64) -> Verdict {
+    |                                                 ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_now_nanos`
+
+warning: fields `fp`, `ts_nanos`, and `req_len` are never read
+  --> crates/deflect-reflect/src/lib.rs:64:5
+   |
+63 | struct Expect {
+   |        ------ fields in this struct
+64 |     fp: u64,
+   |     ^^
+65 |     ts_nanos: u64,
+   |     ^^^^^^^^
+66 |     req_len: u32,
+   |     ^^^^^^^
+   |
+   = note: `Expect` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: fields `ttl` and `min_reply_len` are never read
+  --> crates/deflect-reflect/src/lib.rs:83:5
+   |
+81 | pub struct ReflectionGuard {
+   |            --------------- fields in this struct
+82 |     ports: AmplifierPorts,
+83 |     ttl: u64,
+   |     ^^^
+84 |     min_reply_len: u32,
+   |     ^^^^^^^^^^^^^
+
+warning: method `consume_expectation` is never used
+   --> crates/deflect-reflect/src/lib.rs:164:8
+    |
+ 93 | impl ReflectionGuard {
+    | -------------------- method in this implementation
+...
+164 |     fn consume_expectation(&self, fp: u64, reply_len: u32, now_nanos: u64) -> bool {
+    |        ^^^^^^^^^^^^^^^^^^^
+
+warning: `deflect-reflect` (lib) generated 6 warnings (run `cargo fix --lib -p deflect-reflect` to apply 3 suggestions)
+       Fresh deflect-reflect v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/crates/deflect-reflect)
+warning: `deflect-reflect` (lib test) generated 5 warnings (5 duplicates)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.30s
+     Running `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-3uWQNa.tmp/target/debug/deps/deflect_reflect-464c7b3a9da94672`
+
+running 20 tests
+test ports::tests::boundary_ports ... ok
+test ports::tests::defaults_contain_known_amplifiers ... ok
+test ports::tests::defaults_exclude_ordinary_ports ... ok
+test ports::tests::insert_remove_roundtrip ... ok
+test tests::concurrent_requests_keep_distinct_slots ... ok
+test tests::different_server_reply_is_unsolicited ... FAILED
+test tests::expired_request_no_longer_solicits ... FAILED
+test tests::fingerprint_is_pinned ... ok
+test tests::non_amplifier_port_passes ... ok
+test tests::non_udp_passes ... ok
+test tests::one_request_authorises_one_reply ... FAILED
+test tests::size_only_drops_at_exactly_the_threshold ... FAILED
+test tests::size_only_mode_uses_threshold ... FAILED
+test tests::solicited_dns_reply_passes ... FAILED
+test tests::stage_evaluate_drops_unsolicited ... FAILED
+test tests::stage_name_is_stable ... ok
+test tests::tcp_to_an_amplifier_port_is_not_recorded ... FAILED
+test tests::unsolicited_dns_reply_is_dropped ... FAILED
+test tests::wrong_fingerprint_in_a_shared_slot_is_unsolicited ... FAILED
+test tests::zero_length_request_does_not_divide_by_zero ... ok
+
+failures:
+
+---- tests::different_server_reply_is_unsolicited stdout ----
+
+thread 'tests::different_server_reply_is_unsolicited' (3900219) panicked at crates/deflect-reflect/src/lib.rs:348:9:
+assertion `left == right` failed
+  left: Pass
+ right: Drop(Reflection)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- tests::expired_request_no_longer_solicits stdout ----
+
+thread 'tests::expired_request_no_longer_solicits' (3900220) panicked at crates/deflect-reflect/src/lib.rs:303:9:
+assertion `left == right` failed
+  left: Pass
+ right: Drop(Reflection)
+
+---- tests::one_request_authorises_one_reply stdout ----
+
+thread 'tests::one_request_authorises_one_reply' (3900224) panicked at crates/deflect-reflect/src/lib.rs:292:9:
+assertion `left == right` failed
+  left: Pass
+ right: Drop(Reflection)
+
+---- tests::size_only_drops_at_exactly_the_threshold stdout ----
+
+thread 'tests::size_only_drops_at_exactly_the_threshold' (3900225) panicked at crates/deflect-reflect/src/lib.rs:402:9:
+assertion `left == right` failed
+  left: Pass
+ right: Drop(Reflection)
+
+---- tests::size_only_mode_uses_threshold stdout ----
+
+thread 'tests::size_only_mode_uses_threshold' (3900226) panicked at crates/deflect-reflect/src/lib.rs:332:9:
+assertion `left == right` failed
+  left: Pass
+ right: Drop(Reflection)
+
+---- tests::solicited_dns_reply_passes stdout ----
+
+thread 'tests::solicited_dns_reply_passes' (3900227) panicked at crates/deflect-reflect/src/lib.rs:280:9:
+assertion `left == right` failed
+  left: 0
+ right: 1
+
+---- tests::stage_evaluate_drops_unsolicited stdout ----
+
+thread 'tests::stage_evaluate_drops_unsolicited' (3900228) panicked at crates/deflect-reflect/src/lib.rs:441:9:
+assertion `left == right` failed
+  left: Pass
+ right: Drop(Reflection)
+
+---- tests::tcp_to_an_amplifier_port_is_not_recorded stdout ----
+
+thread 'tests::tcp_to_an_amplifier_port_is_not_recorded' (3900230) panicked at crates/deflect-reflect/src/lib.rs:366:9:
+assertion `left == right` failed
+  left: Pass
+ right: Drop(Reflection)
+
+---- tests::unsolicited_dns_reply_is_dropped stdout ----
+
+thread 'tests::unsolicited_dns_reply_is_dropped' (3900231) panicked at crates/deflect-reflect/src/lib.rs:267:9:
+assertion `left == right` failed
+  left: Pass
+ right: Drop(Reflection)
+
+---- tests::wrong_fingerprint_in_a_shared_slot_is_unsolicited stdout ----
+
+thread 'tests::wrong_fingerprint_in_a_shared_slot_is_unsolicited' (3900232) panicked at crates/deflect-reflect/src/lib.rs:422:9:
+assertion `left == right` failed
+  left: Pass
+ right: Drop(Reflection)
+
+
+failures:
+    tests::different_server_reply_is_unsolicited
+    tests::expired_request_no_longer_solicits
+    tests::one_request_authorises_one_reply
+    tests::size_only_drops_at_exactly_the_threshold
+    tests::size_only_mode_uses_threshold
+    tests::solicited_dns_reply_passes
+    tests::stage_evaluate_drops_unsolicited
+    tests::tcp_to_an_amplifier_port_is_not_recorded
+    tests::unsolicited_dns_reply_is_dropped
+    tests::wrong_fingerprint_in_a_shared_slot_is_unsolicited
+
+test result: FAILED. 10 passed; 10 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p deflect-reflect --lib`
+
+*** result: Failure(101)

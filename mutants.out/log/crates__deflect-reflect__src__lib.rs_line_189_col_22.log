@@ -1,0 +1,146 @@
+
+*** crates/deflect-reflect/src/lib.rs:189:22: replace > with == in ReflectionGuard::consume_expectation
+
+*** mutation diff:
+--- crates/deflect-reflect/src/lib.rs
++++ replace > with == in ReflectionGuard::consume_expectation
+@@ -181,17 +181,17 @@
+             .expect("expect mutex poisoned");
+         if e.fp != fp || e.fp == 0 {
+             return false;
+         }
+         let fresh = now_nanos.saturating_sub(e.ts_nanos) <= self.ttl;
+         if !fresh {
+             return false;
+         }
+-        if e.req_len > 0 {
++        if e.req_len == /* ~ changed by cargo-mutants ~ */ 0 {
+             let pct = u64::from(reply_len) * 100 / u64::from(e.req_len);
+             self.peak_amp_pct.fetch_max(pct, Ordering::Relaxed);
+         }
+         e.fp = 0;
+         true
+     }
+ 
+     #[must_use]
+
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=deflect-reflect@0.1.0
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh getrandom v0.4.3
+       Fresh autocfg v1.5.1
+       Fresh bitflags v2.13.2
+       Fresh linux-raw-sys v0.12.1
+       Fresh rustix v1.1.5
+       Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
+       Fresh tempfile v3.27.0
+       Fresh wait-timeout v0.2.1
+       Fresh cpufeatures v0.3.1
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+       Fresh bit-vec v0.10.1
+       Fresh bit-set v0.11.1
+       Fresh rusty-fork v0.3.1
+       Fresh chacha20 v0.10.2
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh regex-syntax v0.8.11
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/crates/deflect-core)
+       Fresh unarray v0.1.4
+       Fresh core_detect v1.0.0
+       Fresh proptest v1.12.0
+       Dirty deflect-reflect v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/crates/deflect-reflect): the file `crates/deflect-reflect/src/lib.rs` has changed (1792417173.095976512s, 4s after last build at 1792417169.901916420s)
+   Compiling deflect-reflect v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/crates/deflect-reflect)
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_reflect --edition=2021 crates/deflect-reflect/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=b7fe68b5d52c2563 -C extra-filename=-8df17f1741652d8e --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rmeta`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_reflect --edition=2021 crates/deflect-reflect/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=7fe7f33b1f392db0 -C extra-filename=-464c7b3a9da94672 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name properties --edition=2021 crates/deflect-reflect/tests/properties.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=555774f3a9fa1194 -C extra-filename=-9ffd5c383e2c9540 --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern deflect_reflect=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/target/debug/deps/libdeflect_reflect-8df17f1741652d8e.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.36s
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/target/debug/deps/deflect_reflect-464c7b3a9da94672`
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/target/debug/deps/properties-9ffd5c383e2c9540`
+
+*** result: Success
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=deflect-reflect@0.1.0
+    Blocking waiting for file lock on package cache
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh getrandom v0.4.3
+       Fresh bitflags v2.13.2
+       Fresh linux-raw-sys v0.12.1
+       Fresh autocfg v1.5.1
+       Fresh rustix v1.1.5
+       Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
+       Fresh tempfile v3.27.0
+       Fresh wait-timeout v0.2.1
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+       Fresh bit-vec v0.10.1
+       Fresh cpufeatures v0.3.1
+       Fresh chacha20 v0.10.2
+       Fresh bit-set v0.11.1
+       Fresh rusty-fork v0.3.1
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/crates/deflect-core)
+       Fresh unarray v0.1.4
+       Fresh core_detect v1.0.0
+       Fresh regex-syntax v0.8.11
+       Fresh proptest v1.12.0
+       Fresh deflect-reflect v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/crates/deflect-reflect)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.70s
+     Running `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-VOGroV.tmp/target/debug/deps/deflect_reflect-464c7b3a9da94672`
+
+running 20 tests
+test ports::tests::boundary_ports ... ok
+test ports::tests::defaults_contain_known_amplifiers ... ok
+test ports::tests::defaults_exclude_ordinary_ports ... ok
+test ports::tests::insert_remove_roundtrip ... ok
+test tests::concurrent_requests_keep_distinct_slots ... ok
+test tests::different_server_reply_is_unsolicited ... ok
+test tests::expired_request_no_longer_solicits ... ok
+test tests::fingerprint_is_pinned ... ok
+test tests::non_amplifier_port_passes ... ok
+test tests::non_udp_passes ... ok
+test tests::one_request_authorises_one_reply ... ok
+test tests::size_only_drops_at_exactly_the_threshold ... ok
+test tests::size_only_mode_uses_threshold ... ok
+test tests::solicited_dns_reply_passes ... FAILED
+test tests::stage_evaluate_drops_unsolicited ... ok
+test tests::stage_name_is_stable ... ok
+test tests::tcp_to_an_amplifier_port_is_not_recorded ... ok
+test tests::unsolicited_dns_reply_is_dropped ... ok
+test tests::wrong_fingerprint_in_a_shared_slot_is_unsolicited ... ok
+test tests::zero_length_request_does_not_divide_by_zero ... FAILED
+
+failures:
+
+---- tests::solicited_dns_reply_passes stdout ----
+
+thread 'tests::solicited_dns_reply_passes' (3908858) panicked at crates/deflect-reflect/src/lib.rs:297:9:
+assertion `left == right` failed
+  left: 0
+ right: 6826
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- tests::zero_length_request_does_not_divide_by_zero stdout ----
+
+thread 'tests::zero_length_request_does_not_divide_by_zero' (3908864) panicked at crates/deflect-reflect/src/lib.rs:190:23:
+attempt to divide by zero
+
+
+failures:
+    tests::solicited_dns_reply_passes
+    tests::zero_length_request_does_not_divide_by_zero
+
+test result: FAILED. 18 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `-p deflect-reflect --lib`
+
+*** result: Failure(101)

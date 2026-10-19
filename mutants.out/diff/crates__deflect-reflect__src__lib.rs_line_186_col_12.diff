@@ -1,0 +1,21 @@
+--- crates/deflect-reflect/src/lib.rs
++++ delete ! in ReflectionGuard::consume_expectation
+@@ -178,17 +178,17 @@
+     fn consume_expectation(&self, fp: u64, reply_len: u32, now_nanos: u64) -> bool {
+         let mut e = self.table[self.slot(fp)]
+             .lock()
+             .expect("expect mutex poisoned");
+         if e.fp != fp || e.fp == 0 {
+             return false;
+         }
+         let fresh = now_nanos.saturating_sub(e.ts_nanos) <= self.ttl;
+-        if !fresh {
++        if  /* ~ changed by cargo-mutants ~ */fresh {
+             return false;
+         }
+         if e.req_len > 0 {
+             let pct = u64::from(reply_len) * 100 / u64::from(e.req_len);
+             self.peak_amp_pct.fetch_max(pct, Ordering::Relaxed);
+         }
+         e.fp = 0;
+         true

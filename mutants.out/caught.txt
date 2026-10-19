@@ -1,52 +1,63 @@
-crates/deflect-signature/src/builtin.rs:18:5: replace tcp_flag_anomalies -> Vec<Signature> with vec![]
-crates/deflect-signature/src/matcher.rs:31:39: replace == with != in PortMatch::matches
-crates/deflect-signature/src/matcher.rs:67:24: replace |= with &= in FlagMatch::forbid
-crates/deflect-signature/src/matcher.rs:73:23: replace |= with &= in FlagMatch::and_require
-crates/deflect-signature/src/matcher.rs:79:9: replace FlagMatch::matches -> bool with true
-crates/deflect-signature/src/matcher.rs:79:9: replace FlagMatch::matches -> bool with false
-crates/deflect-signature/src/matcher.rs:80:49: replace && with || in FlagMatch::matches
-crates/deflect-signature/src/matcher.rs:80:32: replace == with != in FlagMatch::matches
-crates/deflect-signature/src/matcher.rs:24:9: replace PortMatch::range -> PortMatch with Default::default()
-crates/deflect-signature/src/matcher.rs:80:15: replace & with | in FlagMatch::matches
-crates/deflect-signature/src/matcher.rs:80:15: replace & with ^ in FlagMatch::matches
-crates/deflect-signature/src/matcher.rs:80:76: replace == with != in FlagMatch::matches
-crates/deflect-signature/src/matcher.rs:80:58: replace & with | in FlagMatch::matches
-crates/deflect-signature/src/matcher.rs:80:58: replace & with ^ in FlagMatch::matches
-crates/deflect-signature/src/matcher.rs:107:61: replace <= with > in PayloadMatch::matches
-crates/deflect-signature/src/matcher.rs:104:9: replace PayloadMatch::matches -> bool with true
-crates/deflect-signature/src/set.rs:26:9: replace SignatureSet::len -> usize with 0
-crates/deflect-signature/src/matcher.rs:29:9: replace PortMatch::matches -> bool with true
-crates/deflect-signature/src/builtin.rs:59:5: replace baseline -> SignatureSet with Default::default()
-crates/deflect-signature/src/set.rs:31:9: replace SignatureSet::is_empty -> bool with true
-crates/deflect-signature/src/set.rs:26:9: replace SignatureSet::len -> usize with 1
-crates/deflect-signature/src/set.rs:31:9: replace SignatureSet::is_empty -> bool with false
-crates/deflect-signature/src/set.rs:37:45: replace <= with > in SignatureSet::push
-crates/deflect-signature/src/set.rs:35:9: replace SignatureSet::push with ()
-crates/deflect-signature/src/set.rs:44:9: replace SignatureSet::first_match -> Option<&Signature> with None
-crates/deflect-signature/src/matcher.rs:29:9: replace PortMatch::matches -> bool with false
-crates/deflect-signature/src/set.rs:51:9: replace SignatureSet::classify -> Verdict with Default::default()
-crates/deflect-signature/src/set.rs:57:9: replace SignatureSet::iter -> impl Iterator<Item =&Signature> with ::std::iter::empty()
-crates/deflect-signature/src/set.rs:63:9: replace <impl Stage for SignatureSet>::evaluate -> Verdict with Default::default()
-crates/deflect-signature/src/matcher.rs:104:9: replace PayloadMatch::matches -> bool with false
-crates/deflect-signature/src/set.rs:67:9: replace <impl Stage for SignatureSet>::name -> &'static str with ""
-crates/deflect-signature/src/set.rs:73:9: replace <impl FromIterator<Signature> for SignatureSet>::from_iter -> Self with Default::default()
-crates/deflect-signature/src/set.rs:67:9: replace <impl Stage for SignatureSet>::name -> &'static str with "xyzzy"
-crates/deflect-signature/src/signature.rs:24:9: replace Action::verdict -> Verdict with Default::default()
-crates/deflect-signature/src/signature.rs:61:5: replace max_wire_default -> u32 with 0
-crates/deflect-signature/src/signature.rs:61:5: replace max_wire_default -> u32 with 1
-crates/deflect-signature/src/signature.rs:142:9: replace Signature::matches -> bool with true
-crates/deflect-signature/src/signature.rs:142:9: replace Signature::matches -> bool with false
-crates/deflect-signature/src/signature.rs:143:19: replace != with == in Signature::matches
-crates/deflect-signature/src/signature.rs:147:28: replace < with == in Signature::matches
-crates/deflect-signature/src/signature.rs:147:48: replace || with && in Signature::matches
-crates/deflect-signature/src/signature.rs:147:28: replace < with > in Signature::matches
-crates/deflect-signature/src/signature.rs:147:28: replace < with <= in Signature::matches
-crates/deflect-signature/src/signature.rs:147:67: replace > with == in Signature::matches
-crates/deflect-signature/src/signature.rs:147:67: replace > with < in Signature::matches
-crates/deflect-signature/src/signature.rs:150:52: replace || with && in Signature::matches
-crates/deflect-signature/src/signature.rs:147:67: replace > with >= in Signature::matches
-crates/deflect-signature/src/signature.rs:150:12: delete ! in Signature::matches
-crates/deflect-signature/src/signature.rs:150:55: delete ! in Signature::matches
-crates/deflect-signature/src/signature.rs:156:23: replace != with == in Signature::matches
-crates/deflect-signature/src/signature.rs:157:26: replace != with == in Signature::matches
-crates/deflect-signature/src/signature.rs:160:16: delete ! in Signature::matches
+crates/deflect-reflect/src/lib.rs:142:33: replace || with && in ReflectionGuard::note_outbound
+crates/deflect-reflect/src/lib.rs:142:22: replace != with == in ReflectionGuard::note_outbound
+crates/deflect-reflect/src/lib.rs:142:36: delete ! in ReflectionGuard::note_outbound
+crates/deflect-reflect/src/lib.rs:159:9: replace ReflectionGuard::classify -> Verdict with Default::default()
+crates/deflect-reflect/src/lib.rs:159:33: replace || with && in ReflectionGuard::classify
+crates/deflect-reflect/src/lib.rs:159:22: replace != with == in ReflectionGuard::classify
+crates/deflect-reflect/src/lib.rs:159:36: delete ! in ReflectionGuard::classify
+crates/deflect-reflect/src/lib.rs:167:28: replace < with == in ReflectionGuard::classify
+crates/deflect-reflect/src/lib.rs:167:28: replace < with > in ReflectionGuard::classify
+crates/deflect-reflect/src/lib.rs:167:28: replace < with <= in ReflectionGuard::classify
+crates/deflect-reflect/src/lib.rs:133:28: replace & with | in ReflectionGuard::slot
+crates/deflect-reflect/src/lib.rs:179:9: replace ReflectionGuard::consume_expectation -> bool with true
+crates/deflect-reflect/src/lib.rs:179:9: replace ReflectionGuard::consume_expectation -> bool with false
+crates/deflect-reflect/src/lib.rs:182:23: replace || with && in ReflectionGuard::consume_expectation
+crates/deflect-reflect/src/lib.rs:182:17: replace != with == in ReflectionGuard::consume_expectation
+crates/deflect-reflect/src/lib.rs:182:31: replace == with != in ReflectionGuard::consume_expectation
+crates/deflect-reflect/src/lib.rs:185:58: replace <= with > in ReflectionGuard::consume_expectation
+crates/deflect-reflect/src/lib.rs:186:12: delete ! in ReflectionGuard::consume_expectation
+crates/deflect-reflect/src/lib.rs:133:28: replace & with ^ in ReflectionGuard::slot
+crates/deflect-reflect/src/lib.rs:189:22: replace > with == in ReflectionGuard::consume_expectation
+crates/deflect-reflect/src/lib.rs:189:22: replace > with < in ReflectionGuard::consume_expectation
+crates/deflect-reflect/src/lib.rs:189:22: replace > with >= in ReflectionGuard::consume_expectation
+crates/deflect-reflect/src/lib.rs:190:50: replace / with % in ReflectionGuard::consume_expectation
+crates/deflect-reflect/src/lib.rs:133:9: replace ReflectionGuard::slot -> usize with 1
+crates/deflect-reflect/src/lib.rs:133:9: replace ReflectionGuard::slot -> usize with 0
+crates/deflect-reflect/src/lib.rs:190:50: replace / with * in ReflectionGuard::consume_expectation
+crates/deflect-reflect/src/lib.rs:142:9: replace ReflectionGuard::note_outbound with ()
+crates/deflect-reflect/src/lib.rs:190:44: replace * with + in ReflectionGuard::consume_expectation
+crates/deflect-reflect/src/lib.rs:190:44: replace * with / in ReflectionGuard::consume_expectation
+crates/deflect-reflect/src/lib.rs:199:9: replace ReflectionGuard::stats -> ReflectStats with Default::default()
+crates/deflect-reflect/src/lib.rs:210:9: replace <impl Stage for ReflectionGuard>::evaluate -> Verdict with Default::default()
+crates/deflect-reflect/src/lib.rs:214:9: replace <impl Stage for ReflectionGuard>::name -> &'static str with ""
+crates/deflect-reflect/src/lib.rs:214:9: replace <impl Stage for ReflectionGuard>::name -> &'static str with "xyzzy"
+crates/deflect-reflect/src/lib.rs:219:5: replace fingerprint -> u64 with 1
+crates/deflect-reflect/src/lib.rs:223:11: replace ^= with |= in fingerprint
+crates/deflect-reflect/src/lib.rs:219:5: replace fingerprint -> u64 with 0
+crates/deflect-reflect/src/lib.rs:223:11: replace ^= with &= in fingerprint
+crates/deflect-reflect/src/lib.rs:240:15: replace >> with << in fingerprint
+crates/deflect-reflect/src/lib.rs:241:15: replace & with | in fingerprint
+crates/deflect-reflect/src/lib.rs:243:10: replace == with != in fingerprint
+crates/deflect-reflect/src/lib.rs:241:15: replace & with ^ in fingerprint
+crates/deflect-reflect/src/ports.rs:61:9: replace AmplifierPorts::insert with ()
+crates/deflect-reflect/src/ports.rs:62:25: replace |= with &= in AmplifierPorts::insert
+crates/deflect-reflect/src/ports.rs:62:33: replace << with >> in AmplifierPorts::insert
+crates/deflect-reflect/src/ports.rs:53:9: replace AmplifierPorts::with_defaults -> AmplifierPorts with Default::default()
+crates/deflect-reflect/src/ports.rs:67:28: delete ! in AmplifierPorts::remove
+crates/deflect-reflect/src/ports.rs:66:9: replace AmplifierPorts::remove with ()
+crates/deflect-reflect/src/ports.rs:67:25: replace &= with |= in AmplifierPorts::remove
+crates/deflect-reflect/src/ports.rs:67:35: replace << with >> in AmplifierPorts::remove
+crates/deflect-reflect/src/ports.rs:72:9: replace AmplifierPorts::contains -> bool with true
+crates/deflect-reflect/src/ports.rs:72:9: replace AmplifierPorts::contains -> bool with false
+crates/deflect-reflect/src/ports.rs:73:41: replace != with == in AmplifierPorts::contains
+crates/deflect-reflect/src/ports.rs:73:25: replace & with | in AmplifierPorts::contains
+crates/deflect-reflect/src/ports.rs:73:25: replace & with ^ in AmplifierPorts::contains
+crates/deflect-reflect/src/ports.rs:73:33: replace << with >> in AmplifierPorts::contains
+crates/deflect-reflect/src/ports.rs:77:9: replace AmplifierPorts::index -> (usize, usize) with (0, 1)
+crates/deflect-reflect/src/ports.rs:77:9: replace AmplifierPorts::index -> (usize, usize) with (0, 0)
+crates/deflect-reflect/src/ports.rs:77:9: replace AmplifierPorts::index -> (usize, usize) with (1, 0)
+crates/deflect-reflect/src/ports.rs:78:12: replace / with * in AmplifierPorts::index
+crates/deflect-reflect/src/ports.rs:77:9: replace AmplifierPorts::index -> (usize, usize) with (1, 1)
+crates/deflect-reflect/src/ports.rs:78:20: replace % with / in AmplifierPorts::index
+crates/deflect-reflect/src/ports.rs:78:12: replace / with % in AmplifierPorts::index
+crates/deflect-reflect/src/ports.rs:78:20: replace % with + in AmplifierPorts::index
