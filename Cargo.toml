@@ -4,6 +4,7 @@ members = [
     "crates/deflect-core",
     "crates/deflect-ratelimit",
     "crates/deflect-detect",
+    "crates/deflect-syncookie",
 ]
 
 [workspace.package]
@@ -15,7 +16,7 @@ repository = "https://github.com/copyleftdev/deflect-rs"
 authors = ["copyleftdev"]
 
 [workspace.dependencies]
-deflect-core = { path = "crates/deflect-core" }
+deflect-core = { path = "crates/deflect-core", default-features = false }
 
 [profile.release]
 lto = "thin"

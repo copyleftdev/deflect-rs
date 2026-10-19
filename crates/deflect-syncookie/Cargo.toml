@@ -1,0 +1,21 @@
+[package]
+name = "deflect-syncookie"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+description = "Stateless SYN-cookie issuance and validation for deflect-rs, keyed with SipHash-2-4."
+
+[dependencies]
+deflect-core = { workspace = true, default-features = false }
+siphasher = { version = "1.0.4", default-features = false }
+
+[features]
+default = ["std"]
+std = ["deflect-core/std"]
+
+[lints.clippy]
+all = "warn"
+pedantic = "warn"

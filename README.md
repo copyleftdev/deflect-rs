@@ -34,10 +34,10 @@ time-dependent primitive is driven deterministically in tests.
 | `deflect-core` | ✅ | `Verdict`, `SourceKey` (+ subnet aggregation), `Packet`/`Observation`, `TcpFlags`, `Clock`, the `Stage` trait |
 | `deflect-ratelimit` | ✅ | Exact integer `TokenBucket`; `SourceGovernor`, a fixed-size per-source/per-subnet limiter with bounded memory |
 | `deflect-detect` | ✅ | `SlidingWindow` exact rate counter; `Trigger`, dual-watermark attack detection with hysteresis |
+| `deflect-syncookie` | ✅ | Stateless SYN-cookie issuance and validation (SipHash-2-4 keyed) |
 | `deflect-signature` | ⏳ | Protocol/port/flag/payload signature engine |
 | `deflect-reflect` | ⏳ | Reflection/amplification defense |
 | `deflect-fingerprint` | ⏳ | Learning fingerprints of unknown attacks |
-| `deflect-syncookie` | ⏳ | Stateless SYN-cookie validation |
 | `deflect-enforce` | ⏳ | nftables / XDP enforcement backends behind a trait |
 | `deflect-telemetry` | ⏳ | sFlow / NetFlow v5·v9 / IPFIX ingestion |
 | `deflect-bgp` | ⏳ | Upstream RTBH / ExaBGP announcement |
@@ -60,11 +60,16 @@ time-dependent primitive is driven deterministically in tests.
 - **Hysteresis, not a single threshold.** The attack `Trigger` engages at a high
   watermark and only disengages below a lower one, so it does not flap when a
   rate sits near the line.
+- **Cookies authenticate the client ISN.** `deflect-syncookie` keeps the
+  stateless Linux-style layout but folds the client's sequence number *into* the
+  keyed MAC, so the cookie authenticates `(tuple, client_isn, epoch)` rather
+  than binding the ISN only linearly. The secret is caller-supplied (seed it
+  with `getrandom`) and rotates with a one-generation grace window.
 
 ## Status
 
-Early. Three crates are implemented and tested (29 tests, `clippy -W pedantic`
-clean). The remaining crates are scaffolded as roadmap.
+Early. Four crates are implemented and tested (47 tests, `clippy -W pedantic`
+clean, builds `no_std`). The remaining crates are scaffolded as roadmap.
 
 ## License
 
