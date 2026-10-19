@@ -109,10 +109,30 @@ time-dependent primitive is driven deterministically in tests.
   leak into the global table, and every blackhole carries a deadline that
   `sweep` lifts, so a forgotten one does not persist.
 
+## Verification
+
+Every crate is held to a hard quality bar:
+
+- **Property tests** (via [`proptest`](https://crates.io/crates/proptest)) assert
+  the laws each primitive relies on across the whole input space — verdict
+  severity is a lattice, token-bucket refill is exact, address masking only
+  clears bits, a blackhole stays inside owned space, and every untrusted parser
+  returns rather than panics on arbitrary bytes.
+- **Zero surviving mutants.** Each crate passes a [`cargo-mutants`](https://mutants.rs/)
+  sweep with no survivors: every mutation of the source is caught by a test.
+  Where a mutation was genuinely equivalent (e.g. `a | b` where a shift makes it
+  identical to `a ^ b`), the code was refactored to remove the ambiguity rather
+  than suppress the report.
+- `clippy -W pedantic` clean; core primitives build `no_std`.
+
+The hardening pass also found and fixed a real defect: a crafted SYN-cookie ACK
+whose reconstructed epoch predated the clock origin underflowed an epoch
+subtraction (a remotely reachable panic in debug builds); it is now rejected.
+
 ## Status
 
-Early. Ten crates are implemented and tested (148 tests default, 150 with
-`serde`; `clippy -W pedantic` clean; core primitives build `no_std`). The data,
+Early but well-tested. Ten crates are implemented, with **270 tests** (272 with
+`serde`) and zero mutation survivors across all of them. The data, detection,
 action, ingestion, and upstream-signalling planes are all present; sFlow
 ingestion (which needs a packet-header parser) is the remaining roadmap item.
 
