@@ -39,7 +39,7 @@ time-dependent primitive is driven deterministically in tests.
 | `deflect-reflect` | ✅ | Reflection/amplification defense via request/response correlation |
 | `deflect-fingerprint` | ✅ | Learning fingerprints of unknown attacks (bounded heavy-hitter counting) |
 | `deflect-enforce` | ✅ | Enforcement behind an `Enforcer` trait: nftables sets (XDP/netlink planned) |
-| `deflect-telemetry` | ⏳ | sFlow / NetFlow v5·v9 / IPFIX ingestion |
+| `deflect-telemetry` | ◑ | NetFlow v5 / v9 / IPFIX ingestion (sFlow pending) |
 | `deflect-bgp` | ⏳ | Upstream RTBH / ExaBGP announcement |
 
 ## Design decisions worth knowing
@@ -94,10 +94,16 @@ time-dependent primitive is driven deterministically in tests.
   carry a TTL the kernel expires itself via `flags timeout`; the drop chain sits
   at priority -300 so banned sources are dropped before conntrack. A
   `NullEnforcer` gives watch/dry-run mode for free.
+- **Telemetry parses untrusted input without ever panicking.** `deflect-telemetry`
+  decodes NetFlow v5/v9 and IPFIX through a bounds-checked byte reader whose every
+  read returns a `Result` — truncated or malformed datagrams yield the records
+  decoded so far, never a crash. The template-based formats (v9, IPFIX) keep a
+  `TemplateRegistry` across datagrams, so data arriving before its template is
+  skipped and decoded once the template is learned, exactly as the RFCs require.
 
 ## Status
 
-Early. Eight crates are implemented and tested (99 tests default, 101 with
+Early. Nine crates are implemented and tested (117 tests default, 119 with
 `serde`; `clippy -W pedantic` clean; core primitives build `no_std`). The
 remaining crates are scaffolded as roadmap.
 

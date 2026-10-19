@@ -9,6 +9,7 @@ members = [
     "crates/deflect-reflect",
     "crates/deflect-fingerprint",
     "crates/deflect-enforce",
+    "crates/deflect-telemetry",
 ]
 
 [workspace.package]
