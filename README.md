@@ -39,7 +39,8 @@ time-dependent primitive is driven deterministically in tests.
 | `deflect-reflect` | ✅ | Reflection/amplification defense via request/response correlation |
 | `deflect-fingerprint` | ✅ | Learning fingerprints of unknown attacks (bounded heavy-hitter counting) |
 | `deflect-enforce` | ✅ | Enforcement behind an `Enforcer` trait: nftables sets (XDP/netlink planned) |
-| `deflect-telemetry` | ◑ | NetFlow v5 / v9 / IPFIX ingestion (sFlow pending) |
+| `deflect-telemetry` | ✅ | NetFlow v5 / v9 / IPFIX and sFlow v5 ingestion into unified flow records |
+| `deflect-packet` | ✅ | Bounds-checked Ethernet / IPv4 / IPv6 / TCP / UDP header parsing into a 5-tuple |
 | `deflect-bgp` | ✅ | Upstream RTBH blackhole announcement over the ExaBGP text API |
 
 ## Design decisions worth knowing
@@ -100,6 +101,15 @@ time-dependent primitive is driven deterministically in tests.
   decoded so far, never a crash. The template-based formats (v9, IPFIX) keep a
   `TemplateRegistry` across datagrams, so data arriving before its template is
   skipped and decoded once the template is learned, exactly as the RFCs require.
+- **sFlow is sampled packets, not flows — so it parses real headers.** Unlike
+  NetFlow and IPFIX, an sFlow datagram carries the first bytes of actual packets.
+  `deflect-packet` walks Ethernet (and VLAN tags), IPv4, and IPv6 (including its
+  extension-header chain) down to the TCP/UDP header to recover the 5-tuple,
+  checking every read so a *deliberately truncated* sampled header still yields
+  the addresses and protocol it did contain. `deflect-telemetry` then scales each
+  sample by its sampling rate into the same `FlowRecord` the other formats
+  produce (`packets = rate`, `bytes = rate × frame_length`), so a sampled feed
+  drives the detection plane exactly as a flow-export feed does.
 - **Blackholing is authorized and self-limiting by construction.** A
   destination blackhole asks an upstream to discard *all* traffic to a prefix,
   so `deflect-bgp` refuses the two mistakes that turn it into an outage or a
@@ -131,10 +141,11 @@ subtraction (a remotely reachable panic in debug builds); it is now rejected.
 
 ## Status
 
-Early but well-tested. Ten crates are implemented, with **270 tests** (272 with
-`serde`) and zero mutation survivors across all of them. The data, detection,
-action, ingestion, and upstream-signalling planes are all present; sFlow
-ingestion (which needs a packet-header parser) is the remaining roadmap item.
+Early but well-tested. Eleven crates are implemented, with **319 tests** (321
+with `serde`) and zero mutation survivors across all of them. The data,
+detection, action, ingestion, and upstream-signalling planes are all present, and
+flow ingestion now covers NetFlow v5/v9, IPFIX, and sFlow v5 (the last built on a
+standalone, bounds-checked Ethernet/IP/L4 header parser, `deflect-packet`).
 
 ## License
 
