@@ -15,6 +15,21 @@
 //! while a `deflect_detect` trigger reports an attack is the caller's job;
 //! this crate counts what it is given and reports what dominates.
 //!
+//! **Deployment caveat — a fingerprint is only as safe as the legitimate
+//! traffic it is learned against.** The learner keys on whichever value
+//! *dominates* a sample; that is correct for the flood but indifferent to who
+//! else shares that value. If legitimate traffic is a monoculture on the same
+//! dimension the flood targets — nearly all of it to `tcp/443`, say, while a
+//! SYN flood also targets port `443` — then `443` dominates for both, and the
+//! synthesized fingerprint matches real clients as readily as the attack. A
+//! deterministic simulation of the whole pipeline surfaced exactly this:
+//! legitimate traffic collapsed onto a single destination port was dropped
+//! alongside the flood, while every per-crate test — which feeds adversarial
+//! traffic, never a realistic legit/attack mix — stayed green. Mitigate it
+//! where you deploy: feed the learner dimensions on which legitimate traffic is
+//! genuinely diverse, and prefer a challenge or rate-limit over an outright drop
+//! on any dimension legitimate clients also occupy.
+//!
 //! ```
 //! use deflect_fingerprint::Fingerprinter;
 //! use deflect_core::{Packet, L4};
