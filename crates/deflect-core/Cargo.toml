@@ -1,0 +1,17 @@
+[package]
+name = "deflect-core"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+description = "Core contract for deflect-rs: verdicts, source keys, observations, and clocks."
+
+[features]
+default = ["std"]
+std = []
+
+[lints.clippy]
+all = "warn"
+pedantic = "warn"

@@ -1,0 +1,20 @@
+[package]
+name = "deflect-detect"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+description = "Traffic-rate monitoring and attack triggers with hysteresis for deflect-rs."
+
+[dependencies]
+deflect-core = { workspace = true }
+
+[features]
+default = ["std"]
+std = ["deflect-core/std"]
+
+[lints.clippy]
+all = "warn"
+pedantic = "warn"
