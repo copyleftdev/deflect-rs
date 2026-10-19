@@ -1,0 +1,23 @@
+--- crates/deflect-ratelimit/src/governor.rs
++++ replace SourceGovernor::charge -> Spend with Default::default()
+@@ -75,19 +75,17 @@
+     }
+ 
+     /// Charge `cost` to `key` at `now_nanos`, returning the bucket outcome.
+     ///
+     /// # Panics
+     /// Panics only if a slot mutex was poisoned by a previous panic while held.
+     #[must_use]
+     pub fn charge(&self, key: SourceKey, cost: u64, now_nanos: u64) -> Spend {
+-        let slot = self.slot_for(key);
+-        let mut bucket = self.slots[slot].lock().expect("bucket mutex poisoned");
+-        bucket.try_spend(cost, now_nanos)
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl Stage for SourceGovernor {
+     fn evaluate(&self, obs: &Observation<'_>) -> Verdict {
+         let key = obs.source_key(self.config.aggregation);
+         let cost = self.cost_of(obs.packet.wire_len);
+         match self.charge(key, cost, obs.ts_nanos) {

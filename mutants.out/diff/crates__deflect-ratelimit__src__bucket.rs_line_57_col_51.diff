@@ -1,0 +1,21 @@
+--- crates/deflect-ratelimit/src/bucket.rs
++++ replace * with + in TokenBucket::refill
+@@ -49,17 +49,17 @@
+         }
+     }
+ 
+     fn refill(&mut self, now_nanos: u64) {
+         if now_nanos <= self.last_nanos {
+             return;
+         }
+         let elapsed = u128::from(now_nanos - self.last_nanos);
+-        let added = u128::from(self.rate_per_sec) * elapsed;
++        let added = u128::from(self.rate_per_sec) + /* ~ changed by cargo-mutants ~ */ elapsed;
+         self.tokens_units = (self.tokens_units + added).min(self.capacity_units);
+         self.last_nanos = now_nanos;
+     }
+ 
+     /// Advance to `now_nanos` and try to spend `cost` tokens.
+     pub fn try_spend(&mut self, cost: u64, now_nanos: u64) -> Spend {
+         self.refill(now_nanos);
+         let cost_units = u128::from(cost) * NANOS_PER_SEC;

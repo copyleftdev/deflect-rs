@@ -1,0 +1,21 @@
+--- crates/deflect-ratelimit/src/bucket.rs
++++ replace / with % in TokenBucket::available
+@@ -78,17 +78,17 @@
+         Spend::Throttled {
+             retry_after_nanos: retry,
+         }
+     }
+ 
+     /// Whole tokens currently available, after refilling to `now_nanos`.
+     pub fn available(&mut self, now_nanos: u64) -> u64 {
+         self.refill(now_nanos);
+-        u64::try_from(self.tokens_units / NANOS_PER_SEC).unwrap_or(u64::MAX)
++        u64::try_from(self.tokens_units % /* ~ changed by cargo-mutants ~ */ NANOS_PER_SEC).unwrap_or(u64::MAX)
+     }
+ }
+ 
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+ 
+     #[test]

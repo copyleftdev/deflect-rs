@@ -1,0 +1,196 @@
+
+*** crates/deflect-ratelimit/src/bucket.rs:65:43: replace * with / in TokenBucket::try_spend
+
+*** mutation diff:
+--- crates/deflect-ratelimit/src/bucket.rs
++++ replace * with / in TokenBucket::try_spend
+@@ -57,17 +57,17 @@
+         let added = u128::from(self.rate_per_sec) * elapsed;
+         self.tokens_units = (self.tokens_units + added).min(self.capacity_units);
+         self.last_nanos = now_nanos;
+     }
+ 
+     /// Advance to `now_nanos` and try to spend `cost` tokens.
+     pub fn try_spend(&mut self, cost: u64, now_nanos: u64) -> Spend {
+         self.refill(now_nanos);
+-        let cost_units = u128::from(cost) * NANOS_PER_SEC;
++        let cost_units = u128::from(cost) / /* ~ changed by cargo-mutants ~ */ NANOS_PER_SEC;
+         if self.tokens_units >= cost_units {
+             self.tokens_units -= cost_units;
+             return Spend::Allowed;
+         }
+         let deficit = cost_units - self.tokens_units;
+         let retry = if self.rate_per_sec == 0 {
+             u64::MAX
+         } else {
+
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=deflect-ratelimit@0.1.0
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh getrandom v0.4.3
+       Fresh linux-raw-sys v0.12.1
+       Fresh autocfg v1.5.1
+       Fresh bitflags v2.13.2
+       Fresh rustix v1.1.5
+       Fresh once_cell v1.21.4
+       Fresh fastrand v2.5.0
+       Fresh tempfile v3.27.0
+       Fresh wait-timeout v0.2.1
+       Fresh fnv v1.0.7
+       Fresh bit-vec v0.10.1
+       Fresh cpufeatures v0.3.1
+       Fresh quick-error v1.2.3
+       Fresh rusty-fork v0.3.1
+       Fresh chacha20 v0.10.2
+       Fresh bit-set v0.11.1
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/crates/deflect-core)
+       Fresh unarray v0.1.4
+       Fresh core_detect v1.0.0
+       Fresh regex-syntax v0.8.11
+       Fresh proptest v1.12.0
+       Dirty deflect-ratelimit v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/crates/deflect-ratelimit): the file `crates/deflect-ratelimit/src/bucket.rs` has changed (1792415317.616816227s, 4s after last build at 1792415313.035574661s)
+   Compiling deflect-ratelimit v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/crates/deflect-ratelimit)
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_ratelimit --edition=2021 crates/deflect-ratelimit/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=385d0f2f910a3c99 -C extra-filename=-7b203a0b724680ee --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rmeta`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name properties --edition=2021 crates/deflect-ratelimit/tests/properties.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=c7f7613049a32d30 -C extra-filename=-f007d8f8f24be2cc --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern deflect_ratelimit=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/target/debug/deps/libdeflect_ratelimit-7b203a0b724680ee.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+     Running `/home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name deflect_ratelimit --edition=2021 crates/deflect-ratelimit/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 '--warn=clippy::pedantic' '--warn=clippy::all' --test --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=ddce919bbae22bc2 -C extra-filename=-a5d2ebbe30cc8ccc --out-dir /home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/target/debug/deps -C incremental=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/target/debug/incremental -L dependency=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/target/debug/deps --extern deflect_core=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/target/debug/deps/libdeflect_core-8b818455d7c40032.rlib --extern proptest=/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/target/debug/deps/libproptest-d75920e6a8eacbc4.rlib`
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.57s
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/target/debug/deps/deflect_ratelimit-a5d2ebbe30cc8ccc`
+  Executable `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/target/debug/deps/properties-f007d8f8f24be2cc`
+
+*** result: Success
+
+*** /home/ops/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=deflect-ratelimit@0.1.0
+       Fresh rand_core v0.10.1
+       Fresh libc v0.2.191
+       Fresh cfg-if v1.0.5
+       Fresh getrandom v0.4.3
+       Fresh autocfg v1.5.1
+       Fresh bitflags v2.13.2
+       Fresh linux-raw-sys v0.12.1
+       Fresh rustix v1.1.5
+       Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
+       Fresh tempfile v3.27.0
+       Fresh wait-timeout v0.2.1
+       Fresh cpufeatures v0.3.1
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+       Fresh bit-vec v0.10.1
+       Fresh bit-set v0.11.1
+       Fresh rusty-fork v0.3.1
+       Fresh chacha20 v0.10.2
+       Fresh num-traits v0.2.19
+       Fresh rand v0.10.3
+       Fresh rand_xorshift v0.5.0
+       Fresh core_detect v1.0.0
+       Fresh regex-syntax v0.8.11
+       Fresh deflect-core v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/crates/deflect-core)
+       Fresh unarray v0.1.4
+       Fresh proptest v1.12.0
+       Fresh deflect-ratelimit v0.1.0 (/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/crates/deflect-ratelimit)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.30s
+     Running `/home/ops/Project/deflect-rs/target/mutants-tmp/cargo-mutants-deflect-rs-IFFD63.tmp/target/debug/deps/deflect_ratelimit-a5d2ebbe30cc8ccc`
+
+running 15 tests
+test bucket::tests::capacity_caps_refill ... ok
+test bucket::tests::refill_does_not_drift_across_small_steps ... ok
+test bucket::tests::refill_uses_elapsed_since_last_not_sum ... FAILED
+test bucket::tests::refills_at_rate ... FAILED
+test bucket::tests::retry_after_is_exact ... FAILED
+test bucket::tests::retry_after_scales_with_the_real_deficit ... FAILED
+test bucket::tests::spends_down_to_empty_then_throttles ... FAILED
+test bucket::tests::starts_full ... ok
+test bucket::tests::zero_rate_is_a_fixed_quota ... FAILED
+test governor::tests::byte_mode_charges_at_least_one_token ... FAILED
+test governor::tests::byte_mode_charges_wire_length ... FAILED
+test governor::tests::independent_sources_do_not_share_budget ... FAILED
+test governor::tests::stage_name_is_stable ... ok
+test governor::tests::stage_throttles_a_flood_from_one_source ... FAILED
+test governor::tests::subnet_aggregation_collapses_a_rotating_attacker ... FAILED
+
+failures:
+
+---- bucket::tests::refill_uses_elapsed_since_last_not_sum stdout ----
+
+thread 'bucket::tests::refill_uses_elapsed_since_last_not_sum' (3677418) panicked at crates/deflect-ratelimit/src/bucket.rs:156:9:
+assertion failed: !b.try_spend(2, 2_000_000_000).is_allowed()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- bucket::tests::refills_at_rate stdout ----
+
+thread 'bucket::tests::refills_at_rate' (3677419) panicked at crates/deflect-ratelimit/src/bucket.rs:113:9:
+assertion failed: !b.try_spend(1, 0).is_allowed()
+
+---- bucket::tests::retry_after_is_exact stdout ----
+
+thread 'bucket::tests::retry_after_is_exact' (3677420) panicked at crates/deflect-ratelimit/src/bucket.rs:125:31:
+should throttle
+
+---- bucket::tests::retry_after_scales_with_the_real_deficit stdout ----
+
+thread 'bucket::tests::retry_after_scales_with_the_real_deficit' (3677421) panicked at crates/deflect-ratelimit/src/bucket.rs:168:31:
+should throttle
+
+---- bucket::tests::spends_down_to_empty_then_throttles stdout ----
+
+thread 'bucket::tests::spends_down_to_empty_then_throttles' (3677422) panicked at crates/deflect-ratelimit/src/bucket.rs:106:9:
+assertion failed: !b.try_spend(1, 0).is_allowed()
+
+---- bucket::tests::zero_rate_is_a_fixed_quota stdout ----
+
+thread 'bucket::tests::zero_rate_is_a_fixed_quota' (3677424) panicked at crates/deflect-ratelimit/src/bucket.rs:142:31:
+fixed quota must not refill
+
+---- governor::tests::byte_mode_charges_at_least_one_token stdout ----
+
+thread 'governor::tests::byte_mode_charges_at_least_one_token' (3677425) panicked at crates/deflect-ratelimit/src/governor.rs:211:9:
+assertion failed: Stage::evaluate(&g, &Observation::new(p, 0)).blocks()
+
+---- governor::tests::byte_mode_charges_wire_length stdout ----
+
+thread 'governor::tests::byte_mode_charges_wire_length' (3677427) panicked at crates/deflect-ratelimit/src/governor.rs:188:9:
+assertion failed: Stage::evaluate(&g, &Observation::new(p, 0)).blocks()
+
+---- governor::tests::independent_sources_do_not_share_budget stdout ----
+
+thread 'governor::tests::independent_sources_do_not_share_budget' (3677428) panicked at crates/deflect-ratelimit/src/governor.rs:152:9:
+assertion failed: !g.charge(a, 1, 0).is_allowed()
+
+---- governor::tests::stage_throttles_a_flood_from_one_source stdout ----
+
+thread 'governor::tests::stage_throttles_a_flood_from_one_source' (3677434) panicked at crates/deflect-ratelimit/src/governor.rs:173:9:
+assertion `left == right` failed
+  left: 100
+ right: 5
+
+---- governor::tests::subnet_aggregation_collapses_a_rotating_attacker stdout ----
+
+thread 'governor::tests::subnet_aggregation_collapses_a_rotating_attacker' (3677435) panicked at crates/deflect-ratelimit/src/governor.rs:231:9:
+assertion `left == right` failed
+  left: 10
+ right: 3
+
+
+failures:
+    bucket::tests::refill_uses_elapsed_since_last_not_sum
+    bucket::tests::refills_at_rate
+    bucket::tests::retry_after_is_exact
+    bucket::tests::retry_after_scales_with_the_real_deficit
+    bucket::tests::spends_down_to_empty_then_throttles
+    bucket::tests::zero_rate_is_a_fixed_quota
+    governor::tests::byte_mode_charges_at_least_one_token
+    governor::tests::byte_mode_charges_wire_length
+    governor::tests::independent_sources_do_not_share_budget
+    governor::tests::stage_throttles_a_flood_from_one_source
+    governor::tests::subnet_aggregation_collapses_a_rotating_attacker
+
+test result: FAILED. 4 passed; 11 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p deflect-ratelimit --lib`
+
+*** result: Failure(101)

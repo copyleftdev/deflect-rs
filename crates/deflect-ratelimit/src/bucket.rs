@@ -144,6 +144,32 @@ mod tests {
     }
 
     #[test]
+    fn refill_uses_elapsed_since_last_not_sum() {
+        // Start with a non-zero `last` so that confusing `now - last` with
+        // `now + last` changes how much is refilled.
+        let mut b = TokenBucket::new(1, 5, 1_000_000_000);
+        assert!(b.try_spend(5, 1_000_000_000).is_allowed()); // drains, last = 1s
+                                                             // One second later exactly one token has refilled (rate 1/s).
+        assert!(b.try_spend(1, 2_000_000_000).is_allowed());
+        // ...and no more: a second token this instant must be refused. With the
+        // sign flipped, elapsed would be 3s and three tokens would be available.
+        assert!(!b.try_spend(2, 2_000_000_000).is_allowed());
+    }
+
+    #[test]
+    fn retry_after_scales_with_the_real_deficit() {
+        // Throttle while the bucket still holds tokens, so the deficit is
+        // cost - held, not cost + held.
+        let mut b = TokenBucket::new(4, 5, 0);
+        assert!(b.try_spend(3, 0).is_allowed()); // 2 tokens remain
+        match b.try_spend(5, 0) {
+            // deficit = 5 - 2 = 3 tokens at 4/s => 750ms.
+            Spend::Throttled { retry_after_nanos } => assert_eq!(retry_after_nanos, 750_000_000),
+            Spend::Allowed => panic!("should throttle"),
+        }
+    }
+
+    #[test]
     fn refill_does_not_drift_across_small_steps() {
         // Spending one token every 100ms at exactly 10/sec must never throttle.
         let mut b = TokenBucket::new(10, 1, 0);

@@ -189,6 +189,29 @@ mod tests {
     }
 
     #[test]
+    fn stage_name_is_stable() {
+        let g = SourceGovernor::new(GovernorConfig::default());
+        assert_eq!(Stage::name(&g), "source_governor");
+    }
+
+    #[test]
+    fn byte_mode_charges_at_least_one_token() {
+        // A zero-wire-length observation still costs one token, so the `.max(1)`
+        // floor cannot be dropped.
+        let g = SourceGovernor::new(GovernorConfig {
+            rate_per_sec: 0,
+            burst: 1,
+            cost: CostMode::Byte,
+            aggregation: Aggregation::HOST,
+            slots: 1 << 12,
+        });
+        let addr: IpAddr = "203.0.113.9".parse().unwrap();
+        let p = Packet::new(addr, addr, L4::Udp).with_wire_len(0);
+        assert!(Stage::evaluate(&g, &Observation::new(p, 0)).is_pass());
+        assert!(Stage::evaluate(&g, &Observation::new(p, 0)).blocks());
+    }
+
+    #[test]
     fn subnet_aggregation_collapses_a_rotating_attacker() {
         let g = SourceGovernor::new(GovernorConfig {
             rate_per_sec: 0,

@@ -1,0 +1,21 @@
+--- crates/deflect-ratelimit/src/bucket.rs
++++ replace * with / in TokenBucket::try_spend
+@@ -57,17 +57,17 @@
+         let added = u128::from(self.rate_per_sec) * elapsed;
+         self.tokens_units = (self.tokens_units + added).min(self.capacity_units);
+         self.last_nanos = now_nanos;
+     }
+ 
+     /// Advance to `now_nanos` and try to spend `cost` tokens.
+     pub fn try_spend(&mut self, cost: u64, now_nanos: u64) -> Spend {
+         self.refill(now_nanos);
+-        let cost_units = u128::from(cost) * NANOS_PER_SEC;
++        let cost_units = u128::from(cost) / /* ~ changed by cargo-mutants ~ */ NANOS_PER_SEC;
+         if self.tokens_units >= cost_units {
+             self.tokens_units -= cost_units;
+             return Spend::Allowed;
+         }
+         let deficit = cost_units - self.tokens_units;
+         let retry = if self.rate_per_sec == 0 {
+             u64::MAX
+         } else {

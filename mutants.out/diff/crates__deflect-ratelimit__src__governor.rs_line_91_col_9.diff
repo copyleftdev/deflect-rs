@@ -1,0 +1,28 @@
+--- crates/deflect-ratelimit/src/governor.rs
++++ replace <impl Stage for SourceGovernor>::evaluate -> Verdict with Default::default()
+@@ -83,24 +83,17 @@
+         let slot = self.slot_for(key);
+         let mut bucket = self.slots[slot].lock().expect("bucket mutex poisoned");
+         bucket.try_spend(cost, now_nanos)
+     }
+ }
+ 
+ impl Stage for SourceGovernor {
+     fn evaluate(&self, obs: &Observation<'_>) -> Verdict {
+-        let key = obs.source_key(self.config.aggregation);
+-        let cost = self.cost_of(obs.packet.wire_len);
+-        match self.charge(key, cost, obs.ts_nanos) {
+-            Spend::Allowed => Verdict::Pass,
+-            Spend::Throttled { retry_after_nanos } => Verdict::RateLimit {
+-                retry_after: core::time::Duration::from_nanos(retry_after_nanos),
+-            },
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn name(&self) -> &'static str {
+         "source_governor"
+     }
+ }
+ 
+ fn fnv1a(key: SourceKey) -> u64 {
