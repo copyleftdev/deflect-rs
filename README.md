@@ -38,7 +38,7 @@ time-dependent primitive is driven deterministically in tests.
 | `deflect-signature` | ✅ | Protocol/port/flag/payload signature engine; `methods.json`-style rules load via `serde` |
 | `deflect-reflect` | ✅ | Reflection/amplification defense via request/response correlation |
 | `deflect-fingerprint` | ✅ | Learning fingerprints of unknown attacks (bounded heavy-hitter counting) |
-| `deflect-enforce` | ⏳ | nftables / XDP enforcement backends behind a trait |
+| `deflect-enforce` | ✅ | Enforcement behind an `Enforcer` trait: nftables sets (XDP/netlink planned) |
 | `deflect-telemetry` | ⏳ | sFlow / NetFlow v5·v9 / IPFIX ingestion |
 | `deflect-bgp` | ⏳ | Upstream RTBH / ExaBGP announcement |
 
@@ -88,10 +88,16 @@ time-dependent primitive is driven deterministically in tests.
   It refuses to emit a fingerprint unless a *specific* dimension (port, length,
   or payload prefix) dominates, so it can never generate a rule as broad as
   "drop all UDP."
+- **Enforcement separates policy from mechanism.** `deflect-enforce` builds the
+  nftables scripts as pure, testable strings and runs them through a pluggable
+  `NftRunner` (`nft -f -` in production, a recording runner in tests). Bans
+  carry a TTL the kernel expires itself via `flags timeout`; the drop chain sits
+  at priority -300 so banned sources are dropped before conntrack. A
+  `NullEnforcer` gives watch/dry-run mode for free.
 
 ## Status
 
-Early. Seven crates are implemented and tested (85 tests default, 87 with
+Early. Eight crates are implemented and tested (99 tests default, 101 with
 `serde`; `clippy -W pedantic` clean; core primitives build `no_std`). The
 remaining crates are scaffolded as roadmap.
 

@@ -1,0 +1,20 @@
+[package]
+name = "deflect-enforce"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+description = "Enforcement backends for deflect-rs: program bans into nftables (XDP fast path planned)."
+
+[dependencies]
+deflect-core = { workspace = true }
+
+[features]
+default = ["std"]
+std = ["deflect-core/std"]
+
+[lints.clippy]
+all = "warn"
+pedantic = "warn"
