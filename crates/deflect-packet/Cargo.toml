@@ -1,0 +1,23 @@
+[package]
+name = "deflect-packet"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+description = "Bounds-checked Ethernet/IPv4/IPv6/TCP/UDP header parsing into a 5-tuple for deflect-rs."
+
+[dependencies]
+deflect-core = { workspace = true }
+
+[dev-dependencies]
+proptest = "1.6.0"
+
+[features]
+default = ["std"]
+std = ["deflect-core/std"]
+
+[lints.clippy]
+all = "warn"
+pedantic = "warn"

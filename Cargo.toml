@@ -11,6 +11,7 @@ members = [
     "crates/deflect-enforce",
     "crates/deflect-telemetry",
     "crates/deflect-bgp",
+    "crates/deflect-packet",
 ]
 
 [workspace.package]
@@ -23,6 +24,7 @@ authors = ["copyleftdev"]
 
 [workspace.dependencies]
 deflect-core = { path = "crates/deflect-core", default-features = false }
+deflect-packet = { path = "crates/deflect-packet", default-features = false }
 
 [profile.release]
 lto = "thin"
