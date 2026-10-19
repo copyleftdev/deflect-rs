@@ -1,0 +1,29 @@
+# Deflect Observatory
+
+> A live, deterministic DDoS-mitigation scope. The real deflect-rs Rust primitives,
+> compiled to WebAssembly, defending against seeded, replayable synthetic attack
+> traffic. Same seed and knobs reproduce a run bit-for-bit.
+
+## What it is
+- An interactive visualization of github.com/copyleftdev/deflect-rs, a library of
+  composable, kernel-adjacent DDoS-mitigation primitives in Rust.
+- Every verdict shown comes from the actual primitive crate, not a mock. Packets
+  stream into concentric defense rings (one per primitive) and are dropped,
+  challenged, rate-limited, or passed to the protected core.
+
+## The primitives (each a published crate)
+- deflect-signature: drops illegal TCP flag combinations (NULL/XMAS/SYN+FIN).
+- deflect-reflect: drops unsolicited amplifier replies (DNS/NTP reflection).
+- deflect-syncookie: stateless SYN-cookie challenge under SYN flood.
+- deflect-ratelimit: exact-integer token bucket, per-/24 governor, volumetric floods.
+- deflect-fingerprint: Misra–Gries learned fingerprints of novel floods.
+- deflect-detect, deflect-core, deflect-packet, deflect-telemetry, deflect-bgp.
+- deflect-kit: umbrella crate re-exporting all of them behind feature flags.
+
+## Install
+- cargo add deflect-kit --features full
+- use deflect_kit::prelude::*;
+
+## Links
+- Repository: https://github.com/copyleftdev/deflect-rs
+- Crates: https://crates.io/crates/deflect-kit
